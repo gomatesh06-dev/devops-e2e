@@ -3,522 +3,891 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vertical DevOps Architecture Pipeline</title>
+  <title>DevOps Architecture Hub | Multi-Pipeline Showcase</title>
 
   <!-- GSAP Core & ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <!-- Font Awesome -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-dark: #0b0f19;
-      --card-bg: #111827;
+      --bg-dark: #070a12;
+      --card-bg: rgba(17, 24, 39, 0.7);
+      --card-border: rgba(56, 189, 248, 0.15);
       --accent-blue: #38bdf8;
       --accent-green: #22c55e;
       --accent-orange: #f97316;
       --accent-purple: #a855f7;
-      --border-color: #1f2937;
       --text-main: #f3f4f6;
       --text-muted: #9ca3af;
+      --glow-blue: rgba(56, 189, 248, 0.35);
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Inter, system-ui, sans-serif;
+      font-family: 'Inter', system-ui, sans-serif;
     }
 
     body {
       background-color: var(--bg-dark);
       color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem 1rem 5rem 1rem;
       overflow-x: hidden;
+      min-height: 100vh;
+      scroll-behavior: smooth;
     }
 
-    h1 {
-      font-size: 2.2rem;
+    /* BACKGROUND CANVAS FOR GEOMETRIC ANIMATION */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 1.2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(7, 10, 18, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 1000;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 800;
       background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 0.5rem;
-      text-align: center;
     }
 
-    .subtitle {
-      color: var(--text-muted);
-      margin-bottom: 2rem;
-      font-size: 0.95rem;
-      text-align: center;
-    }
-
-    /* CONTROL BUTTONS */
-    .controls {
+    .nav-links {
       display: flex;
-      gap: 1rem;
-      margin-bottom: 3rem;
-      z-index: 10;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--accent-blue);
+      text-shadow: 0 0 10px var(--glow-blue);
+    }
+
+    /* HERO SECTION */
+    .hero-section {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem 2rem;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1.2rem;
+      border-radius: 50px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid var(--accent-blue);
+      color: var(--accent-blue);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 15px var(--glow-blue);
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+      max-width: 900px;
+      background: linear-gradient(135deg, #ffffff 30%, var(--accent-blue) 70%, var(--accent-purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1.2rem;
     }
 
     .btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 0.75rem 1.8rem;
-      border-radius: 8px;
-      cursor: pointer;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
       font-weight: 600;
-      display: flex;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      transition: all 0.3s;
+      gap: 0.6rem;
+      text-decoration: none;
     }
 
     .btn-primary {
-      background: var(--accent-blue);
+      background: linear-gradient(135deg, var(--accent-blue), #0284c7);
       color: #000;
-      border-color: var(--accent-blue);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
     }
 
     .btn-primary:hover {
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.7);
     }
 
-    /* VERTICAL PIPELINE CONTAINER */
-    .pipeline-container {
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      transform: translateY(-2px);
+    }
+
+    /* PROJECT SELECTOR SECTION */
+    .section-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-header h2 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.8rem;
+      margin-bottom: 4rem;
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.8rem;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
-      width: 100%;
-      max-width: 800px;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent-blue);
+      box-shadow: 0 10px 30px rgba(56, 189, 248, 0.15);
+    }
+
+    .project-card.active-project {
+      border-color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.08);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.25);
+    }
+
+    .project-card.active-project::before {
+      opacity: 1;
+    }
+
+    .project-icon {
+      font-size: 2rem;
+      color: var(--accent-blue);
+      margin-bottom: 1rem;
+    }
+
+    .project-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1.2rem;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    /* INTERACTIVE PIPELINE EXECUTION ENGINE */
+    .pipeline-wrapper {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .pipeline-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .pipeline-info h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .pipeline-info p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .pipeline-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* VERTICAL PIPELINE DISPLAY */
+    .vertical-pipeline {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4rem;
+      gap: 3.5rem;
+      max-width: 700px;
+      margin: 0 auto;
     }
 
-    /* VERTICAL CONNECTING TRACK */
-    .vertical-track {
+    .vertical-line-bg {
       position: absolute;
-      top: 60px;
-      bottom: 60px;
+      top: 40px;
+      bottom: 40px;
       left: 50%;
       width: 4px;
-      background: var(--border-color);
+      background: rgba(255, 255, 255, 0.1);
       transform: translateX(-50%);
       z-index: 1;
     }
 
-    .vertical-progress {
+    .vertical-line-progress {
       position: absolute;
-      top: 60px;
+      top: 40px;
       left: 50%;
       width: 4px;
       height: 0%;
       background: linear-gradient(180deg, var(--accent-blue), var(--accent-green));
       transform: translateX(-50%);
       z-index: 2;
+      box-shadow: 0 0 12px var(--accent-blue);
     }
 
-    /* STAGE CARD CONTAINER */
-    .stage-row {
+    .stage-card-item {
       position: relative;
       z-index: 3;
       width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .stage-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--card-border);
       border-radius: 16px;
-      padding: 1.5rem 2rem;
-      width: 100%;
-      max-width: 550px;
+      padding: 1.4rem 1.8rem;
       display: flex;
       align-items: center;
       gap: 1.5rem;
-      position: relative;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      opacity: 0.4;
-      transform: scale(0.95);
-      transition: opacity 0.4s, transform 0.4s, border-color 0.4s;
+      opacity: 0.5;
+      transform: scale(0.96);
+      transition: all 0.4s ease;
     }
 
-    .stage-card.active {
+    .stage-card-item.active-stage {
       opacity: 1;
       transform: scale(1);
       border-color: var(--accent-blue);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.25);
     }
 
-    .stage-card.success {
+    .stage-card-item.success-stage {
+      opacity: 1;
       border-color: var(--accent-green);
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
     }
 
-    /* LOGO HOLDER (DANGLING / FLOATING ANIMATION) */
-    .logo-box {
-      width: 80px;
-      height: 80px;
-      background: #1e293b;
-      border: 1px solid var(--border-color);
+    .stage-icon-box {
+      width: 60px;
+      height: 60px;
       border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       justify-content: center;
       align-items: center;
+      font-size: 1.6rem;
+      color: var(--accent-blue);
       flex-shrink: 0;
-      position: relative;
     }
 
-    .logo-img {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-    }
-
-    /* DANGLING EFFECT CLASS */
-    .dangle {
-      transform-origin: top center;
-      animation: swing 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes swing {
-      0% { transform: rotate(-6deg); }
-      100% { transform: rotate(6deg); }
-    }
-
-    /* STAGE CONTENT */
-    .stage-info {
+    .stage-content {
       flex: 1;
     }
 
-    .stage-info h3 {
-      font-size: 1.1rem;
-      margin-bottom: 0.3rem;
+    .stage-header-row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.3rem;
     }
 
-    .stage-info p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.3;
+    .stage-title {
+      font-size: 1.1rem;
+      font-weight: 700;
     }
 
-    /* STATUS POPUP / TYPING / ARTIFACT CARDS */
-    .status-badge {
+    .stage-badge {
       font-size: 0.75rem;
       padding: 0.2rem 0.6rem;
       border-radius: 20px;
-      background: #1e293b;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       color: var(--text-muted);
-      border: 1px solid var(--border-color);
     }
 
-    /* DEVELOPER STAGE SPECIALS */
-    .dev-avatar-container {
-      position: relative;
+    .stage-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
     }
 
-    .head-buffer {
-      position: absolute;
-      top: -35px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #1e293b;
-      border: 1px solid var(--accent-orange);
-      color: var(--accent-orange);
-      padding: 0.2rem 0.6rem;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      white-space: nowrap;
-      opacity: 0;
+    /* TERMINAL LOG CONSOLE */
+    .terminal-box {
+      margin-top: 4rem;
+      background: #04060a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      overflow: hidden;
+      font-family: 'Fira Code', monospace;
     }
 
-    .dots-loader span {
-      animation: blink 1.4s infinite fill-mode: both;
-    }
-    .dots-loader span:nth-child(2) { animation-delay: .2s; }
-    .dots-loader span:nth-child(3) { animation-delay: .4s; }
-
-    @keyframes blink {
-      0% { opacity: .2; }
-      20% { opacity: 1; }
-      100% { opacity: .2; }
-    }
-
-    /* ARTIFACT GENERATED POPUP */
-    .artifact-popup {
-      position: absolute;
-      right: -130px;
-      top: 50%;
-      transform: translateY(-50%) scale(0.8);
-      background: #1e293b;
-      border: 1px solid var(--accent-green);
-      padding: 0.6rem 0.8rem;
-      border-radius: 8px;
+    .terminal-header {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 0.6rem 1rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      opacity: 0;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .artifact-popup i {
-      color: var(--accent-green);
-      font-size: 1.2rem;
+    .term-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
     }
 
-    .artifact-popup-text h6 {
-      font-size: 0.75rem;
-      color: #fff;
+    .term-red { background: #ef4444; }
+    .term-yellow { background: #f59e0b; }
+    .term-green { background: #10b981; }
+
+    .term-title {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-left: 0.5rem;
     }
 
-    .artifact-popup-text p {
-      font-size: 0.65rem;
-      color: var(--accent-green);
+    .terminal-body {
+      padding: 1rem 1.2rem;
+      height: 140px;
+      overflow-y: auto;
+      font-size: 0.82rem;
+      color: #a7f3d0;
+      line-height: 1.6;
     }
 
-    /* MOVING DOCKER CONTAINER CARGO SHIP */
-    .docker-ship-runner {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      transform: translateX(-50%);
-      width: 45px;
-      height: 45px;
-      background: #0284c7;
-      border: 2px solid var(--accent-blue);
-      border-radius: 8px;
+    .log-line {
+      margin-bottom: 0.3rem;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      font-size: 1.2rem;
-      z-index: 10;
-      opacity: 0;
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+      gap: 0.6rem;
     }
 
-    /* UNLOADING ANIMATION AT AZURE STAGE */
-    .unload-badge {
-      position: absolute;
-      left: -130px;
-      top: 50%;
-      transform: translateY(-50%) scale(0.8);
-      background: #1e293b;
-      border: 1px solid var(--accent-blue);
-      padding: 0.6rem 0.8rem;
-      border-radius: 8px;
+    .log-time {
+      color: var(--text-muted);
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 5rem;
+    }
+
+    /* GSAP SCROLL REVEAL ANIMATIONS */
+    .reveal-on-scroll {
       opacity: 0;
-      font-size: 0.75rem;
-      color: var(--accent-blue);
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 <body>
 
-  <h1>Vertical DevOps Architecture</h1>
-  <p class="subtitle">Live Stage-by-Stage CI/CD Execution & Transit Simulation</p>
+  <!-- GEOMETRIC ANIMATED CANVAS -->
+  <canvas id="bg-canvas"></canvas>
 
-  <div class="controls">
-    <button class="btn btn-primary" onclick="runPipeline()"><i class="fa-solid fa-play"></i> Trigger Pipeline</button>
-    <button class="btn" onclick="resetPipeline()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
-  </div>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <i class="fa-solid fa-cubes-stacked"></i>
+      <span>DevOps Hub</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#hero" class="active">Home</a></li>
+      <li><a href="#projects">Architectures</a></li>
+      <li><a href="#pipeline">Live Execution</a></li>
+    </ul>
+  </nav>
 
-  <div class="pipeline-container">
-    <!-- VERTICAL CONNECTING LINE TRACKS -->
-    <div class="vertical-track"></div>
-    <div class="vertical-progress" id="vertical-progress"></div>
+  <!-- HERO SECTION -->
+  <section class="hero-section" id="hero">
+    <div class="hero-badge reveal-on-scroll">
+      <i class="fa-solid fa-bolt"></i> Interactive DevOps Showcase
+    </div>
+    <h1 class="hero-title reveal-on-scroll">Automated End-to-End Cloud & CI/CD Pipelines</h1>
+    <p class="hero-subtitle reveal-on-scroll">
+      Explore, trigger, and visualize real-time automated delivery pipelines, multi-cloud deployments, and containerized microservices architectures.
+    </p>
+    <div class="hero-buttons reveal-on-scroll">
+      <a href="#pipeline" class="btn btn-primary"><i class="fa-solid fa-play"></i> Trigger Pipeline</a>
+      <a href="#projects" class="btn btn-outline"><i class="fa-solid fa-layer-group"></i> Switch Architectures</a>
+    </div>
+  </section>
 
-    <!-- MOVING DOCKER SHIP RUNNER CARGO -->
-    <div class="docker-ship-runner" id="docker-runner">
-      <i class="fa-solid fa-box"></i>
+  <!-- PROJECT SELECTOR SECTION -->
+  <section class="section-container" id="projects">
+    <div class="section-header reveal-on-scroll">
+      <h2>Select DevOps Architecture</h2>
+      <p>Choose an architecture model below to load its corresponding CI/CD execution pipeline.</p>
     </div>
 
-    <!-- STAGE 1: DEVELOPER AT WORK -->
-    <div class="stage-row">
-      <div class="stage-card" id="stage-0">
-        <div class="dev-avatar-container">
-          <div class="head-buffer" id="dev-buffer">
-            <span>Coding</span>
-            <div class="dots-loader"><span>.</span><span>.</span><span>.</span></div>
-          </div>
-          <div class="logo-box dangle">
-            <!-- Developer Vector Icon -->
-            <img src="https://cdn-icons-png.flaticon.com/512/6840/6840478.png" class="logo-img" alt="Developer">
-          </div>
+    <div class="project-grid">
+      <!-- Project 1 -->
+      <div class="project-card active-project reveal-on-scroll" onclick="selectProject(0)">
+        <div class="project-icon"><i class="fa-brands fa-java"></i></div>
+        <div class="project-title">Java & Maven Cloud App</div>
+        <div class="project-desc">Standard Java Web Service compiled with Maven, containerized with Docker, and deployed to Azure.</div>
+        <div class="project-tags">
+          <span class="tag">Java</span>
+          <span class="tag">Maven</span>
+          <span class="tag">Docker</span>
+          <span class="tag">Azure</span>
         </div>
-        <div class="stage-info">
-          <h3>Developer Environment <span class="status-badge" id="badge-0">Idle</span></h3>
-          <p id="desc-0">Developer modifies code locally. IDE detects file save events.</p>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-card reveal-on-scroll" onclick="selectProject(1)">
+        <div class="project-icon"><i class="fa-solid fa-dharmachakra"></i></div>
+        <div class="project-title">Microservices Kubernetes</div>
+        <div class="project-desc">Spring Boot microservices cluster deployed to Kubernetes via Helm charts and GitOps workflows.</div>
+        <div class="project-tags">
+          <span class="tag">Spring</span>
+          <span class="tag">Kubernetes</span>
+          <span class="tag">Helm</span>
+          <span class="tag">ArgoCD</span>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="project-card reveal-on-scroll" onclick="selectProject(2)">
+        <div class="project-icon"><i class="fa-brands fa-aws"></i></div>
+        <div class="project-title">Multi-Module Enterprise Release</div>
+        <div class="project-desc">Complex multi-module Jenkins build strategy delivering multi-region cloud deployment on AWS.</div>
+        <div class="project-tags">
+          <span class="tag">Jenkins</span>
+          <span class="tag">Multi-Module</span>
+          <span class="tag">Terraform</span>
+          <span class="tag">AWS</span>
         </div>
       </div>
     </div>
 
-    <!-- STAGE 2: GITHUB CHECKOUT & WEBHOOK -->
-    <div class="stage-row">
-      <div class="stage-card" id="stage-1">
-        <div class="logo-box dangle">
-          <!-- Official GitHub Logo PNG/SVG -->
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" class="logo-img" alt="GitHub Logo">
+    <!-- INTERACTIVE PIPELINE EXECUTION ENGINE -->
+    <div class="pipeline-wrapper reveal-on-scroll" id="pipeline">
+      <div class="pipeline-controls">
+        <div class="pipeline-info">
+          <h3 id="current-project-title">Java & Maven Cloud App Pipeline</h3>
+          <p id="current-project-desc">Interactive execution engine for automated deployment</p>
         </div>
-        <div class="stage-info">
-          <h3>GitHub Repository <span class="status-badge" id="badge-1">Pending</span></h3>
-          <p id="desc-1">Code push event detected on 'main' branch. Webhook triggered.</p>
+        <div class="pipeline-actions">
+          <button class="btn btn-primary" onclick="runPipeline()"><i class="fa-solid fa-play"></i> Run Pipeline</button>
+          <button class="btn btn-outline" onclick="resetPipeline()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+        </div>
+      </div>
+
+      <!-- Vertical Stage Cards -->
+      <div class="vertical-pipeline">
+        <div class="vertical-line-bg"></div>
+        <div class="vertical-line-progress" id="pipeline-progress"></div>
+
+        <div id="pipeline-stages-container" style="width: 100%; display: flex; flex-direction: column; gap: 3.5rem;">
+          <!-- Stages rendered dynamically via JavaScript -->
+        </div>
+      </div>
+
+      <!-- Live Log Terminal -->
+      <div class="terminal-box">
+        <div class="terminal-header">
+          <span class="term-dot term-red"></span>
+          <span class="term-dot term-yellow"></span>
+          <span class="term-dot term-green"></span>
+          <span class="term-title">bash — ci-cd-runner.log</span>
+        </div>
+        <div class="terminal-body" id="terminal-body">
+          <div class="log-line"><span class="log-time">[SYSTEM]</span> Ready to trigger build agent pipeline...</div>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- STAGE 3: MAVEN BUILD & ARTIFACT GENERATION -->
-    <div class="stage-row">
-      <div class="stage-card" id="stage-2">
-        <div class="logo-box dangle">
-          <!-- Official Maven Logo PNG/SVG -->
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/52/Apache_Maven_logo.svg" class="logo-img" alt="Maven Logo">
-        </div>
-        <div class="stage-info">
-          <h3>Apache Maven Build <span class="status-badge" id="badge-2">Pending</span></h3>
-          <p id="desc-2">Compiling Java source code, running unit tests, and packaging binary.</p>
-        </div>
-
-        <!-- ARTIFACT GENERATED POPUP -->
-        <div class="artifact-popup" id="artifact-popup">
-          <i class="fa-solid fa-file-zipper"></i>
-          <div class="artifact-popup-text">
-            <h6>app-v1.0.jar</h6>
-            <p><i class="fa-solid fa-check"></i> Artifact Generated</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- STAGE 4: DOCKER CONTAINERIZATION & CARGO SHIP TRANSIT -->
-    <div class="stage-row">
-      <div class="stage-card" id="stage-3">
-        <div class="logo-box dangle">
-          <!-- Official Docker Logo PNG/SVG -->
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" class="logo-img" alt="Docker Logo">
-        </div>
-        <div class="stage-info">
-          <h3>Docker Containerization <span class="status-badge" id="badge-3">Pending</span></h3>
-          <p id="desc-3">Packaging artifact into a lightweight Docker image & pushing to registry.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- STAGE 5: AZURE DEPLOYMENT & UNLOADING -->
-    <div class="stage-row">
-      <div class="stage-card" id="stage-4">
-        <!-- UNLOAD BADGE POPUP -->
-        <div class="unload-badge" id="unload-badge">
-          <i class="fa-solid fa-truck-ramp-box"></i> Container Unloaded
-        </div>
-
-        <div class="logo-box dangle">
-          <!-- Official Azure Logo PNG/SVG -->
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" class="logo-img" alt="Azure Logo">
-        </div>
-        <div class="stage-info">
-          <h3>Azure Cloud Service <span class="status-badge" id="badge-4">Pending</span></h3>
-          <p id="desc-4">Receiving payload, spinning up containers, and running health checks.</p>
-        </div>
-      </div>
-    </div>
-
-  </div>
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 DevOps Architecture Showcase • Hosted live on GitHub Pages</p>
+  </footer>
 
   <script>
-    let timeline;
+    /* ==========================================================================
+       1. DATA CONFIGURATION FOR MULTIPLE PROJECTS
+       ========================================================================== */
+    const projectData = [
+      {
+        id: 0,
+        title: "Java & Maven Cloud Pipeline",
+        desc: "Build, package, containerize, and deploy Java applications to Azure Cloud.",
+        stages: [
+          { icon: "fa-solid fa-code-commit", title: "Developer Workspace", badge: "Idle", desc: "Local code updates committed & pushed to GitHub main branch." },
+          { icon: "fa-brands fa-github", title: "GitHub Webhook", badge: "Pending", desc: "Webhook detects push event and notifies CI/CD pipeline server." },
+          { icon: "fa-solid fa-box-open", title: "Apache Maven Build", badge: "Pending", desc: "Compiles source, executes JUnit tests, generates app-v1.0.jar artifact." },
+          { icon: "fa-brands fa-docker", title: "Docker Registry", badge: "Pending", desc: "Builds Docker image, tags version, and pushes image to Docker Container Registry." },
+          { icon: "fa-brands fa-microsoft", title: "Azure Cloud Deployment", badge: "Pending", desc: "Spins up new container instance on Azure Web App with health checks." }
+        ]
+      },
+      {
+        id: 1,
+        title: "Microservices Kubernetes Pipeline",
+        desc: "Automated GitOps pipeline for Kubernetes microservices using Helm.",
+        stages: [
+          { icon: "fa-solid fa-laptop-code", title: "Feature Commit", badge: "Idle", desc: "Developer updates microservice API endpoint." },
+          { icon: "fa-solid fa-vial", title: "SonarQube & Unit Tests", badge: "Pending", desc: "Code quality checks and security vulnerability scan passed." },
+          { icon: "fa-brands fa-docker", title: "Container Build", badge: "Pending", desc: "Multi-stage Docker build producing lightweight Alpine image." },
+          { icon: "fa-solid fa-dharmachakra", title: "Helm Chart Package", badge: "Pending", desc: "Packaging Kubernetes manifests into updated Helm chart version." },
+          { icon: "fa-solid fa-server", title: "Kubernetes Cluster Live", badge: "Pending", desc: "Rolling restart executed across k8s pods with zero downtime." }
+        ]
+      },
+      {
+        id: 2,
+        title: "Multi-Module Enterprise Release",
+        desc: "Jenkins multibranch build releasing modules across AWS environments.",
+        stages: [
+          { icon: "fa-solid fa-diagram-project", title: "Multi-Module Trigger", badge: "Idle", desc: "Changes detected across Amazon, SKY, and Spring core modules." },
+          { icon: "fa-brands fa-jenkins", title: "Jenkins Parallel Build", badge: "Pending", desc: "Parallel matrix builds triggered for each sub-module." },
+          { icon: "fa-solid fa-cubes", title: "Artifact Repository", badge: "Pending", desc: "Publishing compiled binaries to Nexus/Jfrog Artifactory." },
+          { icon: "fa-solid fa-cloud-arrow-up", title: "AWS CloudFormation", badge: "Pending", desc: "Provisioning AWS ECS cluster tasks via Infrastructure-as-Code." },
+          { icon: "fa-brands fa-aws", title: "AWS Production Live", badge: "Pending", desc: "Application endpoints live across multiple AWS Availability Zones." }
+        ]
+      }
+    ];
+
+    let currentProjectIdx = 0;
+    let activeTimeline = null;
+
+    /* ==========================================================================
+       2. RENDER PIPELINE STAGES & SELECT PROJECT
+       ========================================================================== */
+    function renderProjectStages(idx) {
+      currentProjectIdx = idx;
+      const project = projectData[idx];
+
+      document.getElementById('current-project-title').textContent = project.title;
+      document.getElementById('current-project-desc').textContent = project.desc;
+
+      const container = document.getElementById('pipeline-stages-container');
+      container.innerHTML = '';
+
+      project.stages.forEach((stage, sIdx) => {
+        const stageEl = document.createElement('div');
+        stageEl.className = 'stage-card-item';
+        stageEl.id = `stage-card-${sIdx}`;
+        stageEl.innerHTML = `
+          <div class="stage-icon-box"><i class="${stage.icon}"></i></div>
+          <div class="stage-content">
+            <div class="stage-header-row">
+              <span class="stage-title">${stage.title}</span>
+              <span class="stage-badge" id="badge-${sIdx}">${stage.badge}</span>
+            </div>
+            <p class="stage-desc" id="desc-${sIdx}">${stage.desc}</p>
+          </div>
+        `;
+        container.appendChild(stageEl);
+      });
+
+      resetPipeline();
+    }
+
+    function selectProject(idx) {
+      document.querySelectorAll('.project-card').forEach((card, i) => {
+        card.classList.toggle('active-project', i === idx);
+      });
+      renderProjectStages(idx);
+    }
+
+    /* ==========================================================================
+       3. GSAP PIPELINE ANIMATION EXECUTION
+       ========================================================================== */
+    function logMessage(msg) {
+      const term = document.getElementById('terminal-body');
+      const time = new Date().toLocaleTimeString();
+      term.innerHTML += `<div class="log-line"><span class="log-time">[${time}]</span> ${msg}</div>`;
+      term.scrollTop = term.scrollHeight;
+    }
 
     function runPipeline() {
       resetPipeline();
+      logMessage(`Starting execution for: ${projectData[currentProjectIdx].title}`);
 
-      timeline = gsap.timeline();
+      const project = projectData[currentProjectIdx];
+      activeTimeline = gsap.timeline();
 
-      // STAGE 0: Developer Typing / Buffering
-      timeline.to("#stage-0", { opacity: 1, scale: 1, duration: 0.4 })
-              .to("#dev-buffer", { opacity: 1, y: -5, duration: 0.3 })
-              .to("#badge-0", { textContent: "Typing Code...", borderColor: "#f97316", color: "#f97316", duration: 0.2 })
-              .to("#desc-0", { textContent: "Developer modified code in local workspace.", duration: 0.2 }, "<")
-              
-              // Progress Line to GitHub
-              .to("#vertical-progress", { height: "25%", duration: 1, ease: "power1.inOut" }, "+=0.5")
-              .to("#badge-0", { textContent: "Committed", borderColor: "#22c55e", color: "#22c55e", duration: 0.2 })
-              .to("#dev-buffer", { opacity: 0, duration: 0.2 }, "<");
+      const totalStages = project.stages.length;
 
-      // STAGE 1: GitHub Webhook Trigger
-      timeline.to("#stage-1", { opacity: 1, scale: 1, duration: 0.4 })
-              .to("#badge-1", { textContent: "Webhook Fired!", borderColor: "#38bdf8", color: "#38bdf8", duration: 0.2 })
-              .to("#desc-1", { textContent: "Code changes received! Triggering CI build server...", duration: 0.2 }, "<")
-              
-              // Progress Line to Maven
-              .to("#vertical-progress", { height: "50%", duration: 1, ease: "power1.inOut" }, "+=0.5")
-              .to("#badge-1", { textContent: "Success", borderColor: "#22c55e", color: "#22c55e", duration: 0.2 });
+      project.stages.forEach((stage, i) => {
+        const stageProgressPct = ((i + 1) / totalStages) * 100;
 
-      // STAGE 2: Maven Build & Artifact Creation
-      timeline.to("#stage-2", { opacity: 1, scale: 1, duration: 0.4 })
-              .to("#badge-2", { textContent: "Compiling...", borderColor: "#f97316", color: "#f97316", duration: 0.2 })
-              .to("#desc-2", { textContent: "Executing Maven clean package...", duration: 0.2 }, "<")
-              
-              // Popup Artifact Card
-              .to("#artifact-popup", { opacity: 1, scale: 1, x: 10, duration: 0.5, ease: "back.out(1.7)" })
-              .to("#badge-2", { textContent: "Build Passed", borderColor: "#22c55e", color: "#22c55e", duration: 0.2 })
-              
-              // Progress Line to Docker
-              .to("#vertical-progress", { height: "75%", duration: 1, ease: "power1.inOut" }, "+=0.5");
+        activeTimeline
+          .to(`#stage-card-${i}`, { opacity: 1, scale: 1, duration: 0.4 })
+          .to(`#badge-${i}`, { 
+            textContent: "Running...", 
+            style: "border-color: #38bdf8; color: #38bdf8;", 
+            duration: 0.2,
+            onStart: () => logMessage(`Executing Stage ${i + 1}: ${stage.title}...`)
+          })
+          .to("#pipeline-progress", { height: `${stageProgressPct}%`, duration: 0.8, ease: "power1.inOut" })
+          .to(`#stage-card-${i}`, { className: "stage-card-item success-stage", duration: 0.3 })
+          .to(`#badge-${i}`, { 
+            textContent: "Passed", 
+            style: "border-color: #22c55e; color: #22c55e;", 
+            duration: 0.2,
+            onComplete: () => logMessage(`Stage ${i + 1} (${stage.title}) completed successfully!`)
+          });
+      });
 
-      // STAGE 3: Docker Containerization
-      timeline.to("#stage-3", { opacity: 1, scale: 1, duration: 0.4 })
-              .to("#badge-3", { textContent: "Building Image...", borderColor: "#38bdf8", color: "#38bdf8", duration: 0.2 })
-              
-              // DOCKER SHIP MOVING TRANSIT ANIMATION DOWN TO AZURE
-              .set("#docker-runner", { top: "60%", opacity: 1 })
-              .to("#docker-runner", { top: "85%", duration: 1.5, ease: "power2.inOut" })
-              .to("#badge-3", { textContent: "Image Pushed", borderColor: "#22c55e", color: "#22c55e", duration: 0.2 })
-              
-              // Progress Line to Azure
-              .to("#vertical-progress", { height: "100%", duration: 0.8, ease: "power1.inOut" }, "<");
-
-      // STAGE 4: Azure Unloading & Final Deployment
-      timeline.to("#stage-4", { opacity: 1, scale: 1, duration: 0.4 })
-              .to("#docker-runner", { opacity: 0, scale: 0.5, duration: 0.3 })
-              .to("#unload-badge", { opacity: 1, scale: 1, x: -10, duration: 0.4, ease: "back.out(1.5)" })
-              .to("#stage-4", { className: "stage-card active success", duration: 0.3 })
-              .to("#badge-4", { textContent: "Deployed Live!", borderColor: "#22c55e", color: "#22c55e", duration: 0.2 })
-              .to("#desc-4", { textContent: "Application instance live with zero downtime!", duration: 0.2 }, "<");
+      activeTimeline.call(() => logMessage("🎉 All pipeline stages executed successfully! Application is live."));
     }
 
     function resetPipeline() {
-      if (timeline) timeline.kill();
-      
-      gsap.set("#vertical-progress", { height: "0%" });
-      gsap.set("#dev-buffer, #artifact-popup, #unload-badge, #docker-runner", { opacity: 0 });
-      gsap.set(".stage-card", { opacity: 0.4, scale: 0.95 });
-      
-      document.querySelectorAll('.stage-card').forEach(card => card.classList.remove('active', 'success'));
-      
-      document.getElementById('badge-0').textContent = "Idle";
-      document.getElementById('badge-1').textContent = "Pending";
-      document.getElementById('badge-2').textContent = "Pending";
-      document.getElementById('badge-3').textContent = "Pending";
-      document.getElementById('badge-4').textContent = "Pending";
+      if (activeTimeline) activeTimeline.kill();
 
-      document.querySelectorAll('.status-badge').forEach(b => {
-        b.style.borderColor = "#1f2937";
-        b.style.color = "#9ca3af";
+      gsap.set("#pipeline-progress", { height: "0%" });
+      gsap.set(".stage-card-item", { opacity: 0.5, scale: 0.96 });
+
+      const project = projectData[currentProjectIdx];
+      project.stages.forEach((stage, i) => {
+        const badge = document.getElementById(`badge-${i}`);
+        const card = document.getElementById(`stage-card-${i}`);
+        if (badge) {
+          badge.textContent = "Pending";
+          badge.style.borderColor = "rgba(255, 255, 255, 0.1)";
+          badge.style.color = "#9ca3af";
+        }
+        if (card) {
+          card.className = "stage-card-item";
+        }
+      });
+
+      document.getElementById('terminal-body').innerHTML = '<div class="log-line"><span class="log-time">[SYSTEM]</span> Ready to trigger build agent pipeline...</div>';
+    }
+
+    /* ==========================================================================
+       4. INTERACTIVE GEOMETRIC CANVAS BACKGROUND ANIMATION
+       ========================================================================== */
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let particles = [];
+    let mouse = { x: null, y: null, radius: 150 };
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.x;
+      mouse.y = e.y;
+    });
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles();
+    }
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.vx = (Math.random() - 0.5) * 0.8;
+        this.vy = (Math.random() - 0.5) * 0.8;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+
+      draw() {
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.5)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.floor((canvas.width * canvas.height) / 12000);
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animateCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+
+        for (let j = i; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 110) {
+            ctx.strokeStyle = `rgba(56, 189, 248, ${0.15 - dist / 110})`;
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animateCanvas);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    /* ==========================================================================
+       5. SCROLL REVEAL (GLOW & FADE EFFECTS)
+       ========================================================================== */
+    function handleScrollReveal() {
+      const reveals = document.querySelectorAll('.reveal-on-scroll');
+      reveals.forEach(el => {
+        const top = el.getBoundingClientRect().top;
+        if (top < window.innerHeight - 80) {
+          el.classList.add('visible');
+        }
       });
     }
+
+    window.addEventListener('scroll', handleScrollReveal);
+
+    /* ==========================================================================
+       INITIALIZATION
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      resizeCanvas();
+      animateCanvas();
+      renderProjectStages(0);
+      handleScrollReveal();
+    });
   </script>
 </body>
 </html>
