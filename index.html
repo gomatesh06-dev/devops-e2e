@@ -3,45 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vertical DevOps Architecture & CI/CD Showcase</title>
+  <title>Team Triveni Sangam | DevOps Architecture Showcase</title>
 
-  <!-- GSAP Core -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  
+  <!-- GSAP Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
   <style>
     :root {
-      --bg-dark: #0b0f19;
-      --card-bg: #111827;
-      --accent-blue: #38bdf8;
-      --accent-green: #22c55e;
-      --accent-orange: #f97316;
+      --bg-dark: #070a12;
+      --card-bg: rgba(17, 24, 39, 0.75);
+      --accent-cyan: #38bdf8;
       --accent-purple: #a855f7;
-      --border-color: #1f2937;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
       --text-main: #f3f4f6;
       --text-muted: #9ca3af;
-      --glow-blue: rgba(56, 189, 248, 0.35);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(56, 189, 248, 0.2);
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Inter, system-ui, sans-serif;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
       background-color: var(--bg-dark);
       color: var(--text-main);
-      min-height: 100vh;
       overflow-x: hidden;
-      scroll-behavior: smooth;
+      position: relative;
     }
 
-    /* BACKGROUND CANVAS FOR GEOMETRIC PARTICLES */
+    /* BACKGROUND CANVAS ANIMATION */
     #bg-canvas {
       position: fixed;
       top: 0;
@@ -52,1001 +55,739 @@
       pointer-events: none;
     }
 
-    /* NAVBAR */
-    .navbar {
+    /* --- NAVIGATION BAR --- */
+    nav {
       position: fixed;
       top: 0;
-      left: 0;
       width: 100%;
-      padding: 1.2rem 3rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(11, 15, 25, 0.85);
+      padding: 1rem 4rem;
+      background: rgba(7, 10, 18, 0.85);
       backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid var(--border-color);
       z-index: 1000;
     }
 
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 1.25rem;
+    .nav-logo {
+      font-size: 1.6rem;
       font-weight: 800;
-      background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      letter-spacing: 0.5px;
     }
 
     .nav-links {
       display: flex;
-      gap: 2rem;
       list-style: none;
+      gap: 2rem;
+      align-items: center;
     }
 
     .nav-links a {
-      color: var(--text-muted);
+      color: var(--text-main);
       text-decoration: none;
       font-size: 0.95rem;
       font-weight: 500;
       transition: color 0.3s;
     }
 
-    .nav-links a:hover, .nav-links a.active {
-      color: var(--accent-blue);
-      text-shadow: 0 0 10px var(--glow-blue);
+    .nav-links a:hover {
+      color: var(--accent-cyan);
     }
 
-    /* HERO SECTION */
-    .hero-section {
-      min-height: 80vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 8rem 2rem 2rem 2rem;
+    /* DROPDOWN MENU */
+    .dropdown {
       position: relative;
     }
 
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.4rem 1.2rem;
-      border-radius: 50px;
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: rgba(17, 24, 39, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      list-style: none;
+      width: 240px;
+      padding: 0.5rem 0;
+      display: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+
+    .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-menu li a {
+      padding: 0.75rem 1.2rem;
+      display: block;
+      font-size: 0.88rem;
+    }
+
+    .dropdown-menu li a:hover {
       background: rgba(56, 189, 248, 0.1);
-      border: 1px solid var(--accent-blue);
-      color: var(--accent-blue);
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 0 15px var(--glow-blue);
+      color: var(--accent-cyan);
+    }
+
+    /* --- SECTIONS COMMON --- */
+    section {
+      min-height: 100vh;
+      padding: 7rem 4rem 4rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+      background: linear-gradient(90deg, #fff, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 3.5rem;
+      font-size: 1rem;
+    }
+
+    /* --- HOME SECTION --- */
+    #home {
+      text-align: center;
+      align-items: center;
+      padding-top: 8rem;
     }
 
     .hero-title {
-      font-size: 3.2rem;
+      font-size: 3.8rem;
       font-weight: 800;
-      line-height: 1.15;
       margin-bottom: 1rem;
-      max-width: 900px;
-      background: linear-gradient(135deg, #ffffff 30%, var(--accent-blue) 70%, var(--accent-purple) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
     }
 
-    .hero-subtitle {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      max-width: 650px;
-      margin-bottom: 2.5rem;
-      line-height: 1.6;
-    }
-
-    .hero-buttons {
+    /* DANGLING / PENDULUM MEMBERS CONTAINER */
+    .dangling-container {
       display: flex;
-      gap: 1.2rem;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-top: 4rem;
+      flex-wrap: wrap;
     }
 
-    .btn {
+    .dangling-card {
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 0.75rem 1.8rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.3s;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: var(--accent-blue);
-      color: #000;
-      border-color: var(--accent-blue);
-    }
-
-    .btn-primary:hover {
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-      transform: translateY(-2px);
-    }
-
-    /* SECTION CONTAINERS */
-    .section-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 4rem 2rem;
-    }
-
-    .section-header {
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      width: 190px;
       text-align: center;
-      margin-bottom: 3.5rem;
-    }
-
-    .section-header h2 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-      background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .section-header p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
-    /* PROJECT SELECTOR CARDS */
-    .project-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 4rem;
-    }
-
-    .project-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 1.8rem;
-      cursor: pointer;
-      transition: all 0.4s ease;
+      transform-origin: top center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
       position: relative;
     }
 
-    .project-card:hover, .project-card.active-project {
-      border-color: var(--accent-blue);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
-      transform: translateY(-4px);
+    .dangling-card::before {
+      content: '';
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      width: 2px;
+      height: 24px;
+      background: var(--accent-cyan);
+      transform: translateX(-50%);
     }
 
-    .project-card.active-project {
-      background: rgba(56, 189, 248, 0.08);
+    .dangling-card::after {
+      content: '';
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      transform: translateX(-50%);
     }
 
-    .project-icon {
+    .member-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .member-role {
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 0.4rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* --- ABOUT SECTION --- */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .about-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      padding: 2rem;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .about-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 10px 30px rgba(56, 189, 248, 0.15);
+    }
+
+    .about-card i {
       font-size: 2rem;
-      color: var(--accent-blue);
       margin-bottom: 1rem;
     }
 
-    .project-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .project-desc {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    /* CONTROL BUTTONS AREA FOR PIPELINE */
-    .controls {
+    /* --- PROJECTS / PIPELINE ANIMATION SECTION --- */
+    .project-selector {
       display: flex;
       justify-content: center;
       gap: 1rem;
-      margin-bottom: 3rem;
-      z-index: 10;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
     }
 
-    /* VERTICAL PIPELINE CONTAINER */
-    .pipeline-container {
+    .proj-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .proj-btn.active, .proj-btn:hover {
+      background: var(--accent-cyan);
+      color: #000;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    }
+
+    /* PIPELINE CANVAS CONTAINER */
+    .pipeline-wrapper {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 4rem 2rem;
       position: relative;
-      width: 100%;
-      max-width: 800px;
+      overflow: hidden;
+      min-height: 480px;
+      display: flex;
+      align-items: center;
+      max-width: 1300px;
       margin: 0 auto;
+      width: 100%;
+    }
+
+    /* DEVELOPER SECTION */
+    .developer-stage {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4rem;
+      justify-content: center;
+      width: 140px;
+      position: relative;
+      z-index: 5;
     }
 
-    /* VERTICAL CONNECTING TRACK */
-    .vertical-track {
+    .dev-svg {
+      width: 75px;
+      height: 75px;
+    }
+
+    /* THINKING BUFFER / WEBHook SIGNAL */
+    .thought-bubble {
       position: absolute;
-      top: 60px;
-      bottom: 60px;
-      left: 50%;
-      width: 4px;
+      top: -45px;
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      opacity: 0;
+      transform: translateY(5px);
+    }
+
+    .webhook-signal {
+      position: absolute;
+      top: 50%;
+      left: 130px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 10px var(--accent-green);
+      opacity: 0;
+      z-index: 10;
+    }
+
+    /* HORIZONTAL LINE & NODES */
+    .pipeline-flow {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      margin-left: 2rem;
+    }
+
+    .pipeline-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 4px;
       background: var(--border-color);
-      transform: translateX(-50%);
+      transform: translateY(-50%);
       z-index: 1;
     }
 
-    .vertical-progress {
+    .pipeline-progress {
       position: absolute;
-      top: 60px;
-      left: 50%;
-      width: 4px;
-      height: 0%;
-      background: linear-gradient(180deg, var(--accent-blue), var(--accent-green));
-      transform: translateX(-50%);
+      top: 50%;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-green));
+      transform: translateY(-50%);
       z-index: 2;
     }
 
-    /* STAGE CARD CONTAINER */
-    .stage-row {
+    .pipeline-nodes {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
       position: relative;
       z-index: 3;
-      width: 100%;
+    }
+
+    .node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      opacity: 0.25;
+      transform: scale(0.85);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+
+    .node.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .node-icon-wrap {
+      position: relative;
+    }
+
+    .node-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: #0f172a;
+      border: 2px solid var(--accent-cyan);
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-
-    .stage-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 1.5rem 2rem;
-      width: 100%;
-      max-width: 550px;
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      position: relative;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      opacity: 0.4;
-      transform: scale(0.95);
-      transition: opacity 0.4s, transform 0.4s, border-color 0.4s;
-    }
-
-    .stage-card.active {
-      opacity: 1;
-      transform: scale(1);
-      border-color: var(--accent-blue);
+      font-size: 1.8rem;
+      color: var(--accent-cyan);
       box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
     }
 
-    .stage-card.success {
-      border-color: var(--accent-green);
-    }
-
-    /* LOGO HOLDER (DANGLING / FLOATING ANIMATION) */
-    .logo-box {
-      width: 80px;
-      height: 80px;
-      background: #1e293b;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-shrink: 0;
-      position: relative;
-    }
-
-    .logo-img {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-    }
-
-    /* DANGLING EFFECT CLASS */
-    .dangle {
-      transform-origin: top center;
-      animation: swing 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes swing {
-      0% { transform: rotate(-6deg); }
-      100% { transform: rotate(6deg); }
-    }
-
-    /* STAGE CONTENT */
-    .stage-info {
-      flex: 1;
-    }
-
-    .stage-info h3 {
-      font-size: 1.1rem;
-      margin-bottom: 0.3rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .stage-info p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.3;
-    }
-
-    /* STATUS BADGE */
-    .status-badge {
-      font-size: 0.75rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 20px;
-      background: #1e293b;
-      color: var(--text-muted);
-      border: 1px solid var(--border-color);
-    }
-
-    /* DEVELOPER STAGE SPECIALS */
-    .dev-avatar-container {
-      position: relative;
-    }
-
-    .head-buffer {
+    .version-badge {
       position: absolute;
-      top: -35px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #1e293b;
-      border: 1px solid var(--accent-orange);
-      color: var(--accent-orange);
-      padding: 0.2rem 0.6rem;
-      border-radius: 12px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      white-space: nowrap;
-      opacity: 0;
-    }
-
-    .dots-loader span {
-      animation: blink 1.4s infinite fill-mode: both;
-    }
-    .dots-loader span:nth-child(2) { animation-delay: .2s; }
-    .dots-loader span:nth-child(3) { animation-delay: .4s; }
-
-    @keyframes blink {
-      0% { opacity: .2; }
-      20% { opacity: 1; }
-      100% { opacity: .2; }
-    }
-
-    /* ARTIFACT GENERATED POPUP */
-    .artifact-popup {
-      position: absolute;
-      right: -130px;
-      top: 50%;
-      transform: translateY(-50%) scale(0.8);
-      background: #1e293b;
-      border: 1px solid var(--accent-green);
-      padding: 0.6rem 0.8rem;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      opacity: 0;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    }
-
-    .artifact-popup i {
-      color: var(--accent-green);
-      font-size: 1.2rem;
-    }
-
-    .artifact-popup-text h6 {
-      font-size: 0.75rem;
+      bottom: -6px;
+      right: -8px;
+      background: var(--accent-purple);
       color: #fff;
-    }
-
-    .artifact-popup-text p {
       font-size: 0.65rem;
-      color: var(--accent-green);
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 10px;
+      border: 1px solid var(--bg-dark);
     }
 
-    /* MOVING DOCKER CONTAINER CARGO SHIP RUNNER */
-    .docker-ship-runner {
+    /* TOOL ATTACHED POPUP ACTION */
+    .node-popup {
       position: absolute;
+      top: -125px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      width: 180px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s, transform 0.4s;
+      pointer-events: none;
+    }
+
+    .node-popup::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
       left: 50%;
-      top: 0;
       transform: translateX(-50%);
-      width: 45px;
-      height: 45px;
-      background: #0284c7;
-      border: 2px solid var(--accent-blue);
-      border-radius: 8px;
+      border-width: 8px 8px 0;
+      border-style: solid;
+      border-color: rgba(15, 23, 42, 0.95) transparent;
+    }
+
+    .node.active .node-popup {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .node-popup h5 {
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+      margin-bottom: 0.3rem;
+    }
+
+    .node-popup p {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.2;
+    }
+
+    .node-label {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .controls {
       display: flex;
       justify-content: center;
-      align-items: center;
-      color: #fff;
-      font-size: 1.2rem;
-      z-index: 10;
-      opacity: 0;
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
-    }
-
-    /* UNLOADING ANIMATION AT AZURE STAGE */
-    .unload-badge {
-      position: absolute;
-      left: -130px;
-      top: 50%;
-      transform: translateY(-50%) scale(0.8);
-      background: #1e293b;
-      border: 1px solid var(--accent-blue);
-      padding: 0.6rem 0.8rem;
-      border-radius: 8px;
-      opacity: 0;
-      font-size: 0.75rem;
-      color: var(--accent-blue);
-    }
-
-    /* TERMINAL CONSOLE */
-    .terminal-box {
-      margin-top: 4rem;
-      background: #04060a;
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      overflow: hidden;
-      font-family: 'Fira Code', monospace;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .terminal-header {
-      background: rgba(255, 255, 255, 0.03);
-      padding: 0.6rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .term-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .term-red { background: #ef4444; }
-    .term-yellow { background: #f59e0b; }
-    .term-green { background: #10b981; }
-
-    .term-title {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-left: 0.5rem;
-    }
-
-    .terminal-body {
-      padding: 1rem 1.2rem;
-      height: 130px;
-      overflow-y: auto;
-      font-size: 0.82rem;
-      color: #a7f3d0;
-      line-height: 1.6;
-    }
-
-    /* TEAM SECTION */
-    .team-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 2rem;
+      gap: 1.5rem;
       margin-top: 2rem;
     }
 
-    .team-card {
+    /* --- VISION SECTION --- */
+    .vision-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .vision-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 2rem;
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
-
-    .team-card:hover {
-      transform: translateY(-50px);
-      border-color: var(--accent-blue);
-    }
-
-    .team-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: #1e293b;
-      margin: 0 auto 1rem auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      color: var(--accent-blue);
-      border: 2px solid var(--border-color);
-    }
-
-    .team-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .team-role { font-size: 0.85rem; color: var(--accent-blue); margin-bottom: 0.8rem; }
-    .team-bio { font-size: 0.8rem; color: var(--text-muted); }
-
-    /* FOOTER */
-    footer {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
       padding: 2.5rem 2rem;
-      text-align: center;
+      border-radius: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vision-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .vision-card.c1::before { background: var(--accent-cyan); }
+    .vision-card.c2::before { background: var(--accent-purple); }
+    .vision-card.c3::before { background: var(--accent-green); }
+
+    .vision-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .vision-card p {
+      font-size: 0.92rem;
       color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-top: 5rem;
+      line-height: 1.6;
     }
 
-    /* SCROLL ANIMATION CLASS */
-    .reveal-on-scroll {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.8s ease;
-    }
-
-    .reveal-on-scroll.visible {
-      opacity: 1;
-      transform: translateY(0);
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 992px) {
+      nav { padding: 1rem 2rem; }
+      section { padding: 6rem 2rem 3rem 2rem; }
+      .pipeline-wrapper {
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 1rem;
+      }
+      .pipeline-flow {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 4rem;
+      }
+      .webhook-signal { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- GEOMETRIC PARTICLES CANVAS -->
+  <!-- DYNAMIC MOVING BACKGROUND CANVAS -->
   <canvas id="bg-canvas"></canvas>
 
   <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="nav-brand">
-      <i class="fa-solid fa-cubes-stacked"></i>
-      <span>DevOps Hub</span>
-    </div>
+  <nav>
+    <div class="nav-logo">Team Triveni Sangam</div>
     <ul class="nav-links">
-      <li><a href="#hero" class="active">Home</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#pipeline-section">Architecture</a></li>
-      <li><a href="#team">Team</a></li>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li class="dropdown">
+        <a href="#projects">Projects <i class="fa-solid fa-chevron-down" style="font-size:0.7rem"></i></a>
+        <ul class="dropdown-menu">
+          <li><a href="#projects" onclick="switchProject('meddy')">Meddy Chatbot</a></li>
+          <li><a href="#projects" onclick="switchProject('naukri')">Naukri Automation</a></li>
+          <li><a href="#projects" onclick="switchProject('tumor')">Brain Tumor ML</a></li>
+          <li><a href="#projects" onclick="switchProject('snowman')">Snowman Monolith</a></li>
+          <li><a href="#projects" onclick="switchProject('chunkhound')">ChunkHound AI</a></li>
+        </ul>
+      </li>
+      <li><a href="#vision">Vision</a></li>
     </ul>
   </nav>
 
-  <!-- HERO SECTION -->
-  <section class="hero-section" id="hero">
-    <div class="hero-badge reveal-on-scroll">
-      <i class="fa-solid fa-bolt"></i> Interactive DevOps Architecture
-    </div>
-    <h1 class="hero-title reveal-on-scroll">Vertical DevOps CI/CD Pipeline Showcase</h1>
-    <p class="hero-subtitle reveal-on-scroll">
-      Experience live stage-by-stage CI/CD execution and transit simulation with animated workflows from development to cloud hosting.
-    </p>
-    <div class="hero-buttons reveal-on-scroll">
-      <a href="#pipeline-section" class="btn btn-primary"><i class="fa-solid fa-play"></i> Trigger Pipeline</a>
-      <a href="#projects" class="btn"><i class="fa-solid fa-layer-group"></i> Explore Projects</a>
-    </div>
-  </section>
+  <!-- HOME SECTION -->
+  <section id="home">
+    <h1 class="hero-title">DevOps Infrastructure<br>& Automation Showcase</h1>
+    <p class="section-subtitle">Multi-Project Enterprise CI/CD Infrastructure Pipeline Architecture</p>
 
-  <!-- PROJECT SELECTOR SECTION -->
-  <section class="section-container" id="projects">
-    <div class="section-header reveal-on-scroll">
-      <h2>Architectural Modules</h2>
-      <p>Select a project configuration to load its specific deployment flow.</p>
-    </div>
-
-    <div class="project-grid">
-      <div class="project-card active-project reveal-on-scroll" onclick="selectProject(0)">
-        <div class="project-icon"><i class="fa-brands fa-java"></i></div>
-        <div class="project-title">Java & Maven Pipeline</div>
-        <div class="project-desc">Standard Java application built with Maven, dockerized, and deployed to Azure Cloud services.</div>
+    <!-- SWINGING / DANGLING CARDS FOR TEAM MEMBERS -->
+    <div class="dangling-container">
+      <div class="dangling-card">
+        <div class="member-name">Deepa</div>
+        <div class="member-role">Product Owner</div>
       </div>
-
-      <div class="project-card reveal-on-scroll" onclick="selectProject(1)">
-        <div class="project-icon"><i class="fa-solid fa-dharmachakra"></i></div>
-        <div class="project-title">Microservices Kubernetes</div>
-        <div class="project-desc">Containerized Spring Boot microservices deployed using Helm charts and Kubernetes manifests.</div>
+      <div class="dangling-card">
+        <div class="member-name">Vikas M</div>
+        <div class="member-role">Scrum Master</div>
       </div>
-
-      <div class="project-card reveal-on-scroll" onclick="selectProject(2)">
-        <div class="project-icon"><i class="fa-brands fa-aws"></i></div>
-        <div class="project-title">AWS Enterprise Multibranch</div>
-        <div class="project-desc">Multi-module Jenkins build strategy delivering multi-region cloud deployment on AWS.</div>
+      <div class="dangling-card">
+        <div class="member-name">Gomatesh</div>
+        <div class="member-role">DevOps Engineer</div>
+      </div>
+      <div class="dangling-card">
+        <div class="member-name">Suvarna</div>
+        <div class="member-role">DevOps Engineer</div>
+      </div>
+      <div class="dangling-card">
+        <div class="member-name">Gousia</div>
+        <div class="member-role">DevOps Engineer</div>
       </div>
     </div>
   </section>
 
-  <!-- ANIMATED VERTICAL PIPELINE SECTION -->
-  <section class="section-container" id="pipeline-section">
-    <div class="section-header reveal-on-scroll">
-      <h1 style="font-size: 2.2rem; margin-bottom: 0.5rem; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Vertical DevOps Architecture</h1>
-      <p class="subtitle">Live Stage-by-Stage CI/CD Execution & Transit Simulation</p>
-    </div>
-
-    <!-- CONTROL BUTTONS -->
-    <div class="controls reveal-on-scroll">
-      <button class="btn btn-primary" onclick="runPipeline()"><i class="fa-solid fa-play"></i> Trigger Pipeline</button>
-      <button class="btn" onclick="resetPipeline()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
-    </div>
-
-    <!-- PIPELINE CONTAINER -->
-    <div class="pipeline-container">
-      <div class="vertical-track"></div>
-      <div class="vertical-progress" id="vertical-progress"></div>
-
-      <!-- MOVING DOCKER SHIP RUNNER CARGO -->
-      <div class="docker-ship-runner" id="docker-runner">
-        <i class="fa-solid fa-box"></i>
-      </div>
-
-      <!-- STAGE 1: DEVELOPER AT WORK -->
-      <div class="stage-row">
-        <div class="stage-card" id="stage-0">
-          <div class="dev-avatar-container">
-            <div class="head-buffer" id="dev-buffer">
-              <span>Coding</span>
-              <div class="dots-loader"><span>.</span><span>.</span><span>.</span></div>
-            </div>
-            <div class="logo-box dangle">
-              <img src="https://cdn-icons-png.flaticon.com/512/6840/6840478.png" class="logo-img" alt="Developer">
-            </div>
-          </div>
-          <div class="stage-info">
-            <h3><span id="title-0">Developer Environment</span> <span class="status-badge" id="badge-0">Idle</span></h3>
-            <p id="desc-0">Developer modifies code locally. IDE detects file save events.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- STAGE 2: GITHUB CHECKOUT & WEBHOOK -->
-      <div class="stage-row">
-        <div class="stage-card" id="stage-1">
-          <div class="logo-box dangle">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" class="logo-img" id="img-1" alt="GitHub Logo">
-          </div>
-          <div class="stage-info">
-            <h3><span id="title-1">GitHub Repository</span> <span class="status-badge" id="badge-1">Pending</span></h3>
-            <p id="desc-1">Code push event detected on 'main' branch. Webhook triggered.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- STAGE 3: MAVEN BUILD & ARTIFACT GENERATION -->
-      <div class="stage-row">
-        <div class="stage-card" id="stage-2">
-          <div class="logo-box dangle">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/52/Apache_Maven_logo.svg" class="logo-img" id="img-2" alt="Maven Logo">
-          </div>
-          <div class="stage-info">
-            <h3><span id="title-2">Apache Maven Build</span> <span class="status-badge" id="badge-2">Pending</span></h3>
-            <p id="desc-2">Compiling Java source code, running unit tests, and packaging binary.</p>
-          </div>
-
-          <!-- ARTIFACT GENERATED POPUP -->
-          <div class="artifact-popup" id="artifact-popup">
-            <i class="fa-solid fa-file-zipper"></i>
-            <div class="artifact-popup-text">
-              <h6 id="artifact-title">app-v1.0.jar</h6>
-              <p><i class="fa-solid fa-check"></i> Artifact Generated</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- STAGE 4: DOCKER CONTAINERIZATION & CARGO SHIP TRANSIT -->
-      <div class="stage-row">
-        <div class="stage-card" id="stage-3">
-          <div class="logo-box dangle">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" class="logo-img" id="img-3" alt="Docker Logo">
-          </div>
-          <div class="stage-info">
-            <h3><span id="title-3">Docker Containerization</span> <span class="status-badge" id="badge-3">Pending</span></h3>
-            <p id="desc-3">Packaging artifact into a lightweight Docker image & pushing to registry.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- STAGE 5: AZURE DEPLOYMENT & UNLOADING -->
-      <div class="stage-row">
-        <div class="stage-card" id="stage-4">
-          <!-- UNLOAD BADGE POPUP -->
-          <div class="unload-badge" id="unload-badge">
-            <i class="fa-solid fa-truck-ramp-box"></i> Container Unloaded
-          </div>
-
-          <div class="logo-box dangle">
-            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" class="logo-img" id="img-4" alt="Azure Logo">
-          </div>
-          <div class="stage-info">
-            <h3><span id="title-4">Azure Cloud Service</span> <span class="status-badge" id="badge-4">Pending</span></h3>
-            <p id="desc-4">Receiving payload, spinning up containers, and running health checks.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TERMINAL CONSOLE LOGS -->
-    <div class="terminal-box reveal-on-scroll">
-      <div class="terminal-header">
-        <span class="term-dot term-red"></span>
-        <span class="term-dot term-yellow"></span>
-        <span class="term-dot term-green"></span>
-        <span class="term-title">bash — ci-cd-runner.log</span>
-      </div>
-      <div class="terminal-body" id="terminal-body">
-        <div class="log-line">[SYSTEM] Pipeline initialized and ready for execution...</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TEAM MEMBERS SECTION -->
-  <section class="section-container" id="team">
-    <div class="section-header reveal-on-scroll">
-      <h2>Meet Our Team</h2>
-      <p>Engineers behind the automated infrastructure & pipeline systems.</p>
-    </div>
+  <!-- ABOUT SECTION -->
+  <section id="about">
+    <h2 class="section-title">Team Structure</h2>
+    <p class="section-subtitle">Roles & Engineering Ownership Across Team Triveni Sangam</p>
 
     <div class="team-grid">
-      <div class="team-card reveal-on-scroll">
-        <div class="team-avatar"><i class="fa-solid fa-user-gear"></i></div>
-        <div class="team-name">Gomatesh</div>
-        <div class="team-role">DevOps & Cloud Engineer</div>
-        <div class="team-bio">Specializing in CI/CD pipeline automation, Docker containerization, Linux systems, and Cloud architecture.</div>
+      <div class="about-card">
+        <i class="fa-solid fa-user-gear" style="color:var(--accent-cyan)"></i>
+        <h3>Deepa</h3>
+        <p class="member-role">Product Owner & Azure Infra Lead</p>
+        <p style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
+          Manages multi-branch repository strategies, Azure App Service provisioning, and target environment release governance.
+        </p>
       </div>
-
-      <div class="team-card reveal-on-scroll">
-        <div class="team-avatar"><i class="fa-solid fa-code"></i></div>
-        <div class="team-name">DevOps Team</div>
-        <div class="team-role">Infrastructure Engineering</div>
-        <div class="team-bio">Managing Kubernetes clusters, automated deployment pipelines, and zero-downtime infrastructure.</div>
+      <div class="about-card">
+        <i class="fa-solid fa-list-check" style="color:var(--accent-purple)"></i>
+        <h3>Vikas M</h3>
+        <p class="member-role">Scrum Master & Container Lead</p>
+        <p style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
+          Drives sprint cadence, Docker container optimization, and multi-stage image registry security controls.
+        </p>
+      </div>
+      <div class="about-card">
+        <i class="fa-solid fa-code-branch" style="color:var(--accent-green)"></i>
+        <h3>Gomatesh</h3>
+        <p class="member-role">DevOps Engineer & Pipeline Architect</p>
+        <p style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
+          Specializes in Jenkins CI/CD automation, declarative pipelines, shell scripting, and webhook orchestration.
+        </p>
+      </div>
+      <div class="about-card">
+        <i class="fa-solid fa-cloud" style="color:var(--accent-cyan)"></i>
+        <h3>Suvarna</h3>
+        <p class="member-role">DevOps Engineer & IaC Specialist</p>
+        <p style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
+          Focuses on Terraform infrastructure provisioning, Ansible configuration management, and Azure Cloud setups.
+        </p>
+      </div>
+      <div class="about-card">
+        <i class="fa-solid fa-chart-line" style="color:var(--accent-purple)"></i>
+        <h3>Gousia</h3>
+        <p class="member-role">DevOps Engineer & Observability Lead</p>
+        <p style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
+          Architects Azure Monitor dashboards, central Log Analytics Workspaces, and deployment telemetry dashboards.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>© 2026 DevOps Architecture Showcase • Hosted live on GitHub Pages</p>
-  </footer>
+  <!-- PROJECTS / PIPELINE ANIMATION SECTION -->
+  <section id="projects">
+    <h2 class="section-title">Animated Pipeline Architecture</h2>
+    <p class="section-subtitle">Select a project to trigger the automated webhook and CI/CD workflow</p>
+
+    <!-- PROJECT SELECTOR BUTTONS -->
+    <div class="project-selector">
+      <button class="proj-btn active" id="btn-meddy" onclick="switchProject('meddy')">Meddy Chatbot</button>
+      <button class="proj-btn" id="btn-naukri" onclick="switchProject('naukri')">Naukri Automation</button>
+      <button class="proj-btn" id="btn-tumor" onclick="switchProject('tumor')">Brain Tumor ML</button>
+      <button class="proj-btn" id="btn-snowman" onclick="switchProject('snowman')">Snowman Monolith</button>
+      <button class="proj-btn" id="btn-chunkhound" onclick="switchProject('chunkhound')">ChunkHound AI</button>
+    </div>
+
+    <!-- MAIN PIPELINE STAGE -->
+    <div class="pipeline-wrapper">
+      <!-- DEVELOPER AT COMPUTER STAGE -->
+      <div class="developer-stage">
+        <div class="thought-bubble" id="dev-thought">git push...</div>
+        <!-- Animated Developer Vector SVG -->
+        <svg class="dev-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M32 12C25.3726 12 20 17.3726 20 24C20 27.65 21.63 30.92 24.2 33.11C16.8 35.8 11.5 42.8 11 51H53C52.5 42.8 47.2 35.8 39.8 33.11C42.37 30.92 44 27.65 44 24C44 17.3726 38.6274 12 32 12Z" fill="#38bdf8" opacity="0.8"/>
+          <rect x="18" y="46" width="28" height="14" rx="2" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+          <line x1="14" y1="60" x2="50" y2="60" stroke="#a855f7" stroke-width="2"/>
+        </svg>
+        <span style="font-size:0.8rem; font-weight:bold; margin-top:0.5rem; color:var(--text-muted);">Developer</span>
+      </div>
+
+      <!-- ANIMATED WEBHook SIGNAL -->
+      <div class="webhook-signal" id="webhook-dot"></div>
+
+      <!-- HORIZONTAL FLOW -->
+      <div class="pipeline-flow">
+        <div class="pipeline-line"></div>
+        <div class="pipeline-progress" id="progress-bar"></div>
+
+        <div class="pipeline-nodes" id="pipeline-nodes">
+          <!-- Dynamic Nodes Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+      <button class="proj-btn" onclick="runSimulation()"><i class="fa-solid fa-play"></i> Run Webhook Pipeline</button>
+      <button class="proj-btn" onclick="resetSimulation()"><i class="fa-solid fa-rotate-left"></i> Reset Flow</button>
+    </div>
+  </section>
+
+  <!-- VISION SECTION -->
+  <section id="vision">
+    <h2 class="section-title">Our Vision</h2>
+    <p class="section-subtitle">The Strategic Roadmap for Team Triveni Sangam</p>
+
+    <div class="vision-cards">
+      <div class="vision-card c1">
+        <h3 style="color:var(--accent-cyan);">What We Are Doing</h3>
+        <p>
+          Standardizing CI/CD pipelines, containerizing multi-tier applications, and leveraging Infrastructure-as-Code (Terraform) across hybrid cloud environments to guarantee reproducible builds.
+        </p>
+      </div>
+      <div class="vision-card c2">
+        <h3 style="color:var(--accent-purple);">What We Want to Achieve</h3>
+        <p>
+          Achieving zero-downtime deployments, full automated telemetry coverage with centralized logging, automated rollback workflows, and reducing deployment cycle times to under 3 minutes.
+        </p>
+      </div>
+      <div class="vision-card c3">
+        <h3 style="color:var(--accent-green);">Future Roadmap</h3>
+        <p>
+          Expanding into MLOps automation pipelines, GitOps continuous delivery using ArgoCD, serverless container scaling via Azure Container Apps, and automated DevSecOps vulnerability scanning.
+        </p>
+      </div>
+    </div>
+  </section>
 
   <script>
-    /* ==========================================================================
-       1. MULTI-PROJECT DATA DEFINITIONS
-       ========================================================================== */
-    const projects = [
-      {
-        titles: ["Developer Environment", "GitHub Repository", "Apache Maven Build", "Docker Containerization", "Azure Cloud Service"],
-        descs: [
-          "Developer modifies code locally. IDE detects file save events.",
-          "Code push event detected on 'main' branch. Webhook triggered.",
-          "Compiling Java source code, running unit tests, and packaging binary.",
-          "Packaging artifact into a lightweight Docker image & pushing to registry.",
-          "Receiving payload, spinning up containers, and running health checks."
-        ],
-        imgs: [
-          "https://cdn-icons-png.flaticon.com/512/6840/6840478.png",
-          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
-          "https://upload.wikimedia.org/wikipedia/commons/5/52/Apache_Maven_logo.svg",
-          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
-          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg"
-        ],
-        artifact: "app-v1.0.jar"
-      },
-      {
-        titles: ["Feature Branch Commit", "SonarQube Scan", "Gradle Packaging", "Kubernetes Registry", "K8s Pod Cluster"],
-        descs: [
-          "Developer commits feature updates to repository.",
-          "Static code analysis & security vulnerability scan passed.",
-          "Executing Gradle wrapper build & compiling microservice binary.",
-          "Building container image and pushing to Helm chart repository.",
-          "Rolling update deployed across Kubernetes cluster pods."
-        ],
-        imgs: [
-          "https://cdn-icons-png.flaticon.com/512/6840/6840478.png",
-          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sonarqube/sonarqube-original.svg",
-          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gradle/gradle-original.svg",
-          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg",
-          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-workloads.svg"
-        ],
-        artifact: "service-v2.1.war"
-      },
-      {
-        titles: ["Multi-Module Trigger", "Jenkins Agent", "Terraform Plan", "AWS ECR Registry", "AWS ECS Production"],
-        descs: [
-          "Code change triggers Jenkins multibranch pipeline build.",
-          "Jenkins worker node provisions isolated build workspace.",
-          "Terraform generates infrastructure execution plan.",
-          "Docker image uploaded to AWS Elastic Container Registry.",
-          "AWS ECS updates task definitions across multi-region clusters."
-        ],
-        imgs: [
-          "https://cdn-icons-png.flaticon.com/512/6840/6840478.png",
-          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg",
-          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg",
-          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg",
-          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-line-wordmark.svg"
-        ],
-        artifact: "release-v3.0.zip"
-      }
-    ];
-
-    let activeProjectIdx = 0;
-    let timeline;
-
-    function selectProject(idx) {
-      activeProjectIdx = idx;
-      document.querySelectorAll('.project-card').forEach((card, i) => {
-        card.classList.toggle('active-project', i === idx);
-      });
-
-      const p = projects[idx];
-      for (let i = 0; i < 5; i++) {
-        document.getElementById(`title-${i}`).textContent = p.titles[i];
-        document.getElementById(`desc-${i}`).textContent = p.descs[i];
-        if (i > 0) document.getElementById(`img-${i}`).src = p.imgs[i];
-      }
-      document.getElementById('artifact-title').textContent = p.artifact;
-      resetPipeline();
-    }
-
-    function logTerminal(text) {
-      const term = document.getElementById('terminal-body');
-      const time = new Date().toLocaleTimeString();
-      term.innerHTML += `<div class="log-line"><span style="color:#9ca3af;">[${time}]</span> ${text}</div>`;
-      term.scrollTop = term.scrollHeight;
-    }
-
-    /* ==========================================================================
-       2. ANIMATION TIMELINE ENGINE
-       ========================================================================== */
-    function runPipeline() {
-      resetPipeline();
-      logTerminal(`Pipeline execution started for Module ${activeProjectIdx + 1}...`);
-
-      timeline = gsap.timeline();
-
-      // STAGE 0: Developer Workspace
-      timeline.to("#stage-0", { opacity: 1, scale: 1, duration: 0.4 })
-              .to("#dev-buffer", { opacity: 1, y: -5, duration: 0.3 })
-              .to("#badge-0", { textContent: "Typing Code...", borderColor: "#f97316", color: "#f97316", duration: 0.2 })
-              .to("#desc-0", { textContent: "Developer modified code in local workspace.", duration: 0.2 }, "<")
-              .call(() => logTerminal("Stage 1: Code saved and committed locally."))
-              
-              // Progress Line to GitHub
-              .to("#vertical-progress", { height: "25%", duration: 1, ease: "power1.inOut" }, "+=0.5")
-              .to("#badge-0", { textContent: "Committed", borderColor: "#22c55e", color: "#22c55e", duration: 0.2 })
-              .to("#dev-buffer", { opacity: 0, duration: 0.2 }, "<");
-
-      // STAGE 1: GitHub Webhook Trigger
-      timeline.to("#stage-1", { opacity: 1, scale: 1, duration: 0.4 })
-              .to("#badge-1", { textContent: "Webhook Fired!", borderColor: "#38bdf8", color: "#38bdf8", duration: 0.2 })
-              .to("#desc-1", { textContent: "Code changes received! Triggering CI build server...", duration: 0.2 }, "<")
-              .call(() => logTerminal("Stage 2: Webhook fired to CI engine."))
-              
-              // Progress Line to Maven
-              .to("#vertical-progress", { height: "50%", duration: 1, ease: "power1.inOut" }, "+=0.5")
-              .to("#badge-1", { textContent: "Success", borderColor: "#22c55e", color: "#22c55e", duration: 0.2 });
-
-      // STAGE 2: Maven Build & Artifact Creation
-      timeline.to("#stage-2", { opacity: 1, scale: 1, duration: 0.4 })
-              .to("#badge-2", { textContent: "Compiling...", borderColor: "#f97316", color: "#f97316", duration: 0.2 })
-              .to("#desc-2", { textContent: "Executing compilation & package tasks...", duration: 0.2 }, "<")
-              .call(() => logTerminal("Stage 3: Building and packaging binary artifact..."))
-              
-              // Popup Artifact Card
-              .to("#artifact-popup", { opacity: 1, scale: 1, x: 10, duration: 0.5, ease: "back.out(1.7)" })
-              .to("#badge-2", { textContent: "Build Passed", borderColor: "#22c55e", color: "#22c55e", duration: 0.2 })
-              
-              // Progress Line to Docker
-              .to("#vertical-progress", { height: "75%", duration: 1, ease: "power1.inOut" }, "+=0.5");
-
-      // STAGE 3: Docker Containerization
-      timeline.to("#stage-3", { opacity: 1, scale: 1, duration: 0.4 })
-              .to("#badge-3", { textContent: "Building Image...", borderColor: "#38bdf8", color: "#38bdf8", duration: 0.2 })
-              .call(() => logTerminal("Stage 4: Containerizing artifact and pushing runner cargo..."))
-              
-              // DOCKER SHIP MOVING TRANSIT ANIMATION DOWN TO AZURE
-              .set("#docker-runner", { top: "60%", opacity: 1 })
-              .to("#docker-runner", { top: "85%", duration: 1.5, ease: "power2.inOut" })
-              .to("#badge-3", { textContent: "Image Pushed", borderColor: "#22c55e", color: "#22c55e", duration: 0.2 })
-              
-              // Progress Line to Azure
-              .to("#vertical-progress", { height: "100%", duration: 0.8, ease: "power1.inOut" }, "<");
-
-      // STAGE 4: Azure Unloading & Final Deployment
-      timeline.to("#stage-4", { opacity: 1, scale: 1, duration: 0.4 })
-              .to("#docker-runner", { opacity: 0, scale: 0.5, duration: 0.3 })
-              .to("#unload-badge", { opacity: 1, scale: 1, x: -10, duration: 0.4, ease: "back.out(1.5)" })
-              .to("#stage-4", { className: "stage-card active success", duration: 0.3 })
-              .to("#badge-4", { textContent: "Deployed Live!", borderColor: "#22c55e", color: "#22c55e", duration: 0.2 })
-              .to("#desc-4", { textContent: "Application instance live with zero downtime!", duration: 0.2 }, "<")
-              .call(() => logTerminal("🎉 Stage 5: Deployment complete! Application is now live."));
-    }
-
-    function resetPipeline() {
-      if (timeline) timeline.kill();
-      
-      gsap.set("#vertical-progress", { height: "0%" });
-      gsap.set("#dev-buffer, #artifact-popup, #unload-badge, #docker-runner", { opacity: 0 });
-      gsap.set(".stage-card", { opacity: 0.4, scale: 0.95 });
-      
-      document.querySelectorAll('.stage-card').forEach(card => card.classList.remove('active', 'success'));
-      
-      document.getElementById('badge-0').textContent = "Idle";
-      document.getElementById('badge-1').textContent = "Pending";
-      document.getElementById('badge-2').textContent = "Pending";
-      document.getElementById('badge-3').textContent = "Pending";
-      document.getElementById('badge-4').textContent = "Pending";
-
-      document.querySelectorAll('.status-badge').forEach(b => {
-        b.style.borderColor = "#1f2937";
-        b.style.color = "#9ca3af";
-      });
-
-      document.getElementById('terminal-body').innerHTML = '<div class="log-line">[SYSTEM] Pipeline initialized and ready for execution...</div>';
-    }
-
-    /* ==========================================================================
-       3. BACKGROUND GEOMETRIC PARTICLES CANVAS
-       ========================================================================== */
+    // --- 1. DYNAMIC MOVING NETWORK BACKGROUND CANVAS ---
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
-    let particles = [];
+    let width, height, particles;
 
     function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      initParticles();
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
     }
 
     class Particle {
       constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 1;
-        this.vx = (Math.random() - 0.5) * 0.7;
-        this.vy = (Math.random() - 0.5) * 0.7;
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.6;
+        this.vy = (Math.random() - 0.5) * 0.6;
+        this.radius = Math.random() * 1.8 + 1;
       }
-
       update() {
         this.x += this.vx;
         this.y += this.vy;
-        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        if (this.x < 0 || this.x > width) this.vx *= -1;
+        if (this.y < 0 || this.y > height) this.vy *= -1;
       }
-
       draw() {
-        ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
         ctx.fill();
       }
     }
 
-    function initParticles() {
-      particles = [];
-      const count = Math.floor((canvas.width * canvas.height) / 12000);
-      for (let i = 0; i < count; i++) particles.push(new Particle());
+    function initCanvas() {
+      resizeCanvas();
+      particles = Array.from({ length: 65 }, () => new Particle());
     }
 
     function animateCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, width, height);
       for (let i = 0; i < particles.length; i++) {
         particles[i].update();
         particles[i].draw();
-        for (let j = i; j < particles.length; j++) {
+        for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
-            ctx.strokeStyle = `rgba(56, 189, 248, ${0.12 - dist / 100})`;
-            ctx.lineWidth = 0.8;
+          if (dist < 120) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(56, 189, 248, ${0.15 - dist / 120 * 0.15})`;
+            ctx.lineWidth = 0.8;
             ctx.stroke();
           }
         }
@@ -1055,25 +796,134 @@
     }
 
     window.addEventListener('resize', resizeCanvas);
+    initCanvas();
+    animateCanvas();
 
-    /* ==========================================================================
-       4. SCROLL REVEAL EFFECT
-       ========================================================================== */
-    function handleScroll() {
-      document.querySelectorAll('.reveal-on-scroll').forEach(el => {
-        if (el.getBoundingClientRect().top < window.innerHeight - 80) {
-          el.classList.add('visible');
-        }
+    // --- 2. SWINGING DANGLING CARDS ANIMATION ---
+    gsap.utils.toArray('.dangling-card').forEach((card, i) => {
+      gsap.to(card, {
+        rotation: i % 2 === 0 ? 4 : -4,
+        duration: 2.2 + i * 0.3,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+    });
+
+    // --- 3. PIPELINE DATA DEFINITIONS ---
+    const projectData = {
+      meddy: [
+        { name: "GitHub", icon: "fa-brands fa-github", ver: "v2.4", action: "PR Merged & Webhook Emitted" },
+        { name: "Jenkins", icon: "fa-brands fa-jenkins", ver: "v2.414", action: "PyTest Suite & Security Linting" },
+        { name: "Docker", icon: "fa-brands fa-docker", ver: "v24.0", action: "Containerizing PyTorch/Flask App" },
+        { name: "ACR", icon: "fa-solid fa-box-archive", ver: "Basic", action: "Tagging & Pushing Image Artifacts" },
+        { name: "Azure App Service", icon: "fa-solid fa-cloud-arrow-up", ver: "Linux B1", action: "Continuous Service Deployment" }
+      ],
+      naukri: [
+        { name: "GitHub", icon: "fa-brands fa-github", ver: "v2.4", action: "Checkout Main Branch Codebase" },
+        { name: "Maven / Node", icon: "fa-solid fa-cube", ver: "Java 17", action: "Packaging Spring Boot & React Engine" },
+        { name: "Docker", icon: "fa-brands fa-docker", ver: "v24.0", action: "Containerizing Automation Engine" },
+        { name: "Azure Storage", icon: "fa-solid fa-database", ver: "Hot Tier", action: "Storing Build Binaries & Artifacts" },
+        { name: "Azure App Service", icon: "fa-solid fa-server", ver: "Linux B1", action: "Deploying API Engine & Portal" }
+      ],
+      tumor: [
+        { name: "GitHub", icon: "fa-brands fa-github", ver: "v2.4", action: "Branch Governance Validation" },
+        { name: "Jenkins", icon: "fa-brands fa-jenkins", ver: "v2.414", action: "Evaluating CNN Model Metrics" },
+        { name: "Docker", icon: "fa-brands fa-docker", ver: "v24.0", action: "Building Image Classifier Image" },
+        { name: "Terraform", icon: "fa-solid fa-layer-group", ver: "v1.5", action: "Provisioning Azure B2 Infra" },
+        { name: "Azure Monitor", icon: "fa-solid fa-chart-line", ver: "Log Analytics", action: "Realtime Inference Telemetry" }
+      ],
+      snowman: [
+        { name: "GitHub", icon: "fa-brands fa-github", ver: "v2.4", action: "Commit Trigger Captured" },
+        { name: "Maven", icon: "fa-solid fa-gears", ver: "v3.9", action: "Compiling Monolith JAR Package" },
+        { name: "Docker", icon: "fa-brands fa-docker", ver: "v24.0", action: "Packaging Legacy Monolith Container" },
+        { name: "Ansible", icon: "fa-solid fa-terminal", ver: "v2.15", action: "Executing VM Playbook Configurations" },
+        { name: "Azure VM", icon: "fa-solid fa-desktop", ver: "Std B2s", action: "Host Deployment Execution" }
+      ],
+      chunkhound: [
+        { name: "GitHub", icon: "fa-brands fa-github", ver: "v2.4", action: "Syncing Repository Indexing Engine" },
+        { name: "Cargo / Rust", icon: "fa-solid fa-bolt", ver: "v1.70+", action: "Compiling High-Speed Semantic Search" },
+        { name: "Docker", icon: "fa-brands fa-docker", ver: "v24.0", action: "Creating Microservice Container Image" },
+        { name: "ACR", icon: "fa-solid fa-boxes-stacked", ver: "Shared Tier", action: "Registry Image Release" },
+        { name: "Azure VM", icon: "fa-solid fa-network-wired", ver: "Std B2s", action: "Deploying Code Search Daemon" }
+      ]
+    };
+
+    let currentProject = 'meddy';
+    let mainTimeline = null;
+
+    function renderPipelineNodes(projKey) {
+      const container = document.getElementById('pipeline-nodes');
+      container.innerHTML = '';
+      const nodes = projectData[projKey];
+
+      nodes.forEach((node, index) => {
+        const nodeEl = document.createElement('div');
+        nodeEl.className = 'node';
+        nodeEl.id = `node-${index}`;
+        nodeEl.innerHTML = `
+          <div class="node-popup">
+            <h5>${node.name}</h5>
+            <p>${node.action}</p>
+          </div>
+          <div class="node-icon-wrap">
+            <div class="node-icon"><i class="${node.icon}"></i></div>
+            <span class="version-badge">${node.ver}</span>
+          </div>
+          <div class="node-label">${node.name}</div>
+        `;
+        container.appendChild(nodeEl);
       });
     }
 
-    window.addEventListener('scroll', handleScroll);
+    function switchProject(projKey) {
+      currentProject = projKey;
+      document.querySelectorAll('.proj-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-${projKey}`);
+      if(activeBtn) activeBtn.classList.add('active');
+      resetSimulation();
+      renderPipelineNodes(projKey);
+    }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      resizeCanvas();
-      animateCanvas();
-      handleScroll();
-    });
+    function runSimulation() {
+      resetSimulation();
+      const nodes = projectData[currentProject];
+      mainTimeline = gsap.timeline();
+
+      // Step 1: Developer Thinking Bubble Appearance
+      mainTimeline.to("#dev-thought", { opacity: 1, y: 0, duration: 0.4 });
+      
+      // Step 2: Webhook Signal Animation
+      mainTimeline.to("#webhook-dot", { opacity: 1, duration: 0.2 });
+      mainTimeline.to("#webhook-dot", { x: 40, duration: 0.6, ease: "power1.inOut" });
+      mainTimeline.to("#webhook-dot", { opacity: 0, duration: 0.2 });
+
+      // Step 3: Progress Bar Movement & Node Activation
+      mainTimeline.to("#progress-bar", {
+        width: "100%",
+        duration: nodes.length * 1.4,
+        ease: "none"
+      });
+
+      nodes.forEach((_, index) => {
+        mainTimeline.to(`#node-${index}`, {
+          onStart: () => {
+            document.getElementById(`node-${index}`).classList.add('active');
+          }
+        }, 1.2 + (index * 1.4));
+      });
+    }
+
+    function resetSimulation() {
+      if (mainTimeline) mainTimeline.kill();
+      gsap.set("#dev-thought", { opacity: 0, y: 5 });
+      gsap.set("#webhook-dot", { opacity: 0, x: 0 });
+      gsap.set("#progress-bar", { width: "0%" });
+      document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+    }
+
+    // INITIALIZATION
+    renderPipelineNodes('meddy');
   </script>
 </body>
 </html>
