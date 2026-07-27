@@ -33,8 +33,8 @@
     --font-accent:'Playfair Display',serif;
   }
   *{margin:0;padding:0;box-sizing:border-box;font-family:var(--font-body);}
-  html{scroll-behavior:smooth;}
-  body{background:var(--bg-main);color:var(--text-main);overflow-x:hidden;position:relative;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+  body{background:var(--bg-main);color:var(--text-main);overflow-x:hidden;position:relative;width:100%;}
   h1,h2,h3,h4,h5{font-family:var(--font-display);}
  
   #bg-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;}
@@ -199,58 +199,46 @@
     .project-info-row{grid-template-columns:1fr;}
   }
  
-  .pipeline-wrapper{
-    background:var(--bg-alt);border:1px solid var(--border-color);border-radius:16px;padding:3.5rem 2rem;
-    position:relative;overflow:hidden;min-height:420px;display:flex;align-items:center;z-index:2;
+  /* ===================== LIVE DIAGRAM (image + animated flow overlay) ===================== */
+  .diagram-panel{
+    position:relative;z-index:2;background:#0b0b0c;border:1px solid var(--border-color);border-radius:16px;
+    padding:1.1rem;box-shadow:var(--shadow-soft);
   }
-  .developer-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;width:140px;position:relative;z-index:5;}
-  .dev-svg{width:75px;height:75px;}
-  .thought-bubble{
-    position:absolute;top:-45px;background:rgba(14,165,165,0.14);border:1px solid var(--accent-teal);
-    color:var(--accent-teal);border-radius:20px;padding:4px 10px;font-size:0.7rem;font-weight:bold;
-    opacity:0;transform:translateY(5px);
+  .diagram-wrap{position:relative;width:100%;line-height:0;border-radius:10px;overflow:hidden;background:#000;}
+  .diagram-img{width:100%;display:block;user-select:none;-webkit-user-drag:none;}
+  .diagram-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+  .flow-line{fill:none;stroke:var(--diagram-accent,#4F7965);stroke-width:0.35;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:1.6 1.6;opacity:0.85;filter:drop-shadow(0 0 2px var(--diagram-accent,#4F7965));
+    animation:dashFlow 1.4s linear infinite;}
+  @keyframes dashFlow{to{stroke-dashoffset:-6.4;}}
+  .flow-marker{
+    position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;
+    background:rgba(255,255,255,0.92);border:2px solid var(--diagram-accent,#4F7965);
+    display:flex;align-items:center;justify-content:center;font-size:0.62rem;color:var(--diagram-accent,#4F7965);
+    box-shadow:0 0 0 0 rgba(79,121,101,0.5);transition:transform 0.3s,box-shadow 0.3s,background 0.3s,color 0.3s;
+    z-index:3;cursor:default;
   }
-  .webhook-signal{
-    position:absolute;top:50%;left:130px;width:12px;height:12px;border-radius:50%;
-    background:var(--accent-teal);box-shadow:0 0 10px var(--accent-teal);opacity:0;z-index:10;
+  .flow-marker .fm-tip{
+    position:absolute;bottom:130%;left:50%;transform:translateX(-50%);white-space:nowrap;
+    background:rgba(10,10,10,0.92);color:#fff;font-size:0.62rem;font-weight:600;padding:3px 8px;border-radius:6px;
+    opacity:0;pointer-events:none;transition:opacity 0.25s;
   }
-  .pipeline-flow{position:relative;flex:1;display:flex;align-items:center;margin-left:2rem;}
-  .pipeline-line{position:absolute;top:50%;left:0;width:100%;height:4px;background:var(--border-color);transform:translateY(-50%);z-index:1;}
-  .pipeline-progress{
-    position:absolute;top:50%;left:0;width:0%;height:4px;
-    background:linear-gradient(90deg,var(--accent-teal),var(--accent-indigo),var(--accent-amber));
-    transform:translateY(-50%);z-index:2;
+  .flow-marker:hover .fm-tip{opacity:1;}
+  .flow-marker.active{
+    background:var(--diagram-accent,#4F7965);color:#fff;transform:scale(1.28);
+    box-shadow:0 0 0 8px rgba(79,121,101,0.16);
+    animation:markerPulse 1s ease-out;
   }
-  .pipeline-nodes{display:flex;justify-content:space-between;width:100%;position:relative;z-index:3;}
-  .node{display:flex;flex-direction:column;align-items:center;position:relative;opacity:0.28;transform:scale(0.85);transition:opacity 0.4s,transform 0.4s;}
-  .node.active{opacity:1;transform:scale(1);}
-  .node-icon-wrap{position:relative;}
-  .node-icon{
-    width:68px;height:68px;border-radius:50%;background:#fff;border:2px solid var(--accent-teal);
-    display:flex;justify-content:center;align-items:center;box-shadow:0 6px 18px rgba(14,165,165,0.18);
+  @keyframes markerPulse{0%{box-shadow:0 0 0 0 rgba(79,121,101,0.55);}100%{box-shadow:0 0 0 14px rgba(79,121,101,0);}}
+  .flow-traveler{
+    position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;
+    background:var(--diagram-accent,#4F7965);border:2px solid #fff;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:0.85rem;box-shadow:0 4px 14px rgba(0,0,0,0.45),0 0 0 4px rgba(255,255,255,0.15);
+    z-index:5;opacity:0;left:0;top:0;
   }
-  .node-icon img{width:36px;height:36px;object-fit:contain;}
-  .version-badge{
-    position:absolute;bottom:-6px;right:-10px;background:var(--accent-indigo);color:#fff;font-size:0.62rem;
-    font-weight:bold;padding:2px 6px;border-radius:10px;border:2px solid var(--bg-alt);
-  }
-  .node-popup{
-    position:absolute;top:-128px;background:#fff;border:1px solid var(--accent-teal);border-radius:10px;
-    padding:0.8rem 1rem;width:190px;text-align:center;box-shadow:var(--shadow-soft);opacity:0;
-    transform:translateY(10px);transition:opacity 0.4s,transform 0.4s;pointer-events:none;left:50%;margin-left:-95px;
-  }
-  .node-popup::after{content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);border-width:8px 8px 0;border-style:solid;border-color:#fff transparent;}
-  .node.active .node-popup{opacity:1;transform:translateY(0);}
-  .node-popup h5{font-size:0.85rem;color:var(--accent-indigo);margin-bottom:0.3rem;}
-  .node-popup p{font-size:0.72rem;color:var(--text-muted);line-height:1.25;}
-  .node-label{margin-top:1rem;font-size:0.88rem;font-weight:700;}
-  .logo-carrier{
-    position:absolute;top:-38px;left:0;width:46px;height:46px;border-radius:50%;
-    background:#fff;border:2px solid var(--text-main);box-shadow:var(--shadow-soft);
-    display:flex;align-items:center;justify-content:center;z-index:6;transform:translateX(-50%);opacity:0;
-  }
-  .logo-carrier img{width:26px;height:26px;object-fit:contain;}
-  .controls{display:flex;justify-content:center;gap:1.2rem;margin-top:2.2rem;position:relative;z-index:2;}
+  .diagram-controls{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:0.9rem;flex-wrap:wrap;}
+  .diagram-hint{font-size:0.7rem;color:rgba(255,255,255,0.55);font-style:italic;}
+  .diagram-btns{display:flex;gap:0.7rem;}
  
   /* ===================== VISION / FUTURE ===================== */
   .vision-cards,.future-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;max-width:1200px;margin:0 auto;width:100%;}
@@ -286,9 +274,6 @@
     .team-watermark .line1{font-size:2.6rem;}
     .team-watermark .line2{font-size:1.3rem;letter-spacing:6px;}
     .team-watermark .rule{margin:1rem auto 0 auto;}
-    .pipeline-wrapper{flex-direction:column;align-items:center;padding:2rem 1rem;}
-    .pipeline-flow{width:100%;margin-left:0;margin-top:4rem;}
-    .webhook-signal{display:none;}
     .project-slide-header,.project-slide-name{text-align:center;}
     .project-watermark-icon{display:none;}
   }
@@ -536,12 +521,16 @@ const projectData={
       {t:"Azure Container Registry",v:"Basic"},{t:"Azure VM",v:"Ubuntu 22.04"},{t:"Azure Blob Storage",v:"Standard"}
     ],
     archSteps:["Developer (git push)","GitHub Repository","Jenkins CI/CD Pipeline","Docker Build (Flask + Gunicorn)","Azure Container Registry","Azure VM — Nginx → Gunicorn → Flask","Azure Blob Storage (AI Model)","End Users — Chat Interface"],
-    nodes:[
-      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Webhook Triggers Jenkins Pipeline"},
-      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"2.414",action:"Checkout, Test & Build Stages"},
-      {name:"Docker",img:"docker/docker-original",ver:"26.1.3",action:"Building Flask + Gunicorn Image"},
-      {name:"ACR",img:"azure/azure-original",ver:"Basic",action:"Tagging & Pushing Image Artifacts"},
-      {name:"Azure VM",img:"azure/azure-original",ver:"Ubuntu 22.04",action:"Nginx → Gunicorn → Flask Deployment"}
+    diagramImg:"assets/meddy-chatbot.jpeg",
+    flowPath:[
+      {x:7.5,y:16.7,icon:"fa-solid fa-user",label:"Developer"},
+      {x:13.5,y:16.7,icon:"fa-brands fa-github",label:"GitHub Repository"},
+      {x:36,y:19.3,icon:"fa-brands fa-jenkins",label:"Jenkins Pipeline"},
+      {x:61.2,y:19.3,icon:"fa-brands fa-docker",label:"Docker Build"},
+      {x:86.8,y:15.8,icon:"fa-solid fa-boxes-stacked",label:"Azure Container Registry"},
+      {x:59.3,y:56,icon:"fa-solid fa-server",label:"Azure VM"},
+      {x:19.9,y:58.9,icon:"fa-solid fa-database",label:"Azure Blob Storage"},
+      {x:57.8,y:92.6,icon:"fa-solid fa-users",label:"End Users"}
     ]
   },
   naukri:{
@@ -560,12 +549,16 @@ const projectData={
       {t:"Azure VM",v:"Latest"},{t:"Azure Blob Storage",v:"Latest"},{t:"Azure Monitor",v:"Latest"}
     ],
     archSteps:["Developer (Windows) — Git Commit","GitHub Repository","Jenkins CI — Maven + npm + React + Electron","Docker Build → Azure Container Registry","Terraform Provisions Azure Infra","Azure VM Pulls & Runs Container","Azure Blob Storage — Resumes & Reports","Azure Monitor — Health & Metrics"],
-    nodes:[
-      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Webhook Triggers Jenkins"},
-      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"CI",action:"Maven + npm + React + Electron Build"},
-      {name:"Docker",img:"docker/docker-original",ver:"28.x",action:"Containerizing Automation Engine"},
-      {name:"Terraform",img:"terraform/terraform-original",ver:"1.15.x",action:"Provisioning Azure Infrastructure"},
-      {name:"Azure VM",img:"azure/azure-original",ver:"Latest",action:"Pulling Image & Running Container"}
+    diagramImg:"assets/naukri-automation.png",
+    flowPath:[
+      {x:9,y:25.7,icon:"fa-solid fa-user",label:"Developer"},
+      {x:19,y:25.7,icon:"fa-brands fa-github",label:"GitHub Repository"},
+      {x:45.3,y:25.6,icon:"fa-brands fa-jenkins",label:"Jenkins CI/CD"},
+      {x:73.6,y:26,icon:"fa-brands fa-docker",label:"Docker → ACR"},
+      {x:89.9,y:25.9,icon:"fa-solid fa-layer-group",label:"Terraform"},
+      {x:46,y:54.7,icon:"fa-solid fa-server",label:"Azure VM"},
+      {x:92.2,y:55.1,icon:"fa-solid fa-database",label:"Azure Blob Storage"},
+      {x:18.6,y:71,icon:"fa-solid fa-chart-line",label:"Azure Monitor"}
     ]
   },
   tumor:{
@@ -584,12 +577,16 @@ const projectData={
       {t:"Azure Container Registry",v:"Latest"},{t:"Azure VM",v:"Ubuntu 22.04"},{t:"Azure Blob Storage",v:"Latest"}
     ],
     archSteps:["Developer — Git Push","GitHub Repository","Jenkins Pipeline (Clone, Build, Test)","Docker Image → Azure Container Registry","Azure VM — Pull & Start Container","Azure Blob Storage — Download AI Model","Flask + Gunicorn + Nginx — Process MRI","Return Prediction to User"],
-    nodes:[
-      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Source Push Triggers Pipeline"},
-      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"CI",action:"Clone Repo, Build & Test"},
-      {name:"Docker",img:"docker/docker-original",ver:"26.1.3",action:"Building Image Classifier Container"},
-      {name:"ACR",img:"azure/azure-original",ver:"Latest",action:"Storing Versioned Docker Image"},
-      {name:"Azure VM",img:"azure/azure-original",ver:"Ubuntu 22.04",action:"Nginx → Gunicorn → Flask + Model Load"}
+    diagramImg:"assets/brain-tumor-ml.jpeg",
+    flowPath:[
+      {x:6.2,y:11.9,icon:"fa-solid fa-user",label:"Developer"},
+      {x:21.5,y:11.9,icon:"fa-brands fa-github",label:"GitHub Repository"},
+      {x:50.5,y:12.4,icon:"fa-brands fa-jenkins",label:"Jenkins Pipeline"},
+      {x:84.7,y:11.2,icon:"fa-solid fa-boxes-stacked",label:"Azure Container Registry"},
+      {x:80.6,y:40,icon:"fa-solid fa-server",label:"Azure VM"},
+      {x:48.4,y:49.2,icon:"fa-solid fa-database",label:"Azure Blob Storage"},
+      {x:80.5,y:62.9,icon:"fa-solid fa-diagram-project",label:"Nginx → Gunicorn → Flask"},
+      {x:70,y:91.4,icon:"fa-solid fa-users",label:"End Users"}
     ]
   },
   snowman:{
@@ -608,12 +605,16 @@ const projectData={
       {t:"App Gateway & Load Balancer",v:"Latest"},{t:"Azure Monitor",v:"Latest"}
     ],
     archSteps:["Developer — Push to GitHub","GitHub Webhook Triggers Jenkins","Jenkins — Maven Build, Test, Package JAR","Docker Image → Azure Container Registry","Terraform Provisions AKS & Azure Infra","AKS Pulls Image — Deployment/Pods/Service","Application Gateway → Load Balancer","Azure MySQL Database + Azure Monitor"],
-    nodes:[
-      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Webhook Triggers Jenkins"},
-      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"2.5xx LTS",action:"Maven Build, Test & Package JAR"},
-      {name:"Docker",img:"docker/docker-original",ver:"28.x",action:"Building Monolith Container Image"},
-      {name:"Terraform",img:"terraform/terraform-original",ver:"1.15.x",action:"Provisioning AKS & Azure Infra"},
-      {name:"AKS",img:"kubernetes/kubernetes-plain",ver:"1.34.x",action:"Deploying Pods & Services"}
+    diagramImg:"assets/snowman-monolith.jpeg",
+    flowPath:[
+      {x:8.4,y:10.9,icon:"fa-solid fa-user",label:"Developer"},
+      {x:23.8,y:11,icon:"fa-brands fa-github",label:"GitHub Repository"},
+      {x:45,y:14.7,icon:"fa-brands fa-jenkins",label:"Jenkins Pipeline"},
+      {x:81.7,y:30.9,icon:"fa-solid fa-boxes-stacked",label:"Azure Container Registry"},
+      {x:20,y:53,icon:"fa-solid fa-layer-group",label:"Terraform"},
+      {x:77.3,y:51.3,icon:"fa-solid fa-dharmachakra",label:"AKS Cluster"},
+      {x:55.2,y:82,icon:"fa-solid fa-network-wired",label:"App Gateway → LB"},
+      {x:46.5,y:94.3,icon:"fa-solid fa-users",label:"End Users"}
     ]
   },
   chunkhound:{
@@ -632,16 +633,19 @@ const projectData={
       {t:"Azure Monitor",v:"Latest"},{t:"Azure VM",v:"Std B2s, Ubuntu 24.04 LTS"}
     ],
     archSteps:["Developer — VS Code + Git Push","GitHub Repository (webhook trigger)","Azure VM — Jenkins + Python 3.12 + uv + Docker","Jenkins — Checkout, uv sync, Lint, Pytest","Docker Build → Azure Container Registry","Azure Storage — Reports & Logs","Azure Key Vault — Secrets at Runtime","Azure Monitor — Health Checks & Alerts"],
-    nodes:[
-      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Webhook Triggers Jenkins"},
-      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"LTS 2.555.x",action:"Checkout, uv sync, Lint & Pytest"},
-      {name:"Docker",img:"docker/docker-original",ver:"29.x",action:"Building Reproducible CLI Image"},
-      {name:"ACR",img:"azure/azure-original",ver:"Basic",action:"Pushing Image to Registry"},
-      {name:"Azure Monitor",img:"azure/azure-original",ver:"Latest",action:"Health Checks & Alerts"}
+    diagramImg:"assets/chunkhound-ai.jpeg",
+    flowPath:[
+      {x:5.4,y:10.7,icon:"fa-solid fa-user",label:"Developer"},
+      {x:18.8,y:10.7,icon:"fa-brands fa-github",label:"GitHub Repository"},
+      {x:40.8,y:12,icon:"fa-brands fa-jenkins",label:"Jenkins Pipeline"},
+      {x:83,y:9.8,icon:"fa-solid fa-boxes-stacked",label:"Azure Container Registry"},
+      {x:79.7,y:31.8,icon:"fa-solid fa-server",label:"Azure VM"},
+      {x:79.5,y:52.7,icon:"fa-brands fa-docker",label:"Docker Container"},
+      {x:75.5,y:73.5,icon:"fa-solid fa-magnifying-glass",label:"ChunkHound App"},
+      {x:74.9,y:91.1,icon:"fa-solid fa-users",label:"End Users / Developers"}
     ]
   }
 };
-const DEVICON_BASE="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/";
  
 /* Self-contained SVG tile patterns, tinted per project, used as each slide's background image */
 const PATTERN_SHAPES={
@@ -657,22 +661,17 @@ function buildPatternUrl(shapeKey,color){
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
  
+/* Build an SVG polyline "points" string (0-100 coordinate space) through the flow waypoints */
+function buildFlowPoints(flowPath){
+  return flowPath.map(p=>`${p.x},${p.y}`).join(' ');
+}
+ 
 /* ================= 5. RENDER PROJECT SLIDES ================= */
 const slidesContainer=document.getElementById('project-slides-container');
 Object.entries(projectData).forEach(([key,proj])=>{
   const slide=document.createElement('div');
   slide.className='project-slide';
   slide.id=`slide-${key}`;
- 
-  const nodesHtml=proj.nodes.map((n,i)=>`
-    <div class="node" id="node-${key}-${i}">
-      <div class="node-popup"><h5>${n.name}</h5><p>${n.action}</p></div>
-      <div class="node-icon-wrap">
-        <div class="node-icon"><img src="${DEVICON_BASE}${n.img}.svg" alt="${n.name}" onerror="this.style.display='none'"></div>
-        <span class="version-badge">${n.ver}</span>
-      </div>
-      <div class="node-label">${n.name}</div>
-    </div>`).join('');
  
   const archHtml=proj.archSteps.map((s,i)=>`
     <div class="arch-step">${s}</div>
@@ -681,6 +680,12 @@ Object.entries(projectData).forEach(([key,proj])=>{
  
   const buildToolsHtml=proj.buildTools.map(x=>`<li><span class="tname">${x.t}</span><span class="tver">${x.v}</span></li>`).join('');
   const devopsToolsHtml=proj.devopsTools.map(x=>`<li><span class="tname">${x.t}</span><span class="tver">${x.v}</span></li>`).join('');
+ 
+  const markersHtml=proj.flowPath.map((p,i)=>`
+    <div class="flow-marker" id="marker-${key}-${i}" style="left:${p.x}%;top:${p.y}%;">
+      <i class="${p.icon}"></i>
+      <span class="fm-tip">${p.label}</span>
+    </div>`).join('');
  
   slide.innerHTML=`
     <div class="project-slide-bg" style="background-image:${buildPatternUrl(proj.patternShape,proj.accentColor)};"></div>
@@ -708,27 +713,22 @@ Object.entries(projectData).forEach(([key,proj])=>{
     </div>
  
     <div class="devops-workflow-heading">DevOps Workflow</div>
-    <div class="pipeline-wrapper">
-      <div class="developer-stage">
-        <div class="thought-bubble" id="dev-thought-${key}">git push...</div>
-        <svg class="dev-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M32 12C25.3726 12 20 17.3726 20 24C20 27.65 21.63 30.92 24.2 33.11C16.8 35.8 11.5 42.8 11 51H53C52.5 42.8 47.2 35.8 39.8 33.11C42.37 30.92 44 27.65 44 24C44 17.3726 38.6274 12 32 12Z" fill="${proj.accentColor}" opacity="0.85"/>
-          <rect x="18" y="46" width="28" height="14" rx="2" fill="#F7F6F1" stroke="${proj.accentColor}" stroke-width="2"/>
-          <line x1="14" y1="60" x2="50" y2="60" stroke="#7B4B8A" stroke-width="2"/>
+    <div class="diagram-panel" style="--diagram-accent:${proj.accentColor};">
+      <div class="diagram-wrap" id="diagram-wrap-${key}">
+        <img class="diagram-img" src="${proj.diagramImg}" alt="${proj.label} architecture diagram" draggable="false">
+        <svg class="diagram-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <polyline class="flow-line" points="${buildFlowPoints(proj.flowPath)}"></polyline>
         </svg>
-        <span style="font-size:0.8rem;font-weight:bold;margin-top:0.5rem;color:var(--text-muted);">Developer</span>
+        ${markersHtml}
+        <div class="flow-traveler" id="traveler-${key}"><i class="fa-solid fa-bolt"></i></div>
       </div>
-      <div class="webhook-signal" id="webhook-dot-${key}"></div>
-      <div class="pipeline-flow">
-        <div class="pipeline-line"></div>
-        <div class="pipeline-progress" id="progress-bar-${key}"></div>
-        <div class="logo-carrier" id="carrier-${key}"><img src="${DEVICON_BASE}${proj.nodes[0].img}.svg" alt=""></div>
-        <div class="pipeline-nodes">${nodesHtml}</div>
+      <div class="diagram-controls">
+        <span class="diagram-hint">Original diagram, unedited — press Run Pipeline to watch the flow travel through it.</span>
+        <div class="diagram-btns">
+          <button class="proj-btn" onclick="runSimulation('${key}')"><i class="fa-solid fa-play"></i> Run Pipeline</button>
+          <button class="proj-btn" onclick="resetSimulation('${key}')"><i class="fa-solid fa-rotate-left"></i> Reset Flow</button>
+        </div>
       </div>
-    </div>
-    <div class="controls">
-      <button class="proj-btn" onclick="runSimulation('${key}')"><i class="fa-solid fa-play"></i> Run Pipeline</button>
-      <button class="proj-btn" onclick="resetSimulation('${key}')"><i class="fa-solid fa-rotate-left"></i> Reset Flow</button>
     </div>
   `;
   slidesContainer.appendChild(slide);
@@ -743,45 +743,44 @@ Object.values(projectData).forEach(proj=>{
   futureContainer.appendChild(card);
 });
  
-/* ================= 7. PIPELINE SIMULATION ================= */
+/* ================= 7. LIVE DIAGRAM FLOW SIMULATION ================= */
 const activeTimelines={};
 function runSimulation(key){
   resetSimulation(key);
-  const nodes=projectData[key].nodes;
-  const carrier=document.getElementById(`carrier-${key}`);
-  const carrierImg=carrier.querySelector('img');
+  const proj=projectData[key];
+  const points=proj.flowPath;
+  const traveler=document.getElementById(`traveler-${key}`);
+  const travelerIcon=traveler.querySelector('i');
   const tl=gsap.timeline();
   activeTimelines[key]=tl;
  
-  tl.to(`#dev-thought-${key}`,{opacity:1,y:0,duration:0.4});
-  tl.to(`#webhook-dot-${key}`,{opacity:1,duration:0.2});
-  tl.to(`#webhook-dot-${key}`,{x:40,duration:0.6,ease:"power1.inOut"});
-  tl.to(`#webhook-dot-${key}`,{opacity:0,duration:0.2});
-  tl.to(`#progress-bar-${key}`,{width:"100%",duration:nodes.length*1.4,ease:"none"},"<");
-  tl.set(carrier,{left:"0%",opacity:1},"<");
+  const legDuration=1.15;
  
-  nodes.forEach((node,i)=>{
-    const leftPct=(i/(nodes.length-1))*100;
-    tl.to(`#node-${key}-${i}`,{
-      onStart:()=>{
-        document.getElementById(`node-${key}-${i}`).classList.add('active');
-        carrierImg.src=`${DEVICON_BASE}${node.img}.svg`;
-      }
-    },1.2+(i*1.4));
-    tl.to(carrier,{left:`${leftPct}%`,duration:1.1,ease:"power1.inOut"},1.2+(i*1.4)-0.9);
-  });
+  // start the traveler at the first node, carrying that node's own icon
+  tl.set(traveler,{left:`${points[0].x}%`,top:`${points[0].y}%`,opacity:0,scale:0.6});
+  tl.set(travelerIcon,{className:`${points[0].icon}`});
+  tl.to(traveler,{opacity:1,scale:1,duration:0.3,ease:"back.out(2)"});
+  tl.call(()=>{document.getElementById(`marker-${key}-0`).classList.add('active');});
  
-  /* carrier keeps travelling past the last node, toward the next section */
-  tl.to(carrier,{left:"118%",opacity:0,duration:1,ease:"power1.in"},"+=0.3");
+  for(let i=1;i<points.length;i++){
+    const prev=points[i-1], curr=points[i];
+    // the CURRENT node's logo travels toward the next node
+    tl.call(()=>{travelerIcon.className=prev.icon;});
+    tl.to(traveler,{left:`${curr.x}%`,top:`${curr.y}%`,duration:legDuration,ease:"power1.inOut"});
+    tl.call(()=>{
+      document.getElementById(`marker-${key}-${i}`).classList.add('active');
+      travelerIcon.className=curr.icon; // arrived — now carries this node's logo onward
+    });
+    tl.to(traveler,{scale:1.2,duration:0.15,yoyo:true,repeat:1,ease:"power1.inOut"},"-=0.1");
+  }
+ 
+  tl.to(traveler,{opacity:0,scale:0.5,duration:0.4,ease:"power1.in"},"+=0.5");
 }
 function resetSimulation(key){
   if(activeTimelines[key])activeTimelines[key].kill();
-  gsap.set(`#dev-thought-${key}`,{opacity:0,y:5});
-  gsap.set(`#webhook-dot-${key}`,{opacity:0,x:0});
-  gsap.set(`#progress-bar-${key}`,{width:"0%"});
-  const carrier=document.getElementById(`carrier-${key}`);
-  if(carrier)gsap.set(carrier,{left:"0%",opacity:0});
-  document.querySelectorAll(`#slide-${key} .node`).forEach(n=>n.classList.remove('active'));
+  const traveler=document.getElementById(`traveler-${key}`);
+  if(traveler)gsap.set(traveler,{opacity:0,scale:0.6});
+  document.querySelectorAll(`#slide-${key} .flow-marker`).forEach(m=>m.classList.remove('active'));
 }
  
 /* ================= 8. SCROLL-TRIGGERED SLIDE ENTRANCE + AUTO-RUN ================= */
