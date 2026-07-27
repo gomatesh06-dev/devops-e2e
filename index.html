@@ -71,8 +71,8 @@
   .section-subtitle{text-align:center;color:var(--text-muted);margin-bottom:3.5rem;font-size:1rem;}
  
   /* ===================== HOME ===================== */
-  #home{display:flex;align-items:center;justify-content:space-between;gap:2rem;padding-top:9rem;}
-  .home-left{flex:1;display:flex;flex-direction:column;align-items:flex-start;max-width:480px;}
+  #home{display:flex;align-items:center;justify-content:center;gap:3rem;padding-top:7rem;max-width:1400px;margin:0 auto;}
+  .home-left{flex:1.1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;max-width:480px;}
   .hero-title{font-size:2.6rem;font-weight:800;margin-bottom:0.6rem;line-height:1.15;text-align:left;}
   .hero-sub{color:var(--text-muted);font-size:1rem;margin-bottom:2.5rem;text-align:left;}
  
@@ -87,7 +87,7 @@
   .member-name{font-size:1.02rem;font-weight:700;color:var(--text-main);}
   .member-role{font-size:0.72rem;color:var(--accent-teal);text-transform:uppercase;font-weight:700;margin-top:0.25rem;letter-spacing:0.5px;}
  
-  .home-right{flex:1;display:flex;justify-content:center;align-items:center;position:relative;min-width:320px;}
+  .home-right{flex:0.9;display:flex;justify-content:center;align-items:center;position:relative;min-width:300px;}
   .team-watermark{
     position:relative;text-align:right;user-select:none;
   }
@@ -153,9 +153,51 @@
     font-family:var(--font-display);font-weight:800;font-size:3.2rem;
     color:transparent;-webkit-text-stroke:1.2px rgba(27,36,64,0.18);
   }
-  .project-slide-body{position:relative;z-index:2;max-width:720px;margin-bottom:2.5rem;}
+  .project-slide-body{position:relative;z-index:2;max-width:720px;margin-bottom:2rem;}
   .project-slide-body h3{font-size:1.4rem;margin-bottom:0.7rem;color:var(--accent-indigo);}
   .project-slide-body p{color:var(--text-muted);font-size:0.96rem;line-height:1.65;}
+ 
+  /* ---- Architecture / Build Tools / DevOps Tools info row ---- */
+  .project-info-row{
+    position:relative;z-index:2;display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:1.5rem;margin-bottom:2.2rem;
+  }
+  .info-panel{
+    background:#fff;border:1px solid var(--border-color);border-radius:14px;padding:1.3rem 1.4rem;
+    box-shadow:var(--shadow-soft);border-left:5px solid transparent;display:flex;flex-direction:column;
+  }
+  .info-panel h4{font-size:0.82rem;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:0.9rem;display:flex;align-items:center;gap:0.5rem;}
+  .info-panel.arch-panel{border-left-color:var(--accent-teal);}
+  .info-panel.build-panel{border-left-color:var(--accent-coral);}
+  .info-panel.devops-panel{border-left-color:var(--accent-amber);}
+  .info-panel.build-panel h4{color:var(--accent-coral);}
+  .info-panel.devops-panel h4{color:var(--accent-amber);}
+  .info-panel.arch-panel h4{color:var(--accent-teal);}
+ 
+  .tool-list{list-style:none;display:flex;flex-direction:column;gap:0.55rem;}
+  .tool-list li{font-size:0.82rem;color:var(--text-main);display:flex;justify-content:space-between;gap:0.6rem;border-bottom:1px dashed var(--border-color);padding-bottom:0.5rem;}
+  .tool-list li:last-child{border-bottom:none;padding-bottom:0;}
+  .tool-list li .tname{font-weight:600;}
+  .tool-list li .tver{color:var(--text-muted);font-size:0.76rem;white-space:nowrap;}
+ 
+  .arch-flow{display:flex;flex-direction:column;align-items:stretch;gap:0;max-height:340px;overflow-y:auto;padding-right:0.2rem;}
+  .arch-step{
+    background:var(--bg-alt);border:1px solid var(--border-color);border-radius:8px;
+    padding:0.5rem 0.7rem;font-size:0.76rem;font-weight:600;text-align:center;color:var(--text-main);
+  }
+  .arch-arrow{text-align:center;color:var(--accent-teal);font-size:0.85rem;padding:0.15rem 0;}
+  .arch-note{margin-top:0.8rem;font-size:0.68rem;color:var(--text-muted);font-style:italic;}
+ 
+  .devops-workflow-heading{
+    position:relative;z-index:2;font-size:1.2rem;font-weight:700;margin-bottom:1rem;
+    display:flex;align-items:center;gap:0.6rem;color:var(--text-main);
+  }
+  .devops-workflow-heading::before{
+    content:'';width:26px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--accent-teal),var(--accent-amber));
+  }
+ 
+  @media (max-width:1100px){
+    .project-info-row{grid-template-columns:1fr;}
+  }
  
   .pipeline-wrapper{
     background:var(--bg-alt);border:1px solid var(--border-color);border-radius:16px;padding:3.5rem 2rem;
@@ -482,70 +524,120 @@ const projectData={
     label:"Meddy Chatbot",
     watermarkIcon:"fa-solid fa-comment-medical",
     patternShape:"cross",accentColor:"#C1583F",
-    description:"A healthcare assistant chatbot built on PyTorch and Flask that answers patient queries and routes escalations to on-call staff. The pipeline runs automated PyTest suites and security linting on every pull request before shipping a fresh container to Azure App Service.",
+    description:"A healthcare assistant chatbot built on PyTorch and Flask that answers patient queries via a chat interface. Jenkins checks out the code, validates it, builds a Docker image (Flask + Gunicorn), and pushes it to Azure Container Registry. The Azure VM pulls the image and serves it through Nginx → Gunicorn → Flask, while the trained model is fetched from Azure Blob Storage at startup.",
     future:"Add canary releases for model updates and integrate response-quality monitoring into the Azure Monitor dashboard.",
+    buildTools:[
+      {t:"Python",v:"3.8.10"},{t:"Flask",v:"3.0.3"},{t:"PyTorch (torch)",v:"2.3.1"},
+      {t:"Torchvision",v:"0.18.1"},{t:"Pillow",v:"10.3.0"},{t:"Gunicorn",v:"22.0.0"},
+      {t:"Azure Storage Blob SDK",v:"12.20.0"},{t:"Git",v:"2.25.1"}
+    ],
+    devopsTools:[
+      {t:"Jenkins",v:"2.414"},{t:"Docker",v:"26.1.3"},{t:"Nginx",v:"1.18.0"},
+      {t:"Azure Container Registry",v:"Basic"},{t:"Azure VM",v:"Ubuntu 22.04"},{t:"Azure Blob Storage",v:"Standard"}
+    ],
+    archSteps:["Developer (git push)","GitHub Repository","Jenkins CI/CD Pipeline","Docker Build (Flask + Gunicorn)","Azure Container Registry","Azure VM — Nginx → Gunicorn → Flask","Azure Blob Storage (AI Model)","End Users — Chat Interface"],
     nodes:[
-      {name:"GitHub",img:"github/github-original",ver:"v2.4",action:"PR Merged & Webhook Emitted"},
-      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"v2.414",action:"PyTest Suite & Security Linting"},
-      {name:"Docker",img:"docker/docker-original",ver:"v24.0",action:"Containerizing PyTorch/Flask App"},
+      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Webhook Triggers Jenkins Pipeline"},
+      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"2.414",action:"Checkout, Test & Build Stages"},
+      {name:"Docker",img:"docker/docker-original",ver:"26.1.3",action:"Building Flask + Gunicorn Image"},
       {name:"ACR",img:"azure/azure-original",ver:"Basic",action:"Tagging & Pushing Image Artifacts"},
-      {name:"Azure App Service",img:"azure/azure-original",ver:"Linux B1",action:"Continuous Service Deployment"}
+      {name:"Azure VM",img:"azure/azure-original",ver:"Ubuntu 22.04",action:"Nginx → Gunicorn → Flask Deployment"}
     ]
   },
   naukri:{
     label:"Naukri Automation",
     watermarkIcon:"fa-solid fa-briefcase",
     patternShape:"briefcase",accentColor:"#D9A441",
-    description:"A job-application automation engine pairing a Spring Boot API with a React portal, packaging build binaries into Azure Storage before the API and portal ship together to Azure App Service.",
-    future:"Introduce blue-green slots on App Service and move build artifact retention to a lifecycle-managed cool tier.",
+    description:"A desktop automation app (Spring Boot + React + Electron) that automates Naukri profile updates, resume uploads, and job applications. Jenkins builds the backend with Maven and the frontend with npm/React/Electron, then Terraform provisions the full Azure footprint before the VM pulls and runs the container.",
+    future:"Migrate from Jenkins to Azure DevOps, add SonarQube code-quality scanning, and move deployment to AKS with Helm charts.",
+    buildTools:[
+      {t:"Java",v:"17 LTS"},{t:"Spring Boot",v:"3.3.x"},{t:"React + Electron",v:"Latest Stable"},
+      {t:"Maven",v:"3.9.11"},{t:"Node.js",v:"22 LTS"},{t:"npm",v:"10.x"}
+    ],
+    devopsTools:[
+      {t:"Git",v:"2.53+"},{t:"GitHub",v:"Latest"},{t:"Docker",v:"28.x"},
+      {t:"Terraform",v:"1.13.x / 1.15.x"},{t:"Azure Container Registry",v:"Latest"},
+      {t:"Azure VM",v:"Latest"},{t:"Azure Blob Storage",v:"Latest"},{t:"Azure Monitor",v:"Latest"}
+    ],
+    archSteps:["Developer (Windows) — Git Commit","GitHub Repository","Jenkins CI — Maven + npm + React + Electron","Docker Build → Azure Container Registry","Terraform Provisions Azure Infra","Azure VM Pulls & Runs Container","Azure Blob Storage — Resumes & Reports","Azure Monitor — Health & Metrics"],
     nodes:[
-      {name:"GitHub",img:"github/github-original",ver:"v2.4",action:"Checkout Main Branch Codebase"},
-      {name:"Maven / Node",img:"maven/maven-original",ver:"Java 17",action:"Packaging Spring Boot & React Engine"},
-      {name:"Docker",img:"docker/docker-original",ver:"v24.0",action:"Containerizing Automation Engine"},
-      {name:"Azure Storage",img:"azure/azure-original",ver:"Hot Tier",action:"Storing Build Binaries & Artifacts"},
-      {name:"Azure App Service",img:"azure/azure-original",ver:"Linux B1",action:"Deploying API Engine & Portal"}
+      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Webhook Triggers Jenkins"},
+      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"CI",action:"Maven + npm + React + Electron Build"},
+      {name:"Docker",img:"docker/docker-original",ver:"28.x",action:"Containerizing Automation Engine"},
+      {name:"Terraform",img:"terraform/terraform-original",ver:"1.15.x",action:"Provisioning Azure Infrastructure"},
+      {name:"Azure VM",img:"azure/azure-original",ver:"Latest",action:"Pulling Image & Running Container"}
     ]
   },
   tumor:{
     label:"Brain Tumor ML",
     watermarkIcon:"fa-solid fa-brain",
     patternShape:"wave",accentColor:"#7B4B8A",
-    description:"A CNN-based image classifier that flags likely tumor regions in MRI scans. Jenkins validates model accuracy metrics on every branch, Terraform provisions the serving infrastructure, and Azure Monitor tracks inference telemetry in real time.",
+    description:"A CNN-based image classifier (ResNet50) that flags likely tumor regions in MRI scans. Jenkins clones the repo, builds the Docker image, and pushes it to Azure Container Registry. The Azure VM pulls the image, downloads the AI model from Blob Storage on startup, and serves predictions through Nginx → Gunicorn → Flask.",
     future:"Add automated model-drift detection and retrain triggers wired directly into the Jenkins pipeline.",
+    buildTools:[
+      {t:"Python",v:"3.8.10"},{t:"Flask",v:"3.0.3"},{t:"torch",v:"2.3.1"},
+      {t:"torchvision",v:"0.18.1"},{t:"pillow",v:"10.3.0"},{t:"gunicorn",v:"22.0.0"},
+      {t:"azure-storage-blob",v:"12.20.0"},{t:"Git",v:"2.25.1"}
+    ],
+    devopsTools:[
+      {t:"Jenkins",v:"CI/CD"},{t:"Docker",v:"26.1.3"},{t:"Nginx",v:"Latest"},
+      {t:"Azure Container Registry",v:"Latest"},{t:"Azure VM",v:"Ubuntu 22.04"},{t:"Azure Blob Storage",v:"Latest"}
+    ],
+    archSteps:["Developer — Git Push","GitHub Repository","Jenkins Pipeline (Clone, Build, Test)","Docker Image → Azure Container Registry","Azure VM — Pull & Start Container","Azure Blob Storage — Download AI Model","Flask + Gunicorn + Nginx — Process MRI","Return Prediction to User"],
     nodes:[
-      {name:"GitHub",img:"github/github-original",ver:"v2.4",action:"Branch Governance Validation"},
-      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"v2.414",action:"Evaluating CNN Model Metrics"},
-      {name:"Docker",img:"docker/docker-original",ver:"v24.0",action:"Building Image Classifier Image"},
-      {name:"Terraform",img:"terraform/terraform-original",ver:"v1.5",action:"Provisioning Azure B2 Infra"},
-      {name:"Azure Monitor",img:"azure/azure-original",ver:"Log Analytics",action:"Realtime Inference Telemetry"}
+      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Source Push Triggers Pipeline"},
+      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"CI",action:"Clone Repo, Build & Test"},
+      {name:"Docker",img:"docker/docker-original",ver:"26.1.3",action:"Building Image Classifier Container"},
+      {name:"ACR",img:"azure/azure-original",ver:"Latest",action:"Storing Versioned Docker Image"},
+      {name:"Azure VM",img:"azure/azure-original",ver:"Ubuntu 22.04",action:"Nginx → Gunicorn → Flask + Model Load"}
     ]
   },
   snowman:{
     label:"Snowman Monolith",
     watermarkIcon:"fa-solid fa-server",
     patternShape:"grid",accentColor:"#4F7965",
-    description:"A legacy Java monolith kept alive through disciplined packaging and configuration management — Maven compiles the JAR, Docker packages it for portability, and Ansible playbooks bring the target VM to a known-good state before every release.",
-    future:"Begin strangler-fig decomposition of the monolith into containerized services deployable independently.",
+    description:"A Java enterprise monolith (Spring + Maven + MySQL) automated end-to-end without touching application logic. Jenkins builds, tests and packages the JAR into a Docker image pushed to ACR; Terraform provisions AKS and networking, and Kubernetes deploys the app behind an Application Gateway and Load Balancer.",
+    future:"Upgrade to the latest Spring release, migrate CI/CD to Azure DevOps, and add SonarQube plus Prometheus/Grafana monitoring.",
+    buildTools:[
+      {t:"Java",v:"17 LTS"},{t:"Spring Framework",v:"6.x"},{t:"Maven",v:"3.9.x"},
+      {t:"MySQL",v:"8.4 LTS"},{t:"Git",v:"2.50+"}
+    ],
+    devopsTools:[
+      {t:"Jenkins",v:"2.5xx LTS"},{t:"Docker",v:"28.x"},{t:"Docker Compose",v:"v2.x"},
+      {t:"Terraform",v:"1.13.x / 1.15.x"},{t:"Ansible",v:"12.x"},{t:"Kubernetes (AKS)",v:"1.34.x"},
+      {t:"App Gateway & Load Balancer",v:"Latest"},{t:"Azure Monitor",v:"Latest"}
+    ],
+    archSteps:["Developer — Push to GitHub","GitHub Webhook Triggers Jenkins","Jenkins — Maven Build, Test, Package JAR","Docker Image → Azure Container Registry","Terraform Provisions AKS & Azure Infra","AKS Pulls Image — Deployment/Pods/Service","Application Gateway → Load Balancer","Azure MySQL Database + Azure Monitor"],
     nodes:[
-      {name:"GitHub",img:"github/github-original",ver:"v2.4",action:"Commit Trigger Captured"},
-      {name:"Maven",img:"maven/maven-original",ver:"v3.9",action:"Compiling Monolith JAR Package"},
-      {name:"Docker",img:"docker/docker-original",ver:"v24.0",action:"Packaging Legacy Monolith Container"},
-      {name:"Ansible",img:"ansible/ansible-original",ver:"v2.15",action:"Executing VM Playbook Configurations"},
-      {name:"Azure VM",img:"azure/azure-original",ver:"Std B2s",action:"Host Deployment Execution"}
+      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Webhook Triggers Jenkins"},
+      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"2.5xx LTS",action:"Maven Build, Test & Package JAR"},
+      {name:"Docker",img:"docker/docker-original",ver:"28.x",action:"Building Monolith Container Image"},
+      {name:"Terraform",img:"terraform/terraform-original",ver:"1.15.x",action:"Provisioning AKS & Azure Infra"},
+      {name:"AKS",img:"kubernetes/kubernetes-plain",ver:"1.34.x",action:"Deploying Pods & Services"}
     ]
   },
   chunkhound:{
     label:"ChunkHound AI",
     watermarkIcon:"fa-solid fa-magnifying-glass",
     patternShape:"ring",accentColor:"#8A6E4F",
-    description:"A high-speed semantic code-search daemon written in Rust, compiled for performance and shipped as a lean microservice image through ACR onto a dedicated Azure VM for low-latency queries.",
-    future:"Add horizontal scaling behind a load balancer and precompute embeddings on a scheduled background worker.",
+    description:"A semantic code-search CLI (Python) run as a shared team service. A Jenkins-hosted Azure VM checks out the repo, installs dependencies with uv, lints and tests with Pytest, builds a Docker image, and pushes it to ACR — with secrets pulled from Azure Key Vault at runtime and health tracked in Azure Monitor.",
+    future:"Migrate the pipeline from Jenkins to Azure DevOps, and evaluate AKS for horizontally scaling the search service.",
+    buildTools:[
+      {t:"Python",v:"3.12.x"},{t:"uv",v:"0.9.x"},{t:"Pytest",v:"8.x"}
+    ],
+    devopsTools:[
+      {t:"Git",v:"2.50.x"},{t:"Jenkins",v:"LTS 2.555.x"},{t:"Docker Engine",v:"29.x"},
+      {t:"Terraform",v:"1.15.x / OpenTofu 1.9+"},{t:"Azure Container Registry",v:"Basic"},
+      {t:"Azure Key Vault",v:"Standard"},{t:"Azure Storage Account",v:"LRS"},
+      {t:"Azure Monitor",v:"Latest"},{t:"Azure VM",v:"Std B2s, Ubuntu 24.04 LTS"}
+    ],
+    archSteps:["Developer — VS Code + Git Push","GitHub Repository (webhook trigger)","Azure VM — Jenkins + Python 3.12 + uv + Docker","Jenkins — Checkout, uv sync, Lint, Pytest","Docker Build → Azure Container Registry","Azure Storage — Reports & Logs","Azure Key Vault — Secrets at Runtime","Azure Monitor — Health Checks & Alerts"],
     nodes:[
-      {name:"GitHub",img:"github/github-original",ver:"v2.4",action:"Syncing Repository Indexing Engine"},
-      {name:"Cargo / Rust",img:"rust/rust-original",ver:"v1.70+",action:"Compiling High-Speed Semantic Search"},
-      {name:"Docker",img:"docker/docker-original",ver:"v24.0",action:"Creating Microservice Container Image"},
-      {name:"ACR",img:"azure/azure-original",ver:"Shared Tier",action:"Registry Image Release"},
-      {name:"Azure VM",img:"azure/azure-original",ver:"Std B2s",action:"Deploying Code Search Daemon"}
+      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Webhook Triggers Jenkins"},
+      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"LTS 2.555.x",action:"Checkout, uv sync, Lint & Pytest"},
+      {name:"Docker",img:"docker/docker-original",ver:"29.x",action:"Building Reproducible CLI Image"},
+      {name:"ACR",img:"azure/azure-original",ver:"Basic",action:"Pushing Image to Registry"},
+      {name:"Azure Monitor",img:"azure/azure-original",ver:"Latest",action:"Health Checks & Alerts"}
     ]
   }
 };
@@ -582,6 +674,14 @@ Object.entries(projectData).forEach(([key,proj])=>{
       <div class="node-label">${n.name}</div>
     </div>`).join('');
  
+  const archHtml=proj.archSteps.map((s,i)=>`
+    <div class="arch-step">${s}</div>
+    ${i<proj.archSteps.length-1?'<div class="arch-arrow"><i class="fa-solid fa-arrow-down"></i></div>':''}
+  `).join('');
+ 
+  const buildToolsHtml=proj.buildTools.map(x=>`<li><span class="tname">${x.t}</span><span class="tver">${x.v}</span></li>`).join('');
+  const devopsToolsHtml=proj.devopsTools.map(x=>`<li><span class="tname">${x.t}</span><span class="tver">${x.v}</span></li>`).join('');
+ 
   slide.innerHTML=`
     <div class="project-slide-bg" style="background-image:${buildPatternUrl(proj.patternShape,proj.accentColor)};"></div>
     <i class="project-watermark-icon ${proj.watermarkIcon}"></i>
@@ -590,6 +690,24 @@ Object.entries(projectData).forEach(([key,proj])=>{
       <h3 style="color:${proj.accentColor};">How It Works</h3>
       <p>${proj.description}</p>
     </div>
+ 
+    <div class="project-info-row">
+      <div class="info-panel arch-panel">
+        <h4><i class="fa-solid fa-diagram-project"></i> Architecture</h4>
+        <div class="arch-flow">${archHtml}</div>
+        <div class="arch-note">Placeholder flow generated from the project docs — swap in your own architecture diagram image here.</div>
+      </div>
+      <div class="info-panel build-panel">
+        <h4><i class="fa-solid fa-code"></i> Build Tools</h4>
+        <ul class="tool-list">${buildToolsHtml}</ul>
+      </div>
+      <div class="info-panel devops-panel">
+        <h4><i class="fa-solid fa-gears"></i> DevOps Tools</h4>
+        <ul class="tool-list">${devopsToolsHtml}</ul>
+      </div>
+    </div>
+ 
+    <div class="devops-workflow-heading">DevOps Workflow</div>
     <div class="pipeline-wrapper">
       <div class="developer-stage">
         <div class="thought-bubble" id="dev-thought-${key}">git push...</div>
