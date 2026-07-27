@@ -33,8 +33,8 @@
     --font-accent:'Playfair Display',serif;
   }
   *{margin:0;padding:0;box-sizing:border-box;font-family:var(--font-body);}
-  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
-  body{background:var(--bg-main);color:var(--text-main);overflow-x:hidden;position:relative;width:100%;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg-main);color:var(--text-main);overflow-x:hidden;position:relative;}
   h1,h2,h3,h4,h5{font-family:var(--font-display);}
  
   #bg-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;}
@@ -66,15 +66,15 @@
   .dropdown-menu li a:hover{background:rgba(14,165,165,0.08);color:var(--accent-teal);}
  
   /* ===================== SECTIONS ===================== */
-  section{min-height:100vh;padding:clamp(6rem,10vw,8.5rem) clamp(1.6rem,4.5vw,4rem) clamp(3rem,5vw,4rem);position:relative;}
-  .section-title{font-size:clamp(2rem,1.4vw + 1.9rem,2.9rem);margin-bottom:0.5rem;text-align:center;font-weight:800;color:var(--text-main);}
+  section{min-height:100vh;padding:8.5rem 4rem 4rem 4rem;position:relative;}
+  .section-title{font-size:2.6rem;margin-bottom:0.5rem;text-align:center;font-weight:800;color:var(--text-main);}
   .section-subtitle{text-align:center;color:var(--text-muted);margin-bottom:3.5rem;font-size:1rem;}
  
   /* ===================== HOME ===================== */
-  #home{display:flex;align-items:center;justify-content:center;gap:clamp(2rem,4vw,5rem);padding-top:7rem;max-width:1680px;width:100%;margin:0 auto;}
-  .home-left{flex:1.1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;max-width:540px;}
-  .hero-title{font-size:clamp(2.4rem,1.6vw + 2.1rem,3.4rem);font-weight:800;margin-bottom:0.6rem;line-height:1.15;text-align:left;}
-  .hero-sub{color:var(--text-muted);font-size:clamp(1rem,0.4vw + 0.9rem,1.15rem);margin-bottom:2.5rem;text-align:left;}
+  #home{display:flex;align-items:center;justify-content:center;gap:3rem;padding-top:7rem;max-width:1400px;margin:0 auto;}
+  .home-left{flex:1.1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;max-width:480px;}
+  .hero-title{font-size:2.6rem;font-weight:800;margin-bottom:0.6rem;line-height:1.15;text-align:left;}
+  .hero-sub{color:var(--text-muted);font-size:1rem;margin-bottom:2.5rem;text-align:left;}
  
   .dangling-container{display:flex;flex-direction:column;gap:1.1rem;}
   .dangling-card{
@@ -105,7 +105,7 @@
   }
  
   /* ===================== ABOUT ===================== */
-  .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2rem;max-width:1440px;margin:0 auto;width:100%;perspective:1200px;}
+  .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2rem;max-width:1200px;margin:0 auto;width:100%;perspective:1200px;}
   .about-card{
     background:var(--card-bg);border:1px solid var(--border-color);backdrop-filter:blur(10px);
     border-radius:16px;padding:2rem;box-shadow:var(--shadow-soft);cursor:pointer;
@@ -136,8 +136,7 @@
   .project-slide{
     min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;
     border-radius:22px;border:1px solid var(--border-color);background:var(--bg-panel);
-    max-width:1600px;width:94%;margin:0 auto 3rem auto;padding:clamp(2.2rem,3vw,3.5rem) clamp(1.6rem,3.5vw,3.5rem);
-    overflow:hidden;box-shadow:var(--shadow-soft);
+    max-width:1300px;margin:0 auto 3rem auto;padding:3.5rem 3rem;overflow:hidden;box-shadow:var(--shadow-soft);
   }
   .project-watermark-icon{
     position:absolute;right:-40px;bottom:-60px;font-size:22rem;color:var(--text-main);opacity:0.05;z-index:0;pointer-events:none;
@@ -158,7 +157,7 @@
   .project-slide-body h3{font-size:1.4rem;margin-bottom:0.7rem;color:var(--accent-indigo);}
   .project-slide-body p{color:var(--text-muted);font-size:0.96rem;line-height:1.65;}
  
-  /* ---- Architecture / Build Tools / DevOps Tools info row ---- */
+  /* ---- Build Tools / DevOps Tools row ---- */
   .project-info-row{
     position:relative;z-index:2;display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:1.5rem;margin-bottom:2.2rem;
   }
@@ -188,81 +187,107 @@
   .arch-arrow{text-align:center;color:var(--accent-teal);font-size:0.85rem;padding:0.15rem 0;}
   .arch-note{margin-top:0.8rem;font-size:0.68rem;color:var(--text-muted);font-style:italic;}
  
-  .devops-workflow-heading{
+  /* ---- System Architecture: dark diagram card matching the reference flowcharts ---- */
+  .arch-section-heading{
     position:relative;z-index:2;font-size:1.2rem;font-weight:700;margin-bottom:1rem;
     display:flex;align-items:center;gap:0.6rem;color:var(--text-main);
   }
-  .devops-workflow-heading::before{
+  .arch-section-heading::before{
     content:'';width:26px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--accent-teal),var(--accent-amber));
   }
+  .arch-diagram-card{
+    position:relative;z-index:2;background:#0A0E17;border-radius:18px;padding:2.4rem 1.8rem 1.8rem;
+    margin-bottom:2rem;box-shadow:0 24px 55px rgba(10,14,23,0.35);overflow:hidden;
+  }
+  .arch-diagram-title{
+    color:#F5F7FB;text-align:center;font-family:var(--font-display);font-weight:800;font-size:1.25rem;
+    letter-spacing:1.5px;text-transform:uppercase;
+  }
+  .arch-diagram-rule{height:2px;width:130px;margin:0.6rem auto 2rem;background:linear-gradient(90deg,transparent,#38bdf8,transparent);}
+  .arch-grid{display:flex;flex-wrap:wrap;gap:1.3rem;justify-content:center;position:relative;}
+  .arch-box{
+    --box-color:#38bdf8;position:relative;background:rgba(255,255,255,0.035);border:1.5px solid var(--box-color);
+    border-radius:10px;padding:1rem 1rem 0.9rem;width:206px;opacity:0.38;transform:scale(0.92);
+    transition:opacity 0.4s,transform 0.4s,box-shadow 0.4s;
+  }
+  .arch-box.active{opacity:1;transform:scale(1);box-shadow:0 0 26px -4px var(--box-color);}
+  .arch-box .arch-box-num{
+    position:absolute;top:-11px;left:-11px;width:24px;height:24px;border-radius:50%;background:var(--box-color);
+    color:#0A0E17;font-size:0.68rem;font-weight:800;display:flex;align-items:center;justify-content:center;
+  }
+  .arch-box h5{color:var(--box-color);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.65rem;font-weight:700;}
+  .arch-box-chip{display:flex;align-items:center;gap:0.45rem;font-size:0.7rem;color:#E5E7EB;margin-bottom:0.4rem;line-height:1.25;}
+  .arch-box-chip:last-child{margin-bottom:0;}
+  .arch-box-chip img{width:15px;height:15px;flex:0 0 15px;object-fit:contain;filter:brightness(1.4) saturate(1.2);}
+  .arch-box-chip i{width:15px;flex:0 0 15px;color:var(--box-color);}
+  .arch-marker{
+    position:absolute;top:0;left:0;width:36px;height:36px;border-radius:50%;background:#0A0E17;
+    border:2px solid #fff;box-shadow:0 0 18px rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;
+    z-index:10;opacity:0;transform:translate(-50%,-50%);pointer-events:none;
+  }
+  .arch-marker img{width:18px;height:18px;object-fit:contain;}
+  .arch-marker i{font-size:0.85rem;color:#fff;}
+  .arch-diagram-note{font-size:0.68rem;color:var(--text-muted);font-style:italic;text-align:center;margin-top:0.3rem;}
  
   @media (max-width:1100px){
     .project-info-row{grid-template-columns:1fr;}
   }
  
-  /* ===================== LIVE DIAGRAM (image + animated flow overlay) ===================== */
-  .diagram-panel{
-    position:relative;z-index:2;background:#0b0b0c;border:1px solid var(--border-color);border-radius:16px;
-    padding:1.4rem;box-shadow:var(--shadow-soft);
+  .pipeline-wrapper{
+    background:var(--bg-alt);border:1px solid var(--border-color);border-radius:16px;padding:3.5rem 2rem;
+    position:relative;overflow:hidden;min-height:420px;display:flex;align-items:center;z-index:2;
   }
-  /* Fixed aspect-ratio + min-height so this box holds its size even if the diagram
-     image hasn't been added yet at assets/*.jpeg — it no longer collapses to the
-     size of a broken-image icon and crushes the markers together. */
-  .diagram-wrap{
-    position:relative;width:100%;border-radius:10px;overflow:hidden;
-    background:radial-gradient(circle at 30% 20%,#17181a 0%,#0a0a0b 70%);
-    aspect-ratio:16/8;min-height:480px;
+  .developer-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;width:140px;position:relative;z-index:5;}
+  .dev-svg{width:75px;height:75px;}
+  .thought-bubble{
+    position:absolute;top:-45px;background:rgba(14,165,165,0.14);border:1px solid var(--accent-teal);
+    color:var(--accent-teal);border-radius:20px;padding:4px 10px;font-size:0.7rem;font-weight:bold;
+    opacity:0;transform:translateY(5px);
   }
-  .diagram-img{
-    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-    display:block;user-select:none;-webkit-user-drag:none;
+  .webhook-signal{
+    position:absolute;top:50%;left:130px;width:12px;height:12px;border-radius:50%;
+    background:var(--accent-teal);box-shadow:0 0 10px var(--accent-teal);opacity:0;z-index:10;
   }
-  /* Hidden by default; JS adds .img-missing to diagram-wrap on image load error
-     so we show a clean placeholder instead of the browser's broken-image glyph. */
-  .diagram-wrap.img-missing .diagram-img{display:none;}
-  .diagram-missing-note{
-    display:none;position:absolute;inset:0;align-items:center;justify-content:center;
-    flex-direction:column;gap:0.6rem;color:rgba(255,255,255,0.35);text-align:center;padding:2rem;
+  .pipeline-flow{position:relative;flex:1;display:flex;align-items:center;margin-left:2rem;}
+  .pipeline-line{position:absolute;top:50%;left:0;width:100%;height:4px;background:var(--border-color);transform:translateY(-50%);z-index:1;}
+  .pipeline-progress{
+    position:absolute;top:50%;left:0;width:0%;height:4px;
+    background:linear-gradient(90deg,var(--accent-teal),var(--accent-indigo),var(--accent-amber));
+    transform:translateY(-50%);z-index:2;
   }
-  .diagram-wrap.img-missing .diagram-missing-note{display:flex;}
-  .diagram-missing-note i{font-size:2.2rem;}
-  .diagram-missing-note span{font-size:0.78rem;font-style:italic;max-width:360px;}
-  .diagram-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
-  .flow-line{fill:none;stroke:var(--diagram-accent,#4F7965);stroke-width:0.35;stroke-linecap:round;stroke-linejoin:round;
-    stroke-dasharray:1.6 1.6;opacity:0.85;filter:drop-shadow(0 0 2px var(--diagram-accent,#4F7965));
-    animation:dashFlow 1.4s linear infinite;}
-  @keyframes dashFlow{to{stroke-dashoffset:-6.4;}}
-  .flow-marker{
-    position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;
-    background:rgba(255,255,255,0.94);border:2px solid var(--diagram-accent,#4F7965);
-    display:flex;align-items:center;justify-content:center;font-size:0.92rem;color:var(--diagram-accent,#4F7965);
-    box-shadow:0 0 0 0 rgba(79,121,101,0.5);transition:transform 0.3s,box-shadow 0.3s,background 0.3s,color 0.3s;
-    z-index:3;cursor:default;
+  .pipeline-nodes{display:flex;justify-content:space-between;width:100%;position:relative;z-index:3;}
+  .node{display:flex;flex-direction:column;align-items:center;position:relative;opacity:0.28;transform:scale(0.85);transition:opacity 0.4s,transform 0.4s;}
+  .node.active{opacity:1;transform:scale(1);}
+  .node-icon-wrap{position:relative;}
+  .node-icon{
+    width:68px;height:68px;border-radius:50%;background:#fff;border:2px solid var(--accent-teal);
+    display:flex;justify-content:center;align-items:center;box-shadow:0 6px 18px rgba(14,165,165,0.18);
   }
-  .flow-marker .fm-tip{
-    position:absolute;bottom:135%;left:50%;transform:translateX(-50%);white-space:nowrap;
-    background:rgba(10,10,10,0.92);color:#fff;font-size:0.68rem;font-weight:600;padding:4px 9px;border-radius:6px;
-    opacity:0;pointer-events:none;transition:opacity 0.25s;z-index:6;
+  .node-icon img{width:36px;height:36px;object-fit:contain;}
+  .version-badge{
+    position:absolute;bottom:-6px;right:-10px;background:var(--accent-indigo);color:#fff;font-size:0.62rem;
+    font-weight:bold;padding:2px 6px;border-radius:10px;border:2px solid var(--bg-alt);
   }
-  .flow-marker:hover .fm-tip{opacity:1;}
-  .flow-marker.active{
-    background:var(--diagram-accent,#4F7965);color:#fff;transform:scale(1.28);
-    box-shadow:0 0 0 8px rgba(79,121,101,0.16);
-    animation:markerPulse 1s ease-out;
+  .node-popup{
+    position:absolute;top:-128px;background:#fff;border:1px solid var(--accent-teal);border-radius:10px;
+    padding:0.8rem 1rem;width:190px;text-align:center;box-shadow:var(--shadow-soft);opacity:0;
+    transform:translateY(10px);transition:opacity 0.4s,transform 0.4s;pointer-events:none;left:50%;margin-left:-95px;
   }
-  @keyframes markerPulse{0%{box-shadow:0 0 0 0 rgba(79,121,101,0.55);}100%{box-shadow:0 0 0 14px rgba(79,121,101,0);}}
-  .flow-traveler{
-    position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;
-    background:var(--diagram-accent,#4F7965);border:3px solid #fff;display:flex;align-items:center;justify-content:center;
-    color:#fff;font-size:1.15rem;box-shadow:0 4px 18px rgba(0,0,0,0.5),0 0 0 5px rgba(255,255,255,0.15);
-    z-index:5;opacity:0;left:0;top:0;
+  .node-popup::after{content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);border-width:8px 8px 0;border-style:solid;border-color:#fff transparent;}
+  .node.active .node-popup{opacity:1;transform:translateY(0);}
+  .node-popup h5{font-size:0.85rem;color:var(--accent-indigo);margin-bottom:0.3rem;}
+  .node-popup p{font-size:0.72rem;color:var(--text-muted);line-height:1.25;}
+  .node-label{margin-top:1rem;font-size:0.88rem;font-weight:700;}
+  .logo-carrier{
+    position:absolute;top:-38px;left:0;width:46px;height:46px;border-radius:50%;
+    background:#fff;border:2px solid var(--text-main);box-shadow:var(--shadow-soft);
+    display:flex;align-items:center;justify-content:center;z-index:6;transform:translateX(-50%);opacity:0;
   }
-  .diagram-controls{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:0.9rem;flex-wrap:wrap;}
-  .diagram-hint{font-size:0.7rem;color:rgba(255,255,255,0.55);font-style:italic;}
-  .diagram-btns{display:flex;gap:0.7rem;}
+  .logo-carrier img{width:26px;height:26px;object-fit:contain;}
+  .controls{display:flex;justify-content:center;gap:1.2rem;margin-top:2.2rem;position:relative;z-index:2;}
  
   /* ===================== VISION / FUTURE ===================== */
-  .vision-cards,.future-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;max-width:1440px;margin:0 auto;width:100%;}
+  .vision-cards,.future-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;max-width:1200px;margin:0 auto;width:100%;}
   .future-cards{margin-top:1rem;margin-bottom:4rem;}
   .vision-card,.future-card{background:var(--card-bg);border:1px solid var(--border-color);padding:2.3rem 1.8rem;border-radius:14px;position:relative;overflow:hidden;box-shadow:var(--shadow-soft);}
   .vision-card::before,.future-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;}
@@ -275,7 +300,7 @@
  
   /* ===================== CONTACT ===================== */
   #contact{display:flex;flex-direction:column;align-items:center;}
-  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.6rem;max-width:1000px;width:100%;}
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.6rem;max-width:900px;width:100%;}
   .contact-card{
     background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;padding:2rem;
     text-align:center;box-shadow:var(--shadow-soft);
@@ -295,6 +320,9 @@
     .team-watermark .line1{font-size:2.6rem;}
     .team-watermark .line2{font-size:1.3rem;letter-spacing:6px;}
     .team-watermark .rule{margin:1rem auto 0 auto;}
+    .pipeline-wrapper{flex-direction:column;align-items:center;padding:2rem 1rem;}
+    .pipeline-flow{width:100%;margin-left:0;margin-top:4rem;}
+    .webhook-signal{display:none;}
     .project-slide-header,.project-slide-name{text-align:center;}
     .project-watermark-icon{display:none;}
   }
@@ -353,13 +381,13 @@
       <div class="dangling-card"><div class="member-name">Vikas M</div><div class="member-role">Scrum Master</div></div>
       <div class="dangling-card"><div class="member-name">Gomatesh</div><div class="member-role">DevOps Engineer</div></div>
       <div class="dangling-card"><div class="member-name">Suvarna</div><div class="member-role">DevOps Engineer</div></div>
-      <div class="dangling-card"><div class="member-name">Gousiya</div><div class="member-role">DevOps Engineer</div></div>
+      <div class="dangling-card"><div class="member-name">Gousia</div><div class="member-role">DevOps Engineer</div></div>
     </div>
   </div>
   <div class="home-right">
     <div class="team-watermark">
       <span class="line1">Triveni Sangam</span>
-      <span class="line2">DevOps Team</span>
+      <span class="line2">DevOps Guild</span>
       <div class="rule"></div>
     </div>
   </div>
@@ -373,35 +401,35 @@
     <div class="about-card">
       <i class="fa-solid fa-user-gear" style="color:var(--accent-teal)"></i>
       <h3>Deepa</h3>
-      <p class="member-role">Product Owner &amp; </p>
+      <p class="member-role">Product Owner &amp; Azure Infra Lead</p>
       <p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);line-height:1.5;">Manages multi-branch repository strategies, Azure App Service provisioning, and target environment release governance.</p>
       <div class="card-extra">Focus areas: release governance, environment promotion strategy, stakeholder alignment across all five project streams.</div>
     </div>
     <div class="about-card">
       <i class="fa-solid fa-list-check" style="color:var(--accent-indigo)"></i>
       <h3>Vikas M</h3>
-      <p class="member-role">Scrum Master &amp; </p>
+      <p class="member-role">Scrum Master &amp; Container Lead</p>
       <p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);line-height:1.5;">Drives sprint cadence, Docker container optimization, and multi-stage image registry security controls.</p>
       <div class="card-extra">Focus areas: sprint ceremonies, image size reduction, base-image CVE scanning across registries.</div>
     </div>
     <div class="about-card">
       <i class="fa-solid fa-code-branch" style="color:var(--accent-teal)"></i>
       <h3>Gomatesh</h3>
-      <p class="member-role">Scrum Member &amp; </p>
+      <p class="member-role">DevOps Engineer &amp; Pipeline Architect</p>
       <p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);line-height:1.5;">Specializes in Jenkins CI/CD automation, declarative pipelines, shell scripting, and webhook orchestration.</p>
       <div class="card-extra">Focus areas: declarative Jenkinsfiles, shared pipeline libraries, webhook-triggered multibranch builds.</div>
     </div>
     <div class="about-card">
       <i class="fa-solid fa-cloud" style="color:var(--accent-amber)"></i>
       <h3>Suvarna</h3>
-      <p class="member-role">Scrum Member &amp; </p>
+      <p class="member-role">DevOps Engineer &amp; IaC Specialist</p>
       <p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);line-height:1.5;">Focuses on Terraform infrastructure provisioning, Ansible configuration management, and Azure Cloud setups.</p>
       <div class="card-extra">Focus areas: modular Terraform state, Ansible playbook idempotency, Azure resource-group standards.</div>
     </div>
     <div class="about-card">
       <i class="fa-solid fa-chart-line" style="color:var(--accent-coral)"></i>
-      <h3>Gousiya</h3>
-      <p class="member-role">Scrum Member &amp; </p>
+      <h3>Gousia</h3>
+      <p class="member-role">DevOps Engineer &amp; Observability Lead</p>
       <p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);line-height:1.5;">Architects Azure Monitor dashboards, central Log Analytics Workspaces, and deployment telemetry dashboards.</p>
       <div class="card-extra">Focus areas: alert-rule tuning, KQL query libraries, cross-project telemetry correlation.</div>
     </div>
@@ -414,7 +442,7 @@
   <p class="section-subtitle">Each project ships its own build tools, workflow design, and live pipeline animation</p>
  
   <div class="project-subnav" id="project-subnav">
-    <button class="proj-btn active" data-target="slide-meddy">Medical Chatbot</button>
+    <button class="proj-btn active" data-target="slide-meddy">Meddy Chatbot</button>
     <button class="proj-btn" data-target="slide-naukri">Naukri Automation</button>
     <button class="proj-btn" data-target="slide-tumor">Brain Tumor ML</button>
     <button class="proj-btn" data-target="slide-snowman">Snowman Monolith</button>
@@ -461,7 +489,7 @@
     <div class="contact-card">
       <i class="fa-solid fa-phone"></i>
       <h4>Phone</h4>
-      <p>+91 7204060355</p>
+      <p>+91 98765 43210</p>
     </div>
     <div class="contact-card">
       <i class="fa-solid fa-location-dot"></i>
@@ -528,6 +556,7 @@ gsap.utils.toArray('.about-card').forEach((card,i)=>{
 const projectData={
   meddy:{
     label:"Meddy Chatbot",
+    archSteps:["Developer (git push)","GitHub Repository","Jenkins CI/CD Pipeline","Docker Build (Flask + Gunicorn)","Azure Container Registry","Azure VM — Nginx → Gunicorn → Flask","Azure Blob Storage (AI Model)","End Users — Chat Interface"],
     watermarkIcon:"fa-solid fa-comment-medical",
     patternShape:"cross",accentColor:"#C1583F",
     description:"A healthcare assistant chatbot built on PyTorch and Flask that answers patient queries via a chat interface. Jenkins checks out the code, validates it, builds a Docker image (Flask + Gunicorn), and pushes it to Azure Container Registry. The Azure VM pulls the image and serves it through Nginx → Gunicorn → Flask, while the trained model is fetched from Azure Blob Storage at startup.",
@@ -541,21 +570,42 @@ const projectData={
       {t:"Jenkins",v:"2.414"},{t:"Docker",v:"26.1.3"},{t:"Nginx",v:"1.18.0"},
       {t:"Azure Container Registry",v:"Basic"},{t:"Azure VM",v:"Ubuntu 22.04"},{t:"Azure Blob Storage",v:"Standard"}
     ],
-    archSteps:["Developer (git push)","GitHub Repository","Jenkins CI/CD Pipeline","Docker Build (Flask + Gunicorn)","Azure Container Registry","Azure VM — Nginx → Gunicorn → Flask","Azure Blob Storage (AI Model)","End Users — Chat Interface"],
-    diagramImg:"assets/meddy-chatbot.jpeg",
-    flowPath:[
-      {x:7.5,y:16.7,icon:"fa-solid fa-user",label:"Developer"},
-      {x:13.5,y:16.7,icon:"fa-brands fa-github",label:"GitHub Repository"},
-      {x:36,y:19.3,icon:"fa-brands fa-jenkins",label:"Jenkins Pipeline"},
-      {x:61.2,y:19.3,icon:"fa-brands fa-docker",label:"Docker Build"},
-      {x:86.8,y:15.8,icon:"fa-solid fa-boxes-stacked",label:"Azure Container Registry"},
-      {x:59.3,y:56,icon:"fa-solid fa-server",label:"Azure VM"},
-      {x:19.9,y:58.9,icon:"fa-solid fa-database",label:"Azure Blob Storage"},
-      {x:57.8,y:92.6,icon:"fa-solid fa-users",label:"End Users"}
+    archFlow:[
+      {title:"Developer",items:[{label:"git push to GitHub",icon:{type:"devicon",src:"git/git-original"}}]},
+      {title:"Jenkins CI/CD Pipeline",items:[
+        {label:"Checkout Code",icon:{type:"devicon",src:"jenkins/jenkins-original"}},
+        {label:"Install Dependencies",icon:{type:"fa",src:"fa-solid fa-download"}},
+        {label:"Run Tests",icon:{type:"fa",src:"fa-solid fa-vial"}},
+        {label:"Build Docker Image",icon:{type:"devicon",src:"docker/docker-original"}},
+        {label:"Push to ACR",icon:{type:"fa",src:"fa-solid fa-upload"}}
+      ]},
+      {title:"Docker Build",items:[
+        {label:"Dockerfile Build",icon:{type:"devicon",src:"docker/docker-original"}},
+        {label:"Flask Application",icon:{type:"devicon",src:"flask/flask-original"}},
+        {label:"Gunicorn Server",icon:{type:"fa",src:"fa-solid fa-server"}},
+        {label:"Optimized Image",icon:{type:"fa",src:"fa-solid fa-compress"}}
+      ]},
+      {title:"Azure Container Registry",items:[{label:"Image Registry",icon:{type:"devicon",src:"azure/azure-original"}}]},
+      {title:"Azure VM (Ubuntu 22.04)",items:[
+        {label:"Nginx Reverse Proxy",icon:{type:"devicon",src:"nginx/nginx-original"}},
+        {label:"Gunicorn WSGI Server",icon:{type:"fa",src:"fa-solid fa-server"}},
+        {label:"Flask Python App",icon:{type:"devicon",src:"flask/flask-original"}},
+        {label:"Systemd Auto-start",icon:{type:"fa",src:"fa-solid fa-power-off"}}
+      ]},
+      {title:"Azure Blob Storage",items:[{label:"Meddy_AI.pt — loaded on startup",icon:{type:"devicon",src:"azure/azure-original"}}]},
+      {title:"End Users",items:[{label:"Chat Interface",icon:{type:"fa",src:"fa-solid fa-users"}}]}
+    ],
+    nodes:[
+      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Webhook Triggers Jenkins Pipeline"},
+      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"2.414",action:"Checkout, Test & Build Stages"},
+      {name:"Docker",img:"docker/docker-original",ver:"26.1.3",action:"Building Flask + Gunicorn Image"},
+      {name:"ACR",img:"azure/azure-original",ver:"Basic",action:"Tagging & Pushing Image Artifacts"},
+      {name:"Azure VM",img:"azure/azure-original",ver:"Ubuntu 22.04",action:"Nginx → Gunicorn → Flask Deployment"}
     ]
   },
   naukri:{
     label:"Naukri Automation",
+    archSteps:["Developer (Windows) — Git Commit","GitHub Repository","Jenkins CI — Maven + npm + React + Electron","Docker Build → Azure Container Registry","Terraform Provisions Azure Infra","Azure VM Pulls & Runs Container","Azure Blob Storage — Resumes & Reports","Azure Monitor — Health & Metrics"],
     watermarkIcon:"fa-solid fa-briefcase",
     patternShape:"briefcase",accentColor:"#D9A441",
     description:"A desktop automation app (Spring Boot + React + Electron) that automates Naukri profile updates, resume uploads, and job applications. Jenkins builds the backend with Maven and the frontend with npm/React/Electron, then Terraform provisions the full Azure footprint before the VM pulls and runs the container.",
@@ -569,21 +619,53 @@ const projectData={
       {t:"Terraform",v:"1.13.x / 1.15.x"},{t:"Azure Container Registry",v:"Latest"},
       {t:"Azure VM",v:"Latest"},{t:"Azure Blob Storage",v:"Latest"},{t:"Azure Monitor",v:"Latest"}
     ],
-    archSteps:["Developer (Windows) — Git Commit","GitHub Repository","Jenkins CI — Maven + npm + React + Electron","Docker Build → Azure Container Registry","Terraform Provisions Azure Infra","Azure VM Pulls & Runs Container","Azure Blob Storage — Resumes & Reports","Azure Monitor — Health & Metrics"],
-    diagramImg:"assets/naukri-automation.png",
-    flowPath:[
-      {x:9,y:25.7,icon:"fa-solid fa-user",label:"Developer"},
-      {x:19,y:25.7,icon:"fa-brands fa-github",label:"GitHub Repository"},
-      {x:45.3,y:25.6,icon:"fa-brands fa-jenkins",label:"Jenkins CI/CD"},
-      {x:73.6,y:26,icon:"fa-brands fa-docker",label:"Docker → ACR"},
-      {x:89.9,y:25.9,icon:"fa-solid fa-layer-group",label:"Terraform"},
-      {x:46,y:54.7,icon:"fa-solid fa-server",label:"Azure VM"},
-      {x:92.2,y:55.1,icon:"fa-solid fa-database",label:"Azure Blob Storage"},
-      {x:18.6,y:71,icon:"fa-solid fa-chart-line",label:"Azure Monitor"}
+    archFlow:[
+      {title:"Source Control",items:[
+        {label:"Developer Commits",icon:{type:"devicon",src:"git/git-original"}},
+        {label:"GitHub Repository",icon:{type:"devicon",src:"github/github-original"}}
+      ]},
+      {title:"CI/CD Pipeline (Jenkins)",items:[
+        {label:"Checkout Code",icon:{type:"devicon",src:"jenkins/jenkins-original"}},
+        {label:"Maven Build",icon:{type:"devicon",src:"maven/maven-original"}},
+        {label:"npm Install",icon:{type:"devicon",src:"npm/npm-original-wordmark"}},
+        {label:"React Build",icon:{type:"devicon",src:"react/react-original"}},
+        {label:"Electron Build",icon:{type:"devicon",src:"electron/electron-original"}},
+        {label:"Quality Checks",icon:{type:"fa",src:"fa-solid fa-shield-halved"}}
+      ]},
+      {title:"Artifacts",items:[
+        {label:"Docker Image",icon:{type:"devicon",src:"docker/docker-original"}},
+        {label:"Azure Container Registry",icon:{type:"devicon",src:"azure/azure-original"}}
+      ]},
+      {title:"Infrastructure as Code",items:[{label:"Terraform Provisions Azure",icon:{type:"devicon",src:"terraform/terraform-original"}}]},
+      {title:"Azure Infrastructure",items:[
+        {label:"Resource Group / VNet / Subnet",icon:{type:"devicon",src:"azure/azure-original"}},
+        {label:"Network Security Group",icon:{type:"fa",src:"fa-solid fa-network-wired"}},
+        {label:"Public IP",icon:{type:"fa",src:"fa-solid fa-globe"}},
+        {label:"Azure VM (Windows) + Managed Disk",icon:{type:"fa",src:"fa-solid fa-desktop"}}
+      ]},
+      {title:"Deployment & Runtime",items:[
+        {label:"Docker Container",icon:{type:"devicon",src:"docker/docker-original"}},
+        {label:"Naukri Automation App",icon:{type:"fa",src:"fa-solid fa-robot"}},
+        {label:"Playwright Automation",icon:{type:"fa",src:"fa-solid fa-masks-theater"}}
+      ]},
+      {title:"Storage",items:[{label:"Azure Blob Storage — Reports, Logs, Screenshots",icon:{type:"devicon",src:"azure/azure-original"}}]},
+      {title:"Monitoring & Logging",items:[
+        {label:"Azure Monitor",icon:{type:"devicon",src:"azure/azure-original"}},
+        {label:"Log Analytics",icon:{type:"fa",src:"fa-solid fa-chart-line"}},
+        {label:"Alerts & Dashboards",icon:{type:"fa",src:"fa-solid fa-bell"}}
+      ]}
+    ],
+    nodes:[
+      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Webhook Triggers Jenkins"},
+      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"CI",action:"Maven + npm + React + Electron Build"},
+      {name:"Docker",img:"docker/docker-original",ver:"28.x",action:"Containerizing Automation Engine"},
+      {name:"Terraform",img:"terraform/terraform-original",ver:"1.15.x",action:"Provisioning Azure Infrastructure"},
+      {name:"Azure VM",img:"azure/azure-original",ver:"Latest",action:"Pulling Image & Running Container"}
     ]
   },
   tumor:{
     label:"Brain Tumor ML",
+    archSteps:["Developer — Git Push","GitHub Repository","Jenkins Pipeline (Clone, Build, Test)","Docker Image → Azure Container Registry","Azure VM — Pull & Start Container","Azure Blob Storage — Download AI Model","Flask + Gunicorn + Nginx — Process MRI","Return Prediction to User"],
     watermarkIcon:"fa-solid fa-brain",
     patternShape:"wave",accentColor:"#7B4B8A",
     description:"A CNN-based image classifier (ResNet50) that flags likely tumor regions in MRI scans. Jenkins clones the repo, builds the Docker image, and pushes it to Azure Container Registry. The Azure VM pulls the image, downloads the AI model from Blob Storage on startup, and serves predictions through Nginx → Gunicorn → Flask.",
@@ -597,21 +679,47 @@ const projectData={
       {t:"Jenkins",v:"CI/CD"},{t:"Docker",v:"26.1.3"},{t:"Nginx",v:"Latest"},
       {t:"Azure Container Registry",v:"Latest"},{t:"Azure VM",v:"Ubuntu 22.04"},{t:"Azure Blob Storage",v:"Latest"}
     ],
-    archSteps:["Developer — Git Push","GitHub Repository","Jenkins Pipeline (Clone, Build, Test)","Docker Image → Azure Container Registry","Azure VM — Pull & Start Container","Azure Blob Storage — Download AI Model","Flask + Gunicorn + Nginx — Process MRI","Return Prediction to User"],
-    diagramImg:"assets/brain-tumor-ml.jpeg",
-    flowPath:[
-      {x:6.2,y:11.9,icon:"fa-solid fa-user",label:"Developer"},
-      {x:21.5,y:11.9,icon:"fa-brands fa-github",label:"GitHub Repository"},
-      {x:50.5,y:12.4,icon:"fa-brands fa-jenkins",label:"Jenkins Pipeline"},
-      {x:84.7,y:11.2,icon:"fa-solid fa-boxes-stacked",label:"Azure Container Registry"},
-      {x:80.6,y:40,icon:"fa-solid fa-server",label:"Azure VM"},
-      {x:48.4,y:49.2,icon:"fa-solid fa-database",label:"Azure Blob Storage"},
-      {x:80.5,y:62.9,icon:"fa-solid fa-diagram-project",label:"Nginx → Gunicorn → Flask"},
-      {x:70,y:91.4,icon:"fa-solid fa-users",label:"End Users"}
+    archFlow:[
+      {title:"Source Control",items:[
+        {label:"Developer — Git Push",icon:{type:"devicon",src:"git/git-original"}},
+        {label:"GitHub Repository",icon:{type:"devicon",src:"github/github-original"}}
+      ]},
+      {title:"Jenkins Pipeline",items:[
+        {label:"Clone Repository",icon:{type:"devicon",src:"jenkins/jenkins-original"}},
+        {label:"Build Docker Image",icon:{type:"devicon",src:"docker/docker-original"}},
+        {label:"Push Image to ACR",icon:{type:"fa",src:"fa-solid fa-upload"}},
+        {label:"Run Tests (Optional)",icon:{type:"fa",src:"fa-solid fa-vial"}}
+      ]},
+      {title:"Container Registry",items:[{label:"Azure Container Registry — Store Images",icon:{type:"devicon",src:"azure/azure-original"}}]},
+      {title:"Azure VM (Ubuntu 22.04)",items:[
+        {label:"Pull Latest Image",icon:{type:"fa",src:"fa-solid fa-download"}},
+        {label:"Stop Old / Start New Container",icon:{type:"fa",src:"fa-solid fa-rotate"}},
+        {label:"Download AI Model",icon:{type:"fa",src:"fa-solid fa-brain"}}
+      ]},
+      {title:"Application Stack",items:[
+        {label:"Nginx Reverse Proxy",icon:{type:"devicon",src:"nginx/nginx-original"}},
+        {label:"Gunicorn WSGI Server",icon:{type:"fa",src:"fa-solid fa-server"}},
+        {label:"Flask Application",icon:{type:"devicon",src:"flask/flask-original"}}
+      ]},
+      {title:"Azure Blob Storage",items:[{label:"bt_resnet50_model.pt (on startup)",icon:{type:"devicon",src:"azure/azure-original"}}]},
+      {title:"Application Flow",items:[
+        {label:"Upload MRI Image",icon:{type:"fa",src:"fa-solid fa-file-image"}},
+        {label:"Process & AI Prediction",icon:{type:"fa",src:"fa-solid fa-diagram-project"}},
+        {label:"Return Prediction to User",icon:{type:"fa",src:"fa-solid fa-circle-check"}}
+      ]},
+      {title:"End Users",items:[{label:"Web Interface",icon:{type:"fa",src:"fa-solid fa-users"}}]}
+    ],
+    nodes:[
+      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Source Push Triggers Pipeline"},
+      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"CI",action:"Clone Repo, Build & Test"},
+      {name:"Docker",img:"docker/docker-original",ver:"26.1.3",action:"Building Image Classifier Container"},
+      {name:"ACR",img:"azure/azure-original",ver:"Latest",action:"Storing Versioned Docker Image"},
+      {name:"Azure VM",img:"azure/azure-original",ver:"Ubuntu 22.04",action:"Nginx → Gunicorn → Flask + Model Load"}
     ]
   },
   snowman:{
     label:"Snowman Monolith",
+    archSteps:["Developer — Push to GitHub","GitHub Webhook Triggers Jenkins","Jenkins — Maven Build, Test, Package JAR","Docker Image → Azure Container Registry","Terraform Provisions AKS & Azure Infra","AKS Pulls Image — Deployment/Pods/Service","Application Gateway → Load Balancer","Azure MySQL Database + Azure Monitor"],
     watermarkIcon:"fa-solid fa-server",
     patternShape:"grid",accentColor:"#4F7965",
     description:"A Java enterprise monolith (Spring + Maven + MySQL) automated end-to-end without touching application logic. Jenkins builds, tests and packages the JAR into a Docker image pushed to ACR; Terraform provisions AKS and networking, and Kubernetes deploys the app behind an Application Gateway and Load Balancer.",
@@ -625,21 +733,53 @@ const projectData={
       {t:"Terraform",v:"1.13.x / 1.15.x"},{t:"Ansible",v:"12.x"},{t:"Kubernetes (AKS)",v:"1.34.x"},
       {t:"App Gateway & Load Balancer",v:"Latest"},{t:"Azure Monitor",v:"Latest"}
     ],
-    archSteps:["Developer — Push to GitHub","GitHub Webhook Triggers Jenkins","Jenkins — Maven Build, Test, Package JAR","Docker Image → Azure Container Registry","Terraform Provisions AKS & Azure Infra","AKS Pulls Image — Deployment/Pods/Service","Application Gateway → Load Balancer","Azure MySQL Database + Azure Monitor"],
-    diagramImg:"assets/snowman-monolith.jpeg",
-    flowPath:[
-      {x:8.4,y:10.9,icon:"fa-solid fa-user",label:"Developer"},
-      {x:23.8,y:11,icon:"fa-brands fa-github",label:"GitHub Repository"},
-      {x:45,y:14.7,icon:"fa-brands fa-jenkins",label:"Jenkins Pipeline"},
-      {x:81.7,y:30.9,icon:"fa-solid fa-boxes-stacked",label:"Azure Container Registry"},
-      {x:20,y:53,icon:"fa-solid fa-layer-group",label:"Terraform"},
-      {x:77.3,y:51.3,icon:"fa-solid fa-dharmachakra",label:"AKS Cluster"},
-      {x:55.2,y:82,icon:"fa-solid fa-network-wired",label:"App Gateway → LB"},
-      {x:46.5,y:94.3,icon:"fa-solid fa-users",label:"End Users"}
+    archFlow:[
+      {title:"Source Control",items:[
+        {label:"Developer — Git Push",icon:{type:"devicon",src:"git/git-original"}},
+        {label:"GitHub Repository (webhook)",icon:{type:"devicon",src:"github/github-original"}}
+      ]},
+      {title:"Jenkins CI/CD Pipeline",items:[
+        {label:"Git Checkout",icon:{type:"devicon",src:"jenkins/jenkins-original"}},
+        {label:"Maven Build",icon:{type:"devicon",src:"maven/maven-original"}},
+        {label:"Unit Testing",icon:{type:"fa",src:"fa-solid fa-vial"}},
+        {label:"Package JAR",icon:{type:"fa",src:"fa-solid fa-box"}},
+        {label:"Docker Build → Push to ACR",icon:{type:"devicon",src:"docker/docker-original"}}
+      ]},
+      {title:"Container Registry",items:[{label:"Azure Container Registry",icon:{type:"devicon",src:"azure/azure-original"}}]},
+      {title:"Terraform (IaC)",items:[
+        {label:"Resource Group / VNet / Subnet",icon:{type:"devicon",src:"terraform/terraform-original"}},
+        {label:"AKS Cluster",icon:{type:"devicon",src:"kubernetes/kubernetes-plain"}},
+        {label:"App Gateway / Load Balancer",icon:{type:"fa",src:"fa-solid fa-diagram-project"}},
+        {label:"Azure MySQL DB + Monitor",icon:{type:"fa",src:"fa-solid fa-database"}}
+      ]},
+      {title:"Azure Kubernetes Service",items:[
+        {label:"Kubernetes Deployment (Pods)",icon:{type:"devicon",src:"kubernetes/kubernetes-plain"}},
+        {label:"Kubernetes Service",icon:{type:"fa",src:"fa-solid fa-diagram-project"}}
+      ]},
+      {title:"Monolith Application",items:[
+        {label:"Spring Enterprise App",icon:{type:"fa",src:"fa-solid fa-leaf"}},
+        {label:"Azure MySQL Database",icon:{type:"devicon",src:"mysql/mysql-original"}}
+      ]},
+      {title:"Traffic Routing",items:[
+        {label:"Application Gateway (WAF+L7)",icon:{type:"fa",src:"fa-solid fa-shield-halved"}},
+        {label:"Load Balancer (L4)",icon:{type:"fa",src:"fa-solid fa-scale-balanced"}}
+      ]},
+      {title:"End Users",items:[
+        {label:"Access Application (Browser)",icon:{type:"fa",src:"fa-solid fa-users"}},
+        {label:"Azure Monitor — Logs & Alerts",icon:{type:"devicon",src:"azure/azure-original"}}
+      ]}
+    ],
+    nodes:[
+      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Webhook Triggers Jenkins"},
+      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"2.5xx LTS",action:"Maven Build, Test & Package JAR"},
+      {name:"Docker",img:"docker/docker-original",ver:"28.x",action:"Building Monolith Container Image"},
+      {name:"Terraform",img:"terraform/terraform-original",ver:"1.15.x",action:"Provisioning AKS & Azure Infra"},
+      {name:"AKS",img:"kubernetes/kubernetes-plain",ver:"1.34.x",action:"Deploying Pods & Services"}
     ]
   },
   chunkhound:{
     label:"ChunkHound AI",
+    archSteps:["Developer — VS Code + Git Push","GitHub Repository (webhook trigger)","Azure VM — Jenkins + Python 3.12 + uv + Docker","Jenkins — Checkout, uv sync, Lint, Pytest","Docker Build → Azure Container Registry","Azure Storage — Reports & Logs","Azure Key Vault — Secrets at Runtime","Azure Monitor — Health Checks & Alerts"],
     watermarkIcon:"fa-solid fa-magnifying-glass",
     patternShape:"ring",accentColor:"#8A6E4F",
     description:"A semantic code-search CLI (Python) run as a shared team service. A Jenkins-hosted Azure VM checks out the repo, installs dependencies with uv, lints and tests with Pytest, builds a Docker image, and pushes it to ACR — with secrets pulled from Azure Key Vault at runtime and health tracked in Azure Monitor.",
@@ -653,20 +793,46 @@ const projectData={
       {t:"Azure Key Vault",v:"Standard"},{t:"Azure Storage Account",v:"LRS"},
       {t:"Azure Monitor",v:"Latest"},{t:"Azure VM",v:"Std B2s, Ubuntu 24.04 LTS"}
     ],
-    archSteps:["Developer — VS Code + Git Push","GitHub Repository (webhook trigger)","Azure VM — Jenkins + Python 3.12 + uv + Docker","Jenkins — Checkout, uv sync, Lint, Pytest","Docker Build → Azure Container Registry","Azure Storage — Reports & Logs","Azure Key Vault — Secrets at Runtime","Azure Monitor — Health Checks & Alerts"],
-    diagramImg:"assets/chunkhound-ai.jpeg",
-    flowPath:[
-      {x:5.4,y:10.7,icon:"fa-solid fa-user",label:"Developer"},
-      {x:18.8,y:10.7,icon:"fa-brands fa-github",label:"GitHub Repository"},
-      {x:40.8,y:12,icon:"fa-brands fa-jenkins",label:"Jenkins Pipeline"},
-      {x:83,y:9.8,icon:"fa-solid fa-boxes-stacked",label:"Azure Container Registry"},
-      {x:79.7,y:31.8,icon:"fa-solid fa-server",label:"Azure VM"},
-      {x:79.5,y:52.7,icon:"fa-brands fa-docker",label:"Docker Container"},
-      {x:75.5,y:73.5,icon:"fa-solid fa-magnifying-glass",label:"ChunkHound App"},
-      {x:74.9,y:91.1,icon:"fa-solid fa-users",label:"End Users / Developers"}
+    archFlow:[
+      {title:"Source Control",items:[
+        {label:"Developer — Git Push",icon:{type:"devicon",src:"git/git-original"}},
+        {label:"GitHub Repository (webhook)",icon:{type:"devicon",src:"github/github-original"}}
+      ]},
+      {title:"Jenkins CI/CD Pipeline",items:[
+        {label:"Clone Repository",icon:{type:"devicon",src:"jenkins/jenkins-original"}},
+        {label:"Install Dependencies (uv)",icon:{type:"fa",src:"fa-solid fa-bolt"}},
+        {label:"Configure Environment",icon:{type:"fa",src:"fa-solid fa-gear"}},
+        {label:"Build & Push Docker Image",icon:{type:"devicon",src:"docker/docker-original"}}
+      ]},
+      {title:"Container Registry",items:[{label:"Azure Container Registry",icon:{type:"devicon",src:"azure/azure-original"}}]},
+      {title:"Azure VM (Ubuntu 24.04 LTS)",items:[
+        {label:"Docker Engine",icon:{type:"devicon",src:"docker/docker-original"}},
+        {label:"Auto Pull & Restart Container",icon:{type:"fa",src:"fa-solid fa-rotate"}},
+        {label:"Systemd Service",icon:{type:"fa",src:"fa-solid fa-power-off"}}
+      ]},
+      {title:"ChunkHound Application",items:[
+        {label:"Index Codebase",icon:{type:"fa",src:"fa-solid fa-folder-tree"}},
+        {label:"Parse Source (Tree-sitter)",icon:{type:"fa",src:"fa-solid fa-code-branch"}},
+        {label:"Generate Embeddings",icon:{type:"fa",src:"fa-solid fa-brain"}},
+        {label:"Store Metadata (DuckDB)",icon:{type:"fa",src:"fa-solid fa-database"}},
+        {label:"Semantic Code Search (MCP)",icon:{type:"fa",src:"fa-solid fa-magnifying-glass"}}
+      ]},
+      {title:"External Services",items:[
+        {label:"OpenAI Embedding API",icon:{type:"fa",src:"fa-solid fa-robot"}},
+        {label:"VoyageAI Embedding API",icon:{type:"fa",src:"fa-solid fa-robot"}}
+      ]},
+      {title:"End Users / Developers",items:[{label:"Semantic Search via MCP Clients",icon:{type:"fa",src:"fa-solid fa-users"}}]}
+    ],
+    nodes:[
+      {name:"GitHub",img:"github/github-original",ver:"Latest",action:"Webhook Triggers Jenkins"},
+      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"LTS 2.555.x",action:"Checkout, uv sync, Lint & Pytest"},
+      {name:"Docker",img:"docker/docker-original",ver:"29.x",action:"Building Reproducible CLI Image"},
+      {name:"ACR",img:"azure/azure-original",ver:"Basic",action:"Pushing Image to Registry"},
+      {name:"Azure Monitor",img:"azure/azure-original",ver:"Latest",action:"Health Checks & Alerts"}
     ]
   }
 };
+const DEVICON_BASE="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/";
  
 /* Self-contained SVG tile patterns, tinted per project, used as each slide's background image */
 const PATTERN_SHAPES={
@@ -681,10 +847,9 @@ function buildPatternUrl(shapeKey,color){
   const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='70' height='70'><g fill='none' stroke='${color}' stroke-width='2.4'>${inner}</g></svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
- 
-/* Build an SVG polyline "points" string (0-100 coordinate space) through the flow waypoints */
-function buildFlowPoints(flowPath){
-  return flowPath.map(p=>`${p.x},${p.y}`).join(' ');
+function iconHtml(icon){
+  if(icon.type==='devicon')return `<img src="${DEVICON_BASE}${icon.src}.svg" alt="" onerror="this.style.display='none'">`;
+  return `<i class="${icon.src}"></i>`;
 }
  
 /* ================= 5. RENDER PROJECT SLIDES ================= */
@@ -694,19 +859,22 @@ Object.entries(projectData).forEach(([key,proj])=>{
   slide.className='project-slide';
   slide.id=`slide-${key}`;
  
+  const buildToolsHtml=proj.buildTools.map(x=>`<li><span class="tname">${x.t}</span><span class="tver">${x.v}</span></li>`).join('');
+  const devopsToolsHtml=proj.devopsTools.map(x=>`<li><span class="tname">${x.t}</span><span class="tver">${x.v}</span></li>`).join('');
+ 
   const archHtml=proj.archSteps.map((s,i)=>`
     <div class="arch-step">${s}</div>
     ${i<proj.archSteps.length-1?'<div class="arch-arrow"><i class="fa-solid fa-arrow-down"></i></div>':''}
   `).join('');
  
-  const buildToolsHtml=proj.buildTools.map(x=>`<li><span class="tname">${x.t}</span><span class="tver">${x.v}</span></li>`).join('');
-  const devopsToolsHtml=proj.devopsTools.map(x=>`<li><span class="tname">${x.t}</span><span class="tver">${x.v}</span></li>`).join('');
- 
-  const markersHtml=proj.flowPath.map((p,i)=>`
-    <div class="flow-marker" id="marker-${key}-${i}" style="left:${p.x}%;top:${p.y}%;">
-      <i class="${p.icon}"></i>
-      <span class="fm-tip">${p.label}</span>
-    </div>`).join('');
+  const ARCH_COLORS=['#a855f7','#38bdf8','#22c55e','#f59e0b','#ec4899','#06b6d4','#eab308','#f87171'];
+  const archBoxesHtml=proj.archFlow.map((g,gi)=>{
+    const chips=g.items.map(it=>`<div class="arch-box-chip">${iconHtml(it.icon)}<span>${it.label}</span></div>`).join('');
+    return `<div class="arch-box" id="arch-${key}-${gi}" style="--box-color:${ARCH_COLORS[gi%ARCH_COLORS.length]}">
+      <div class="arch-box-num">${gi+1}</div>
+      <h5>${g.title}</h5>${chips}
+    </div>`;
+  }).join('');
  
   slide.innerHTML=`
     <div class="project-slide-bg" style="background-image:${buildPatternUrl(proj.patternShape,proj.accentColor)};"></div>
@@ -733,28 +901,18 @@ Object.entries(projectData).forEach(([key,proj])=>{
       </div>
     </div>
  
-    <div class="devops-workflow-heading">DevOps Workflow</div>
-    <div class="diagram-panel" style="--diagram-accent:${proj.accentColor};">
-      <div class="diagram-wrap" id="diagram-wrap-${key}">
-        <img class="diagram-img" src="${proj.diagramImg}" alt="${proj.label} architecture diagram" draggable="false"
-             onerror="this.closest('.diagram-wrap').classList.add('img-missing')" onload="this.closest('.diagram-wrap').classList.remove('img-missing')">
-        <div class="diagram-missing-note">
-          <i class="fa-solid fa-image"></i>
-          <span>Diagram image not found at ${proj.diagramImg} — add the file to see it here. The flow still runs on the layout below.</span>
-        </div>
-        <svg class="diagram-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <polyline class="flow-line" points="${buildFlowPoints(proj.flowPath)}"></polyline>
-        </svg>
-        ${markersHtml}
-        <div class="flow-traveler" id="traveler-${key}"><i class="fa-solid fa-bolt"></i></div>
-      </div>
-      <div class="diagram-controls">
-        <span class="diagram-hint">Original diagram, unedited — press Run Pipeline to watch the flow travel through it.</span>
-        <div class="diagram-btns">
-          <button class="proj-btn" onclick="runSimulation('${key}')"><i class="fa-solid fa-play"></i> Run Pipeline</button>
-          <button class="proj-btn" onclick="resetSimulation('${key}')"><i class="fa-solid fa-rotate-left"></i> Reset Flow</button>
-        </div>
-      </div>
+    <div class="arch-section-heading">DevOps Workflow</div>
+    <div class="arch-diagram-card">
+      <div class="arch-diagram-title">${proj.label} — DevOps Flow</div>
+      <div class="arch-diagram-rule"></div>
+      <div class="arch-marker" id="arch-marker-${key}"></div>
+      <div class="arch-grid" id="arch-row-${key}">${archBoxesHtml}</div>
+    </div>
+    <div class="arch-diagram-note">Click Run Pipeline to watch the flow animate stage by stage, following each real tool logo.</div>
+ 
+    <div class="controls">
+      <button class="proj-btn" onclick="runArchFlow('${key}')"><i class="fa-solid fa-play"></i> Run Pipeline</button>
+      <button class="proj-btn" onclick="resetArchFlow('${key}')"><i class="fa-solid fa-rotate-left"></i> Reset Flow</button>
     </div>
   `;
   slidesContainer.appendChild(slide);
@@ -769,44 +927,37 @@ Object.values(projectData).forEach(proj=>{
   futureContainer.appendChild(card);
 });
  
-/* ================= 7. LIVE DIAGRAM FLOW SIMULATION ================= */
-const activeTimelines={};
-function runSimulation(key){
-  resetSimulation(key);
-  const proj=projectData[key];
-  const points=proj.flowPath;
-  const traveler=document.getElementById(`traveler-${key}`);
-  const travelerIcon=traveler.querySelector('i');
+/* ================= 7. ARCHITECTURE DIAGRAM FLOW ================= */
+const activeArchTimelines={};
+function runArchFlow(key){
+  resetArchFlow(key);
+  const boxes=Array.from(document.querySelectorAll(`#arch-row-${key} .arch-box`));
+  const marker=document.getElementById(`arch-marker-${key}`);
+  if(!boxes.length||!marker)return;
   const tl=gsap.timeline();
-  activeTimelines[key]=tl;
+  activeArchTimelines[key]=tl;
  
-  const legDuration=1.15;
- 
-  // start the traveler at the first node, carrying that node's own icon
-  tl.set(traveler,{left:`${points[0].x}%`,top:`${points[0].y}%`,opacity:0,scale:0.6});
-  tl.set(travelerIcon,{className:`${points[0].icon}`});
-  tl.to(traveler,{opacity:1,scale:1,duration:0.3,ease:"back.out(2)"});
-  tl.call(()=>{document.getElementById(`marker-${key}-0`).classList.add('active');});
- 
-  for(let i=1;i<points.length;i++){
-    const prev=points[i-1], curr=points[i];
-    // the CURRENT node's logo travels toward the next node
-    tl.call(()=>{travelerIcon.className=prev.icon;});
-    tl.to(traveler,{left:`${curr.x}%`,top:`${curr.y}%`,duration:legDuration,ease:"power1.inOut"});
-    tl.call(()=>{
-      document.getElementById(`marker-${key}-${i}`).classList.add('active');
-      travelerIcon.className=curr.icon; // arrived — now carries this node's logo onward
+  boxes.forEach((el,i)=>{
+    const centerX=el.offsetLeft+el.offsetWidth/2;
+    const centerY=el.offsetTop+el.offsetHeight/2;
+    const flowData=projectData[key].archFlow[i];
+    tl.to(marker,{
+      left:`${centerX}px`,top:`${centerY}px`,opacity:1,duration:0.8,ease:"power1.inOut",
+      onStart:()=>{
+        boxes.forEach(b=>b.classList.remove('active'));
+        el.classList.add('active');
+        marker.innerHTML=iconHtml(flowData.items[0].icon);
+      }
     });
-    tl.to(traveler,{scale:1.2,duration:0.15,yoyo:true,repeat:1,ease:"power1.inOut"},"-=0.1");
-  }
- 
-  tl.to(traveler,{opacity:0,scale:0.5,duration:0.4,ease:"power1.in"},"+=0.5");
+    tl.to({},{duration:0.45});
+  });
+  tl.to(marker,{opacity:0,duration:0.4});
 }
-function resetSimulation(key){
-  if(activeTimelines[key])activeTimelines[key].kill();
-  const traveler=document.getElementById(`traveler-${key}`);
-  if(traveler)gsap.set(traveler,{opacity:0,scale:0.6});
-  document.querySelectorAll(`#slide-${key} .flow-marker`).forEach(m=>m.classList.remove('active'));
+function resetArchFlow(key){
+  if(activeArchTimelines[key])activeArchTimelines[key].kill();
+  const marker=document.getElementById(`arch-marker-${key}`);
+  if(marker)gsap.set(marker,{left:"0px",top:"0px",opacity:0});
+  document.querySelectorAll(`#arch-row-${key} .arch-box`).forEach(b=>b.classList.remove('active'));
 }
  
 /* ================= 8. SCROLL-TRIGGERED SLIDE ENTRANCE + AUTO-RUN ================= */
