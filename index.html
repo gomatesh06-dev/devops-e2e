@@ -1,929 +1,697 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Team Triveni Sangam | DevOps Architecture Showcase</title>
-
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- GSAP Libraries -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
-  <style>
-    :root {
-      --bg-dark: #070a12;
-      --card-bg: rgba(17, 24, 39, 0.75);
-      --accent-cyan: #38bdf8;
-      --accent-purple: #a855f7;
-      --accent-green: #22c55e;
-      --accent-amber: #f59e0b;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --border-color: rgba(255, 255, 255, 0.1);
-      --glass-border: rgba(56, 189, 248, 0.2);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    /* BACKGROUND CANVAS ANIMATION */
-    #bg-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    /* --- NAVIGATION BAR --- */
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 4rem;
-      background: rgba(7, 10, 18, 0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border-color);
-      z-index: 1000;
-    }
-
-    .nav-logo {
-      font-size: 1.6rem;
-      font-weight: 800;
-      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 0.5px;
-    }
-
-    .nav-links {
-      display: flex;
-      list-style: none;
-      gap: 2rem;
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: var(--text-main);
-      text-decoration: none;
-      font-size: 0.95rem;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover {
-      color: var(--accent-cyan);
-    }
-
-    /* DROPDOWN MENU */
-    .dropdown {
-      position: relative;
-    }
-
-    .dropdown-menu {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: rgba(17, 24, 39, 0.95);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
-      border-radius: 8px;
-      list-style: none;
-      width: 240px;
-      padding: 0.5rem 0;
-      display: none;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    }
-
-    .dropdown:hover .dropdown-menu {
-      display: block;
-    }
-
-    .dropdown-menu li a {
-      padding: 0.75rem 1.2rem;
-      display: block;
-      font-size: 0.88rem;
-    }
-
-    .dropdown-menu li a:hover {
-      background: rgba(56, 189, 248, 0.1);
-      color: var(--accent-cyan);
-    }
-
-    /* --- SECTIONS COMMON --- */
-    section {
-      min-height: 100vh;
-      padding: 7rem 4rem 4rem 4rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      position: relative;
-    }
-
-    .section-title {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      text-align: center;
-      background: linear-gradient(90deg, #fff, var(--text-muted));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .section-subtitle {
-      text-align: center;
-      color: var(--text-muted);
-      margin-bottom: 3.5rem;
-      font-size: 1rem;
-    }
-
-    /* --- HOME SECTION --- */
-    #home {
-      text-align: center;
-      align-items: center;
-      padding-top: 8rem;
-    }
-
-    .hero-title {
-      font-size: 3.8rem;
-      font-weight: 800;
-      margin-bottom: 1rem;
-      line-height: 1.1;
-    }
-
-    /* DANGLING / PENDULUM MEMBERS CONTAINER */
-    .dangling-container {
-      display: flex;
-      justify-content: center;
-      gap: 2.5rem;
-      margin-top: 4rem;
-      flex-wrap: wrap;
-    }
-
-    .dangling-card {
-      background: var(--card-bg);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(8px);
-      border-radius: 12px;
-      padding: 1.5rem 1rem;
-      width: 190px;
-      text-align: center;
-      transform-origin: top center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-      position: relative;
-    }
-
-    .dangling-card::before {
-      content: '';
-      position: absolute;
-      top: -24px;
-      left: 50%;
-      width: 2px;
-      height: 24px;
-      background: var(--accent-cyan);
-      transform: translateX(-50%);
-    }
-
-    .dangling-card::after {
-      content: '';
-      position: absolute;
-      top: -28px;
-      left: 50%;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent-cyan);
-      transform: translateX(-50%);
-    }
-
-    .member-name {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .member-role {
-      font-size: 0.75rem;
-      color: var(--accent-cyan);
-      text-transform: uppercase;
-      font-weight: 700;
-      margin-top: 0.4rem;
-      letter-spacing: 0.5px;
-    }
-
-    /* --- ABOUT SECTION --- */
-    .team-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .about-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(10px);
-      border-radius: 14px;
-      padding: 2rem;
-      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .about-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--accent-cyan);
-      box-shadow: 0 10px 30px rgba(56, 189, 248, 0.15);
-    }
-
-    .about-card i {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    /* --- PROJECTS / PIPELINE ANIMATION SECTION --- */
-    .project-selector {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2.5rem;
-      flex-wrap: wrap;
-    }
-
-    .proj-btn {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-
-    .proj-btn.active, .proj-btn:hover {
-      background: var(--accent-cyan);
-      color: #000;
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-    }
-
-    /* PIPELINE CANVAS CONTAINER */
-    .pipeline-wrapper {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(12px);
-      border-radius: 16px;
-      padding: 4rem 2rem;
-      position: relative;
-      overflow: hidden;
-      min-height: 480px;
-      display: flex;
-      align-items: center;
-      max-width: 1300px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    /* DEVELOPER SECTION */
-    .developer-stage {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 140px;
-      position: relative;
-      z-index: 5;
-    }
-
-    .dev-svg {
-      width: 75px;
-      height: 75px;
-    }
-
-    /* THINKING BUFFER / WEBHook SIGNAL */
-    .thought-bubble {
-      position: absolute;
-      top: -45px;
-      background: rgba(56, 189, 248, 0.2);
-      border: 1px solid var(--accent-cyan);
-      color: var(--accent-cyan);
-      border-radius: 20px;
-      padding: 4px 10px;
-      font-size: 0.7rem;
-      font-weight: bold;
-      opacity: 0;
-      transform: translateY(5px);
-    }
-
-    .webhook-signal {
-      position: absolute;
-      top: 50%;
-      left: 130px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--accent-green);
-      box-shadow: 0 0 10px var(--accent-green);
-      opacity: 0;
-      z-index: 10;
-    }
-
-    /* HORIZONTAL LINE & NODES */
-    .pipeline-flow {
-      position: relative;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      margin-left: 2rem;
-    }
-
-    .pipeline-line {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: var(--border-color);
-      transform: translateY(-50%);
-      z-index: 1;
-    }
-
-    .pipeline-progress {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 0%;
-      height: 4px;
-      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-green));
-      transform: translateY(-50%);
-      z-index: 2;
-    }
-
-    .pipeline-nodes {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      position: relative;
-      z-index: 3;
-    }
-
-    .node {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      opacity: 0.25;
-      transform: scale(0.85);
-      transition: opacity 0.4s, transform 0.4s;
-    }
-
-    .node.active {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .node-icon-wrap {
-      position: relative;
-    }
-
-    .node-icon {
-      width: 68px;
-      height: 68px;
-      border-radius: 50%;
-      background: #0f172a;
-      border: 2px solid var(--accent-cyan);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.8rem;
-      color: var(--accent-cyan);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
-    }
-
-    .version-badge {
-      position: absolute;
-      bottom: -6px;
-      right: -8px;
-      background: var(--accent-purple);
-      color: #fff;
-      font-size: 0.65rem;
-      font-weight: bold;
-      padding: 2px 6px;
-      border-radius: 10px;
-      border: 1px solid var(--bg-dark);
-    }
-
-    /* TOOL ATTACHED POPUP ACTION */
-    .node-popup {
-      position: absolute;
-      top: -125px;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid var(--accent-cyan);
-      border-radius: 10px;
-      padding: 0.8rem 1rem;
-      width: 180px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.4s, transform 0.4s;
-      pointer-events: none;
-    }
-
-    .node-popup::after {
-      content: '';
-      position: absolute;
-      bottom: -8px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 8px 8px 0;
-      border-style: solid;
-      border-color: rgba(15, 23, 42, 0.95) transparent;
-    }
-
-    .node.active .node-popup {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .node-popup h5 {
-      font-size: 0.85rem;
-      color: var(--accent-cyan);
-      margin-bottom: 0.3rem;
-    }
-
-    .node-popup p {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      line-height: 1.2;
-    }
-
-    .node-label {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    /* --- VISION SECTION --- */
-    .vision-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .vision-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      padding: 2.5rem 2rem;
-      border-radius: 14px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .vision-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-    }
-
-    .vision-card.c1::before { background: var(--accent-cyan); }
-    .vision-card.c2::before { background: var(--accent-purple); }
-    .vision-card.c3::before { background: var(--accent-green); }
-
-    .vision-card h3 {
-      font-size: 1.3rem;
-      margin-bottom: 0.8rem;
-    }
-
-    .vision-card p {
-      font-size: 0.92rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    /* RESPONSIVE DESIGN */
-    @media (max-width: 992px) {
-      nav { padding: 1rem 2rem; }
-      section { padding: 6rem 2rem 3rem 2rem; }
-      .pipeline-wrapper {
-        flex-direction: column;
-        align-items: center;
-        padding: 2rem 1rem;
-      }
-      .pipeline-flow {
-        width: 100%;
-        margin-left: 0;
-        margin-top: 4rem;
-      }
-      .webhook-signal { display: none; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Triveni Sangam | DevOps Architecture Showcase</title>
+ 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600;1,800&display=swap" rel="stylesheet">
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+ 
+<style>
+  :root{
+    /* ===== Signature: "orchard ledger" palette — sage / plum / gold on warm paper ===== */
+    --bg-main:#F7F6F1;
+    --bg-alt:#EFEDE3;
+    --bg-panel:#FFFFFF;
+    --card-bg:rgba(255,255,255,0.85);
+    --accent-teal:#4F7965;   /* sage */
+    --accent-indigo:#7B4B8A; /* plum */
+    --accent-amber:#D9A441;  /* gold */
+    --accent-coral:#C1583F;  /* rust */
+    --text-main:#242222;
+    --text-muted:#6E6A63;
+    --border-color:rgba(36,34,34,0.10);
+    --glass-border:rgba(79,121,101,0.32);
+    --shadow-soft:0 12px 34px rgba(36,34,34,0.09);
+    --font-display:'Sora',sans-serif;
+    --font-body:'Inter',sans-serif;
+    --font-accent:'Playfair Display',serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family:var(--font-body);}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg-main);color:var(--text-main);overflow-x:hidden;position:relative;}
+  h1,h2,h3,h4,h5{font-family:var(--font-display);}
+ 
+  #bg-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;}
+ 
+  /* ===================== NAV ===================== */
+  nav{
+    position:fixed;top:0;width:100%;display:flex;justify-content:space-between;align-items:center;
+    padding:1.4rem 4rem;min-height:96px;
+    background:rgba(255,255,255,0.82);backdrop-filter:blur(18px);
+    border-bottom:1px solid var(--border-color);z-index:1000;
+  }
+  .nav-logo{display:flex;align-items:center;gap:0.85rem;}
+  .nav-logo svg{width:52px;height:52px;}
+  .nav-logo .wordmark{display:flex;flex-direction:column;line-height:1.05;}
+  .nav-logo .wordmark .main{font-family:var(--font-display);font-weight:800;font-size:1.3rem;color:var(--text-main);letter-spacing:0.2px;}
+  .nav-logo .wordmark .sub{font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-teal);}
+ 
+  .nav-links{display:flex;list-style:none;gap:2.4rem;align-items:center;}
+  .nav-links a{color:var(--text-main);text-decoration:none;font-size:1.02rem;font-weight:600;transition:color 0.3s;}
+  .nav-links a:hover{color:var(--accent-teal);}
+  .dropdown{position:relative;}
+  .dropdown-menu{
+    position:absolute;top:130%;left:0;background:var(--bg-panel);backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border);border-radius:10px;list-style:none;width:250px;padding:0.5rem 0;
+    display:none;box-shadow:var(--shadow-soft);
+  }
+  .dropdown:hover .dropdown-menu{display:block;}
+  .dropdown-menu li a{padding:0.75rem 1.2rem;display:block;font-size:0.92rem;font-weight:500;}
+  .dropdown-menu li a:hover{background:rgba(14,165,165,0.08);color:var(--accent-teal);}
+ 
+  /* ===================== SECTIONS ===================== */
+  section{min-height:100vh;padding:8.5rem 4rem 4rem 4rem;position:relative;}
+  .section-title{font-size:2.6rem;margin-bottom:0.5rem;text-align:center;font-weight:800;color:var(--text-main);}
+  .section-subtitle{text-align:center;color:var(--text-muted);margin-bottom:3.5rem;font-size:1rem;}
+ 
+  /* ===================== HOME ===================== */
+  #home{display:flex;align-items:center;justify-content:space-between;gap:2rem;padding-top:9rem;}
+  .home-left{flex:1;display:flex;flex-direction:column;align-items:flex-start;max-width:480px;}
+  .hero-title{font-size:2.6rem;font-weight:800;margin-bottom:0.6rem;line-height:1.15;text-align:left;}
+  .hero-sub{color:var(--text-muted);font-size:1rem;margin-bottom:2.5rem;text-align:left;}
+ 
+  .dangling-container{display:flex;flex-direction:column;gap:1.1rem;}
+  .dangling-card{
+    background:var(--card-bg);border:1px solid var(--glass-border);backdrop-filter:blur(8px);
+    border-radius:12px;padding:0.9rem 1.3rem;width:230px;text-align:left;transform-origin:top center;
+    box-shadow:var(--shadow-soft);position:relative;display:flex;flex-direction:column;
+  }
+  .dangling-card::before{content:'';position:absolute;top:-18px;left:28px;width:2px;height:18px;background:var(--accent-teal);}
+  .dangling-card::after{content:'';position:absolute;top:-22px;left:28px;width:8px;height:8px;border-radius:50%;background:var(--accent-teal);transform:translateX(-3px);}
+  .member-name{font-size:1.02rem;font-weight:700;color:var(--text-main);}
+  .member-role{font-size:0.72rem;color:var(--accent-teal);text-transform:uppercase;font-weight:700;margin-top:0.25rem;letter-spacing:0.5px;}
+ 
+  .home-right{flex:1;display:flex;justify-content:center;align-items:center;position:relative;min-width:320px;}
+  .team-watermark{
+    position:relative;text-align:right;user-select:none;
+  }
+  .team-watermark .line1{
+    font-family:var(--font-accent);font-style:italic;font-weight:800;font-size:4.4rem;line-height:0.95;
+    color:var(--accent-indigo);display:block;
+  }
+  .team-watermark .line2{
+    font-family:var(--font-display);font-weight:700;font-size:2.1rem;letter-spacing:10px;
+    color:var(--accent-amber);display:block;margin-top:0.6rem;text-transform:uppercase;
+  }
+  .team-watermark .rule{
+    height:3px;width:110px;margin:1rem 0 0 auto;
+    background:linear-gradient(90deg,var(--accent-teal),var(--accent-amber));border-radius:2px;
+  }
+ 
+  /* ===================== ABOUT ===================== */
+  .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2rem;max-width:1200px;margin:0 auto;width:100%;perspective:1200px;}
+  .about-card{
+    background:var(--card-bg);border:1px solid var(--border-color);backdrop-filter:blur(10px);
+    border-radius:16px;padding:2rem;box-shadow:var(--shadow-soft);cursor:pointer;
+    transform-style:preserve-3d;transition:box-shadow 0.3s,border-color 0.3s;
+    opacity:0;transform:translateY(50px) scale(0.92);
+  }
+  .about-card:hover{border-color:var(--accent-teal);box-shadow:0 20px 40px rgba(14,165,165,0.18);}
+  .about-card i{font-size:2rem;margin-bottom:1rem;}
+  .about-card .card-extra{
+    max-height:0;overflow:hidden;opacity:0;transition:max-height 0.4s ease,opacity 0.4s ease,margin-top 0.4s ease;
+    font-size:0.78rem;color:var(--text-muted);border-top:1px dashed var(--border-color);
+  }
+  .about-card:hover .card-extra{max-height:120px;opacity:1;margin-top:0.9rem;padding-top:0.8rem;}
+ 
+  /* ===================== PROJECT SUBNAV ===================== */
+  .project-subnav{
+    position:sticky;top:96px;z-index:200;display:flex;justify-content:center;gap:0.8rem;flex-wrap:wrap;
+    padding:1rem 0;margin-bottom:1rem;background:rgba(245,247,251,0.9);backdrop-filter:blur(10px);
+  }
+  .proj-btn{
+    background:var(--bg-panel);border:1px solid var(--border-color);color:var(--text-main);
+    padding:0.65rem 1.3rem;border-radius:999px;cursor:pointer;font-weight:600;font-size:0.85rem;
+    transition:all 0.3s;
+  }
+  .proj-btn.active,.proj-btn:hover{background:var(--accent-teal);color:#fff;border-color:var(--accent-teal);box-shadow:0 6px 16px rgba(14,165,165,0.3);}
+ 
+  /* ===================== PROJECT SLIDES ===================== */
+  .project-slide{
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;
+    border-radius:22px;border:1px solid var(--border-color);background:var(--bg-panel);
+    max-width:1300px;margin:0 auto 3rem auto;padding:3.5rem 3rem;overflow:hidden;box-shadow:var(--shadow-soft);
+  }
+  .project-watermark-icon{
+    position:absolute;right:-40px;bottom:-60px;font-size:22rem;color:var(--text-main);opacity:0.05;z-index:0;pointer-events:none;
+  }
+  .project-slide-bg{
+    position:absolute;inset:0;z-index:0;background-repeat:repeat;background-size:180px 180px;opacity:0.5;
+  }
+  .project-slide-bg::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(160deg, var(--bg-panel) 20%, rgba(255,255,255,0.55) 70%, var(--bg-panel) 100%);
+  }
+  .project-slide-header{position:relative;z-index:2;text-align:right;margin-bottom:1.5rem;}
+  .project-slide-name{
+    font-family:var(--font-display);font-weight:800;font-size:3.2rem;
+    color:transparent;-webkit-text-stroke:1.2px rgba(27,36,64,0.18);
+  }
+  .project-slide-body{position:relative;z-index:2;max-width:720px;margin-bottom:2.5rem;}
+  .project-slide-body h3{font-size:1.4rem;margin-bottom:0.7rem;color:var(--accent-indigo);}
+  .project-slide-body p{color:var(--text-muted);font-size:0.96rem;line-height:1.65;}
+ 
+  .pipeline-wrapper{
+    background:var(--bg-alt);border:1px solid var(--border-color);border-radius:16px;padding:3.5rem 2rem;
+    position:relative;overflow:hidden;min-height:420px;display:flex;align-items:center;z-index:2;
+  }
+  .developer-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;width:140px;position:relative;z-index:5;}
+  .dev-svg{width:75px;height:75px;}
+  .thought-bubble{
+    position:absolute;top:-45px;background:rgba(14,165,165,0.14);border:1px solid var(--accent-teal);
+    color:var(--accent-teal);border-radius:20px;padding:4px 10px;font-size:0.7rem;font-weight:bold;
+    opacity:0;transform:translateY(5px);
+  }
+  .webhook-signal{
+    position:absolute;top:50%;left:130px;width:12px;height:12px;border-radius:50%;
+    background:var(--accent-teal);box-shadow:0 0 10px var(--accent-teal);opacity:0;z-index:10;
+  }
+  .pipeline-flow{position:relative;flex:1;display:flex;align-items:center;margin-left:2rem;}
+  .pipeline-line{position:absolute;top:50%;left:0;width:100%;height:4px;background:var(--border-color);transform:translateY(-50%);z-index:1;}
+  .pipeline-progress{
+    position:absolute;top:50%;left:0;width:0%;height:4px;
+    background:linear-gradient(90deg,var(--accent-teal),var(--accent-indigo),var(--accent-amber));
+    transform:translateY(-50%);z-index:2;
+  }
+  .pipeline-nodes{display:flex;justify-content:space-between;width:100%;position:relative;z-index:3;}
+  .node{display:flex;flex-direction:column;align-items:center;position:relative;opacity:0.28;transform:scale(0.85);transition:opacity 0.4s,transform 0.4s;}
+  .node.active{opacity:1;transform:scale(1);}
+  .node-icon-wrap{position:relative;}
+  .node-icon{
+    width:68px;height:68px;border-radius:50%;background:#fff;border:2px solid var(--accent-teal);
+    display:flex;justify-content:center;align-items:center;box-shadow:0 6px 18px rgba(14,165,165,0.18);
+  }
+  .node-icon img{width:36px;height:36px;object-fit:contain;}
+  .version-badge{
+    position:absolute;bottom:-6px;right:-10px;background:var(--accent-indigo);color:#fff;font-size:0.62rem;
+    font-weight:bold;padding:2px 6px;border-radius:10px;border:2px solid var(--bg-alt);
+  }
+  .node-popup{
+    position:absolute;top:-128px;background:#fff;border:1px solid var(--accent-teal);border-radius:10px;
+    padding:0.8rem 1rem;width:190px;text-align:center;box-shadow:var(--shadow-soft);opacity:0;
+    transform:translateY(10px);transition:opacity 0.4s,transform 0.4s;pointer-events:none;left:50%;margin-left:-95px;
+  }
+  .node-popup::after{content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);border-width:8px 8px 0;border-style:solid;border-color:#fff transparent;}
+  .node.active .node-popup{opacity:1;transform:translateY(0);}
+  .node-popup h5{font-size:0.85rem;color:var(--accent-indigo);margin-bottom:0.3rem;}
+  .node-popup p{font-size:0.72rem;color:var(--text-muted);line-height:1.25;}
+  .node-label{margin-top:1rem;font-size:0.88rem;font-weight:700;}
+  .logo-carrier{
+    position:absolute;top:-38px;left:0;width:46px;height:46px;border-radius:50%;
+    background:#fff;border:2px solid var(--text-main);box-shadow:var(--shadow-soft);
+    display:flex;align-items:center;justify-content:center;z-index:6;transform:translateX(-50%);opacity:0;
+  }
+  .logo-carrier img{width:26px;height:26px;object-fit:contain;}
+  .controls{display:flex;justify-content:center;gap:1.2rem;margin-top:2.2rem;position:relative;z-index:2;}
+ 
+  /* ===================== VISION / FUTURE ===================== */
+  .vision-cards,.future-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;max-width:1200px;margin:0 auto;width:100%;}
+  .future-cards{margin-top:1rem;margin-bottom:4rem;}
+  .vision-card,.future-card{background:var(--card-bg);border:1px solid var(--border-color);padding:2.3rem 1.8rem;border-radius:14px;position:relative;overflow:hidden;box-shadow:var(--shadow-soft);}
+  .vision-card::before,.future-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;}
+  .vision-card.c1::before,.future-card::before{background:var(--accent-teal);}
+  .vision-card.c2::before{background:var(--accent-indigo);}
+  .vision-card.c3::before{background:var(--accent-amber);}
+  .vision-card h3,.future-card h4{font-size:1.15rem;margin-bottom:0.7rem;}
+  .vision-card p,.future-card p{font-size:0.9rem;color:var(--text-muted);line-height:1.6;}
+  .future-card h4{color:var(--accent-indigo);}
+ 
+  /* ===================== CONTACT ===================== */
+  #contact{display:flex;flex-direction:column;align-items:center;}
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.6rem;max-width:900px;width:100%;}
+  .contact-card{
+    background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;padding:2rem;
+    text-align:center;box-shadow:var(--shadow-soft);
+  }
+  .contact-card i{font-size:1.6rem;color:var(--accent-teal);margin-bottom:0.8rem;}
+  .contact-card h4{font-size:0.95rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:0.5rem;}
+  .contact-card p{font-size:1rem;font-weight:600;color:var(--text-main);}
+  .contact-note{margin-top:2rem;color:var(--text-muted);font-size:0.8rem;text-align:center;max-width:520px;}
+ 
+  @media (max-width:992px){
+    nav{padding:1rem 1.6rem;min-height:80px;}
+    section{padding:6rem 1.6rem 3rem 1.6rem;}
+    #home{flex-direction:column;text-align:center;}
+    .home-left{align-items:center;max-width:100%;}
+    .hero-title,.hero-sub{text-align:center;}
+    .team-watermark{text-align:center;}
+    .team-watermark .line1{font-size:2.6rem;}
+    .team-watermark .line2{font-size:1.3rem;letter-spacing:6px;}
+    .team-watermark .rule{margin:1rem auto 0 auto;}
+    .pipeline-wrapper{flex-direction:column;align-items:center;padding:2rem 1rem;}
+    .pipeline-flow{width:100%;margin-left:0;margin-top:4rem;}
+    .webhook-signal{display:none;}
+    .project-slide-header,.project-slide-name{text-align:center;}
+    .project-watermark-icon{display:none;}
+  }
+</style>
 </head>
 <body>
-
-  <!-- DYNAMIC MOVING BACKGROUND CANVAS -->
-  <canvas id="bg-canvas"></canvas>
-
-  <!-- NAVBAR -->
-  <nav>
-    <div class="nav-logo">Team Triveni Sangam</div>
-    <ul class="nav-links">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li class="dropdown">
-        <a href="#projects">Projects <i class="fa-solid fa-chevron-down" style="font-size:0.7rem"></i></a>
-        <ul class="dropdown-menu">
-          <li><a href="#projects" onclick="switchProject('meddy')">Meddy Chatbot</a></li>
-          <li><a href="#projects" onclick="switchProject('naukri')">Naukri Automation</a></li>
-          <li><a href="#projects" onclick="switchProject('tumor')">Brain Tumor ML</a></li>
-          <li><a href="#projects" onclick="switchProject('snowman')">Snowman Monolith</a></li>
-          <li><a href="#projects" onclick="switchProject('chunkhound')">ChunkHound AI</a></li>
-        </ul>
-      </li>
-      <li><a href="#vision">Vision</a></li>
-    </ul>
-  </nav>
-
-  <!-- HOME SECTION -->
-  <section id="home">
-    <h1 class="hero-title">DevOps Infrastructure<br>& Automation Showcase</h1>
-    <p class="section-subtitle">Multi-Project Enterprise CI/CD Infrastructure Pipeline Architecture</p>
-
-    <!-- SWINGING / DANGLING CARDS FOR TEAM MEMBERS -->
+ 
+<canvas id="bg-canvas"></canvas>
+ 
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">
+    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0EA5A5"/>
+          <stop offset="100%" stop-color="#4C51E6"/>
+        </linearGradient>
+      </defs>
+      <path d="M25,30 C25,17 38,17 50,30 C62,43 75,43 75,30 C75,17 62,17 50,30 C38,43 25,43 25,30 Z"
+            fill="none" stroke="url(#logoGrad)" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="25" cy="30" r="4.5" fill="#0EA5A5"/>
+      <circle cx="50" cy="30" r="4.5" fill="#E8A33D"/>
+      <circle cx="75" cy="30" r="4.5" fill="#4C51E6"/>
+    </svg>
+    <div class="wordmark">
+      <span class="main">Triveni Sangam</span>
+      <span class="sub">DevOps Guild</span>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li class="dropdown">
+      <a href="#projects">Projects <i class="fa-solid fa-chevron-down" style="font-size:0.7rem"></i></a>
+      <ul class="dropdown-menu">
+        <li><a href="#slide-meddy">Meddy Chatbot</a></li>
+        <li><a href="#slide-naukri">Naukri Automation</a></li>
+        <li><a href="#slide-tumor">Brain Tumor ML</a></li>
+        <li><a href="#slide-snowman">Snowman Monolith</a></li>
+        <li><a href="#slide-chunkhound">ChunkHound AI</a></li>
+      </ul>
+    </li>
+    <li><a href="#vision">Vision</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+ 
+<!-- HOME -->
+<section id="home">
+  <div class="home-left">
+    <h1 class="hero-title">DevOps Infrastructure<br>&amp; Automation Showcase</h1>
+    <p class="hero-sub">Multi-Project Enterprise CI/CD Infrastructure Pipeline Architecture</p>
     <div class="dangling-container">
-      <div class="dangling-card">
-        <div class="member-name">Deepa</div>
-        <div class="member-role">Product Owner</div>
-      </div>
-      <div class="dangling-card">
-        <div class="member-name">Vikas M</div>
-        <div class="member-role">Scrum Master</div>
-      </div>
-      <div class="dangling-card">
-        <div class="member-name">Gomatesh</div>
-        <div class="member-role">DevOps Engineer</div>
-      </div>
-      <div class="dangling-card">
-        <div class="member-name">Suvarna</div>
-        <div class="member-role">DevOps Engineer</div>
-      </div>
-      <div class="dangling-card">
-        <div class="member-name">Gousia</div>
-        <div class="member-role">DevOps Engineer</div>
-      </div>
+      <div class="dangling-card"><div class="member-name">Deepa</div><div class="member-role">Product Owner</div></div>
+      <div class="dangling-card"><div class="member-name">Vikas M</div><div class="member-role">Scrum Master</div></div>
+      <div class="dangling-card"><div class="member-name">Gomatesh</div><div class="member-role">DevOps Engineer</div></div>
+      <div class="dangling-card"><div class="member-name">Suvarna</div><div class="member-role">DevOps Engineer</div></div>
+      <div class="dangling-card"><div class="member-name">Gousia</div><div class="member-role">DevOps Engineer</div></div>
     </div>
-  </section>
-
-  <!-- ABOUT SECTION -->
-  <section id="about">
-    <h2 class="section-title">Team Structure</h2>
-    <p class="section-subtitle">Roles & Engineering Ownership Across Team Triveni Sangam</p>
-
-    <div class="team-grid">
-      <div class="about-card">
-        <i class="fa-solid fa-user-gear" style="color:var(--accent-cyan)"></i>
-        <h3>Deepa</h3>
-        <p class="member-role">Product Owner & Azure Infra Lead</p>
-        <p style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
-          Manages multi-branch repository strategies, Azure App Service provisioning, and target environment release governance.
-        </p>
-      </div>
-      <div class="about-card">
-        <i class="fa-solid fa-list-check" style="color:var(--accent-purple)"></i>
-        <h3>Vikas M</h3>
-        <p class="member-role">Scrum Master & Container Lead</p>
-        <p style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
-          Drives sprint cadence, Docker container optimization, and multi-stage image registry security controls.
-        </p>
-      </div>
-      <div class="about-card">
-        <i class="fa-solid fa-code-branch" style="color:var(--accent-green)"></i>
-        <h3>Gomatesh</h3>
-        <p class="member-role">DevOps Engineer & Pipeline Architect</p>
-        <p style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
-          Specializes in Jenkins CI/CD automation, declarative pipelines, shell scripting, and webhook orchestration.
-        </p>
-      </div>
-      <div class="about-card">
-        <i class="fa-solid fa-cloud" style="color:var(--accent-cyan)"></i>
-        <h3>Suvarna</h3>
-        <p class="member-role">DevOps Engineer & IaC Specialist</p>
-        <p style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
-          Focuses on Terraform infrastructure provisioning, Ansible configuration management, and Azure Cloud setups.
-        </p>
-      </div>
-      <div class="about-card">
-        <i class="fa-solid fa-chart-line" style="color:var(--accent-purple)"></i>
-        <h3>Gousia</h3>
-        <p class="member-role">DevOps Engineer & Observability Lead</p>
-        <p style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
-          Architects Azure Monitor dashboards, central Log Analytics Workspaces, and deployment telemetry dashboards.
-        </p>
-      </div>
+  </div>
+  <div class="home-right">
+    <div class="team-watermark">
+      <span class="line1">Triveni Sangam</span>
+      <span class="line2">DevOps Guild</span>
+      <div class="rule"></div>
     </div>
-  </section>
-
-  <!-- PROJECTS / PIPELINE ANIMATION SECTION -->
-  <section id="projects">
-    <h2 class="section-title">Animated Pipeline Architecture</h2>
-    <p class="section-subtitle">Select a project to trigger the automated webhook and CI/CD workflow</p>
-
-    <!-- PROJECT SELECTOR BUTTONS -->
-    <div class="project-selector">
-      <button class="proj-btn active" id="btn-meddy" onclick="switchProject('meddy')">Meddy Chatbot</button>
-      <button class="proj-btn" id="btn-naukri" onclick="switchProject('naukri')">Naukri Automation</button>
-      <button class="proj-btn" id="btn-tumor" onclick="switchProject('tumor')">Brain Tumor ML</button>
-      <button class="proj-btn" id="btn-snowman" onclick="switchProject('snowman')">Snowman Monolith</button>
-      <button class="proj-btn" id="btn-chunkhound" onclick="switchProject('chunkhound')">ChunkHound AI</button>
+  </div>
+</section>
+ 
+<!-- ABOUT -->
+<section id="about">
+  <h2 class="section-title">Team Structure</h2>
+  <p class="section-subtitle">Roles &amp; Engineering Ownership Across Team Triveni Sangam</p>
+  <div class="team-grid" id="team-grid">
+    <div class="about-card">
+      <i class="fa-solid fa-user-gear" style="color:var(--accent-teal)"></i>
+      <h3>Deepa</h3>
+      <p class="member-role">Product Owner &amp; Azure Infra Lead</p>
+      <p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);line-height:1.5;">Manages multi-branch repository strategies, Azure App Service provisioning, and target environment release governance.</p>
+      <div class="card-extra">Focus areas: release governance, environment promotion strategy, stakeholder alignment across all five project streams.</div>
     </div>
-
-    <!-- MAIN PIPELINE STAGE -->
+    <div class="about-card">
+      <i class="fa-solid fa-list-check" style="color:var(--accent-indigo)"></i>
+      <h3>Vikas M</h3>
+      <p class="member-role">Scrum Master &amp; Container Lead</p>
+      <p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);line-height:1.5;">Drives sprint cadence, Docker container optimization, and multi-stage image registry security controls.</p>
+      <div class="card-extra">Focus areas: sprint ceremonies, image size reduction, base-image CVE scanning across registries.</div>
+    </div>
+    <div class="about-card">
+      <i class="fa-solid fa-code-branch" style="color:var(--accent-teal)"></i>
+      <h3>Gomatesh</h3>
+      <p class="member-role">DevOps Engineer &amp; Pipeline Architect</p>
+      <p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);line-height:1.5;">Specializes in Jenkins CI/CD automation, declarative pipelines, shell scripting, and webhook orchestration.</p>
+      <div class="card-extra">Focus areas: declarative Jenkinsfiles, shared pipeline libraries, webhook-triggered multibranch builds.</div>
+    </div>
+    <div class="about-card">
+      <i class="fa-solid fa-cloud" style="color:var(--accent-amber)"></i>
+      <h3>Suvarna</h3>
+      <p class="member-role">DevOps Engineer &amp; IaC Specialist</p>
+      <p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);line-height:1.5;">Focuses on Terraform infrastructure provisioning, Ansible configuration management, and Azure Cloud setups.</p>
+      <div class="card-extra">Focus areas: modular Terraform state, Ansible playbook idempotency, Azure resource-group standards.</div>
+    </div>
+    <div class="about-card">
+      <i class="fa-solid fa-chart-line" style="color:var(--accent-coral)"></i>
+      <h3>Gousia</h3>
+      <p class="member-role">DevOps Engineer &amp; Observability Lead</p>
+      <p style="margin-top:0.8rem;font-size:0.85rem;color:var(--text-muted);line-height:1.5;">Architects Azure Monitor dashboards, central Log Analytics Workspaces, and deployment telemetry dashboards.</p>
+      <div class="card-extra">Focus areas: alert-rule tuning, KQL query libraries, cross-project telemetry correlation.</div>
+    </div>
+  </div>
+</section>
+ 
+<!-- PROJECTS -->
+<section id="projects">
+  <h2 class="section-title">Project Architecture Slides</h2>
+  <p class="section-subtitle">Each project ships its own build tools, workflow design, and live pipeline animation</p>
+ 
+  <div class="project-subnav" id="project-subnav">
+    <button class="proj-btn active" data-target="slide-meddy">Meddy Chatbot</button>
+    <button class="proj-btn" data-target="slide-naukri">Naukri Automation</button>
+    <button class="proj-btn" data-target="slide-tumor">Brain Tumor ML</button>
+    <button class="proj-btn" data-target="slide-snowman">Snowman Monolith</button>
+    <button class="proj-btn" data-target="slide-chunkhound">ChunkHound AI</button>
+  </div>
+ 
+  <div id="project-slides-container"></div>
+</section>
+ 
+<!-- VISION / FUTURE -->
+<section id="vision">
+  <h2 class="section-title">Our Vision</h2>
+  <p class="section-subtitle">The Strategic Roadmap for Team Triveni Sangam</p>
+  <div class="vision-cards">
+    <div class="vision-card c1">
+      <h3 style="color:var(--accent-teal);">What We Are Doing</h3>
+      <p>Standardizing CI/CD pipelines, containerizing multi-tier applications, and leveraging Infrastructure-as-Code (Terraform) across hybrid cloud environments to guarantee reproducible builds.</p>
+    </div>
+    <div class="vision-card c2">
+      <h3 style="color:var(--accent-indigo);">What We Want to Achieve</h3>
+      <p>Achieving zero-downtime deployments, full automated telemetry coverage with centralized logging, automated rollback workflows, and reducing deployment cycle times to under 3 minutes.</p>
+    </div>
+    <div class="vision-card c3">
+      <h3 style="color:var(--accent-amber);">Future Roadmap</h3>
+      <p>Expanding into MLOps automation pipelines, GitOps continuous delivery using ArgoCD, serverless container scaling via Azure Container Apps, and automated DevSecOps vulnerability scanning.</p>
+    </div>
+  </div>
+ 
+  <h2 class="section-title" style="margin-top:4rem;">Future Enhancements, By Project</h2>
+  <p class="section-subtitle">What's next for each pipeline</p>
+  <div class="future-cards" id="future-cards"></div>
+</section>
+ 
+<!-- CONTACT -->
+<section id="contact">
+  <h2 class="section-title">Get In Touch</h2>
+  <p class="section-subtitle">Reach Team Triveni Sangam</p>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <i class="fa-solid fa-envelope"></i>
+      <h4>Email</h4>
+      <p>team.trivenisangam@gmail.com</p>
+    </div>
+    <div class="contact-card">
+      <i class="fa-solid fa-phone"></i>
+      <h4>Phone</h4>
+      <p>+91 98765 43210</p>
+    </div>
+    <div class="contact-card">
+      <i class="fa-solid fa-location-dot"></i>
+      <h4>Address</h4>
+      <p>Bengaluru, Karnataka, India</p>
+    </div>
+  </div>
+  <p class="contact-note">These contact details are placeholders — swap in your team's real email, phone number, and address before publishing.</p>
+</section>
+ 
+<script>
+/* ================= 1. BACKGROUND PARTICLE NETWORK ================= */
+const canvas=document.getElementById('bg-canvas');
+const ctx=canvas.getContext('2d');
+let width,height,particles;
+function resizeCanvas(){width=canvas.width=window.innerWidth;height=canvas.height=window.innerHeight;}
+class Particle{
+  constructor(){this.x=Math.random()*width;this.y=Math.random()*height;this.vx=(Math.random()-0.5)*0.5;this.vy=(Math.random()-0.5)*0.5;this.radius=Math.random()*1.6+1;}
+  update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>width)this.vx*=-1;if(this.y<0||this.y>height)this.vy*=-1;}
+  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);ctx.fillStyle='rgba(14,165,165,0.28)';ctx.fill();}
+}
+function initCanvas(){resizeCanvas();particles=Array.from({length:55},()=>new Particle());}
+function animateCanvas(){
+  ctx.clearRect(0,0,width,height);
+  for(let i=0;i<particles.length;i++){
+    particles[i].update();particles[i].draw();
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){
+        ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`rgba(76,81,230,${0.10-dist/120*0.10})`;ctx.lineWidth=0.8;ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(animateCanvas);
+}
+window.addEventListener('resize',resizeCanvas);
+initCanvas();animateCanvas();
+ 
+/* ================= 2. HOME DANGLING CARD SWING ================= */
+gsap.utils.toArray('.dangling-card').forEach((card,i)=>{
+  gsap.to(card,{rotation:i%2===0?3:-3,duration:2.2+i*0.3,repeat:-1,yoyo:true,ease:"sine.inOut"});
+});
+ 
+/* ================= 3. ABOUT SECTION: SCROLL REVEAL + TILT ================= */
+gsap.registerPlugin(ScrollTrigger);
+gsap.utils.toArray('.about-card').forEach((card,i)=>{
+  gsap.to(card,{
+    opacity:1,y:0,scale:1,duration:0.7,delay:i*0.08,ease:"back.out(1.4)",
+    scrollTrigger:{trigger:card,start:"top 88%",toggleActions:"play none none reverse"}
+  });
+  card.addEventListener('mousemove',(e)=>{
+    const rect=card.getBoundingClientRect();
+    const x=e.clientX-rect.left,y=e.clientY-rect.top;
+    const rotateX=((y-rect.height/2)/rect.height)*-10;
+    const rotateY=((x-rect.width/2)/rect.width)*10;
+    gsap.to(card,{rotateX,rotateY,duration:0.4,ease:"power2.out",transformPerspective:800});
+  });
+  card.addEventListener('mouseleave',()=>{gsap.to(card,{rotateX:0,rotateY:0,duration:0.5,ease:"power2.out"});});
+});
+ 
+/* ================= 4. PROJECT DATA ================= */
+const projectData={
+  meddy:{
+    label:"Meddy Chatbot",
+    watermarkIcon:"fa-solid fa-comment-medical",
+    patternShape:"cross",accentColor:"#C1583F",
+    description:"A healthcare assistant chatbot built on PyTorch and Flask that answers patient queries and routes escalations to on-call staff. The pipeline runs automated PyTest suites and security linting on every pull request before shipping a fresh container to Azure App Service.",
+    future:"Add canary releases for model updates and integrate response-quality monitoring into the Azure Monitor dashboard.",
+    nodes:[
+      {name:"GitHub",img:"github/github-original",ver:"v2.4",action:"PR Merged & Webhook Emitted"},
+      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"v2.414",action:"PyTest Suite & Security Linting"},
+      {name:"Docker",img:"docker/docker-original",ver:"v24.0",action:"Containerizing PyTorch/Flask App"},
+      {name:"ACR",img:"azure/azure-original",ver:"Basic",action:"Tagging & Pushing Image Artifacts"},
+      {name:"Azure App Service",img:"azure/azure-original",ver:"Linux B1",action:"Continuous Service Deployment"}
+    ]
+  },
+  naukri:{
+    label:"Naukri Automation",
+    watermarkIcon:"fa-solid fa-briefcase",
+    patternShape:"briefcase",accentColor:"#D9A441",
+    description:"A job-application automation engine pairing a Spring Boot API with a React portal, packaging build binaries into Azure Storage before the API and portal ship together to Azure App Service.",
+    future:"Introduce blue-green slots on App Service and move build artifact retention to a lifecycle-managed cool tier.",
+    nodes:[
+      {name:"GitHub",img:"github/github-original",ver:"v2.4",action:"Checkout Main Branch Codebase"},
+      {name:"Maven / Node",img:"maven/maven-original",ver:"Java 17",action:"Packaging Spring Boot & React Engine"},
+      {name:"Docker",img:"docker/docker-original",ver:"v24.0",action:"Containerizing Automation Engine"},
+      {name:"Azure Storage",img:"azure/azure-original",ver:"Hot Tier",action:"Storing Build Binaries & Artifacts"},
+      {name:"Azure App Service",img:"azure/azure-original",ver:"Linux B1",action:"Deploying API Engine & Portal"}
+    ]
+  },
+  tumor:{
+    label:"Brain Tumor ML",
+    watermarkIcon:"fa-solid fa-brain",
+    patternShape:"wave",accentColor:"#7B4B8A",
+    description:"A CNN-based image classifier that flags likely tumor regions in MRI scans. Jenkins validates model accuracy metrics on every branch, Terraform provisions the serving infrastructure, and Azure Monitor tracks inference telemetry in real time.",
+    future:"Add automated model-drift detection and retrain triggers wired directly into the Jenkins pipeline.",
+    nodes:[
+      {name:"GitHub",img:"github/github-original",ver:"v2.4",action:"Branch Governance Validation"},
+      {name:"Jenkins",img:"jenkins/jenkins-original",ver:"v2.414",action:"Evaluating CNN Model Metrics"},
+      {name:"Docker",img:"docker/docker-original",ver:"v24.0",action:"Building Image Classifier Image"},
+      {name:"Terraform",img:"terraform/terraform-original",ver:"v1.5",action:"Provisioning Azure B2 Infra"},
+      {name:"Azure Monitor",img:"azure/azure-original",ver:"Log Analytics",action:"Realtime Inference Telemetry"}
+    ]
+  },
+  snowman:{
+    label:"Snowman Monolith",
+    watermarkIcon:"fa-solid fa-server",
+    patternShape:"grid",accentColor:"#4F7965",
+    description:"A legacy Java monolith kept alive through disciplined packaging and configuration management — Maven compiles the JAR, Docker packages it for portability, and Ansible playbooks bring the target VM to a known-good state before every release.",
+    future:"Begin strangler-fig decomposition of the monolith into containerized services deployable independently.",
+    nodes:[
+      {name:"GitHub",img:"github/github-original",ver:"v2.4",action:"Commit Trigger Captured"},
+      {name:"Maven",img:"maven/maven-original",ver:"v3.9",action:"Compiling Monolith JAR Package"},
+      {name:"Docker",img:"docker/docker-original",ver:"v24.0",action:"Packaging Legacy Monolith Container"},
+      {name:"Ansible",img:"ansible/ansible-original",ver:"v2.15",action:"Executing VM Playbook Configurations"},
+      {name:"Azure VM",img:"azure/azure-original",ver:"Std B2s",action:"Host Deployment Execution"}
+    ]
+  },
+  chunkhound:{
+    label:"ChunkHound AI",
+    watermarkIcon:"fa-solid fa-magnifying-glass",
+    patternShape:"ring",accentColor:"#8A6E4F",
+    description:"A high-speed semantic code-search daemon written in Rust, compiled for performance and shipped as a lean microservice image through ACR onto a dedicated Azure VM for low-latency queries.",
+    future:"Add horizontal scaling behind a load balancer and precompute embeddings on a scheduled background worker.",
+    nodes:[
+      {name:"GitHub",img:"github/github-original",ver:"v2.4",action:"Syncing Repository Indexing Engine"},
+      {name:"Cargo / Rust",img:"rust/rust-original",ver:"v1.70+",action:"Compiling High-Speed Semantic Search"},
+      {name:"Docker",img:"docker/docker-original",ver:"v24.0",action:"Creating Microservice Container Image"},
+      {name:"ACR",img:"azure/azure-original",ver:"Shared Tier",action:"Registry Image Release"},
+      {name:"Azure VM",img:"azure/azure-original",ver:"Std B2s",action:"Deploying Code Search Daemon"}
+    ]
+  }
+};
+const DEVICON_BASE="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/";
+ 
+/* Self-contained SVG tile patterns, tinted per project, used as each slide's background image */
+const PATTERN_SHAPES={
+  cross:"<circle cx='35' cy='35' r='16'/><path d='M35 25 v20 M25 35 h20' stroke-linecap='round'/>",
+  briefcase:"<rect x='20' y='28' width='30' height='20' rx='3'/><path d='M28 28 v-6 a4 4 0 0 1 4 -4 h6 a4 4 0 0 1 4 4 v6'/>",
+  wave:"<path d='M5 40 q8 -18 16 0 t16 0 t16 0' />",
+  grid:"<rect x='15' y='10' width='40' height='12' rx='2'/><rect x='15' y='28' width='40' height='12' rx='2'/><rect x='15' y='46' width='40' height='12' rx='2'/>",
+  ring:"<circle cx='28' cy='28' r='14'/><line x1='38' y1='38' x2='50' y2='50' stroke-linecap='round'/>"
+};
+function buildPatternUrl(shapeKey,color){
+  const inner=PATTERN_SHAPES[shapeKey]||PATTERN_SHAPES.ring;
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='70' height='70'><g fill='none' stroke='${color}' stroke-width='2.4'>${inner}</g></svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+ 
+/* ================= 5. RENDER PROJECT SLIDES ================= */
+const slidesContainer=document.getElementById('project-slides-container');
+Object.entries(projectData).forEach(([key,proj])=>{
+  const slide=document.createElement('div');
+  slide.className='project-slide';
+  slide.id=`slide-${key}`;
+ 
+  const nodesHtml=proj.nodes.map((n,i)=>`
+    <div class="node" id="node-${key}-${i}">
+      <div class="node-popup"><h5>${n.name}</h5><p>${n.action}</p></div>
+      <div class="node-icon-wrap">
+        <div class="node-icon"><img src="${DEVICON_BASE}${n.img}.svg" alt="${n.name}" onerror="this.style.display='none'"></div>
+        <span class="version-badge">${n.ver}</span>
+      </div>
+      <div class="node-label">${n.name}</div>
+    </div>`).join('');
+ 
+  slide.innerHTML=`
+    <div class="project-slide-bg" style="background-image:${buildPatternUrl(proj.patternShape,proj.accentColor)};"></div>
+    <i class="project-watermark-icon ${proj.watermarkIcon}"></i>
+    <div class="project-slide-header"><div class="project-slide-name" style="-webkit-text-stroke-color:${proj.accentColor}66;">${proj.label}</div></div>
+    <div class="project-slide-body">
+      <h3 style="color:${proj.accentColor};">How It Works</h3>
+      <p>${proj.description}</p>
+    </div>
     <div class="pipeline-wrapper">
-      <!-- DEVELOPER AT COMPUTER STAGE -->
       <div class="developer-stage">
-        <div class="thought-bubble" id="dev-thought">git push...</div>
-        <!-- Animated Developer Vector SVG -->
+        <div class="thought-bubble" id="dev-thought-${key}">git push...</div>
         <svg class="dev-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M32 12C25.3726 12 20 17.3726 20 24C20 27.65 21.63 30.92 24.2 33.11C16.8 35.8 11.5 42.8 11 51H53C52.5 42.8 47.2 35.8 39.8 33.11C42.37 30.92 44 27.65 44 24C44 17.3726 38.6274 12 32 12Z" fill="#38bdf8" opacity="0.8"/>
-          <rect x="18" y="46" width="28" height="14" rx="2" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
-          <line x1="14" y1="60" x2="50" y2="60" stroke="#a855f7" stroke-width="2"/>
+          <path d="M32 12C25.3726 12 20 17.3726 20 24C20 27.65 21.63 30.92 24.2 33.11C16.8 35.8 11.5 42.8 11 51H53C52.5 42.8 47.2 35.8 39.8 33.11C42.37 30.92 44 27.65 44 24C44 17.3726 38.6274 12 32 12Z" fill="${proj.accentColor}" opacity="0.85"/>
+          <rect x="18" y="46" width="28" height="14" rx="2" fill="#F7F6F1" stroke="${proj.accentColor}" stroke-width="2"/>
+          <line x1="14" y1="60" x2="50" y2="60" stroke="#7B4B8A" stroke-width="2"/>
         </svg>
-        <span style="font-size:0.8rem; font-weight:bold; margin-top:0.5rem; color:var(--text-muted);">Developer</span>
+        <span style="font-size:0.8rem;font-weight:bold;margin-top:0.5rem;color:var(--text-muted);">Developer</span>
       </div>
-
-      <!-- ANIMATED WEBHook SIGNAL -->
-      <div class="webhook-signal" id="webhook-dot"></div>
-
-      <!-- HORIZONTAL FLOW -->
+      <div class="webhook-signal" id="webhook-dot-${key}"></div>
       <div class="pipeline-flow">
         <div class="pipeline-line"></div>
-        <div class="pipeline-progress" id="progress-bar"></div>
-
-        <div class="pipeline-nodes" id="pipeline-nodes">
-          <!-- Dynamic Nodes Populated by JS -->
-        </div>
+        <div class="pipeline-progress" id="progress-bar-${key}"></div>
+        <div class="logo-carrier" id="carrier-${key}"><img src="${DEVICON_BASE}${proj.nodes[0].img}.svg" alt=""></div>
+        <div class="pipeline-nodes">${nodesHtml}</div>
       </div>
     </div>
-
-    <!-- CONTROLS -->
     <div class="controls">
-      <button class="proj-btn" onclick="runSimulation()"><i class="fa-solid fa-play"></i> Run Webhook Pipeline</button>
-      <button class="proj-btn" onclick="resetSimulation()"><i class="fa-solid fa-rotate-left"></i> Reset Flow</button>
+      <button class="proj-btn" onclick="runSimulation('${key}')"><i class="fa-solid fa-play"></i> Run Pipeline</button>
+      <button class="proj-btn" onclick="resetSimulation('${key}')"><i class="fa-solid fa-rotate-left"></i> Reset Flow</button>
     </div>
-  </section>
-
-  <!-- VISION SECTION -->
-  <section id="vision">
-    <h2 class="section-title">Our Vision</h2>
-    <p class="section-subtitle">The Strategic Roadmap for Team Triveni Sangam</p>
-
-    <div class="vision-cards">
-      <div class="vision-card c1">
-        <h3 style="color:var(--accent-cyan);">What We Are Doing</h3>
-        <p>
-          Standardizing CI/CD pipelines, containerizing multi-tier applications, and leveraging Infrastructure-as-Code (Terraform) across hybrid cloud environments to guarantee reproducible builds.
-        </p>
-      </div>
-      <div class="vision-card c2">
-        <h3 style="color:var(--accent-purple);">What We Want to Achieve</h3>
-        <p>
-          Achieving zero-downtime deployments, full automated telemetry coverage with centralized logging, automated rollback workflows, and reducing deployment cycle times to under 3 minutes.
-        </p>
-      </div>
-      <div class="vision-card c3">
-        <h3 style="color:var(--accent-green);">Future Roadmap</h3>
-        <p>
-          Expanding into MLOps automation pipelines, GitOps continuous delivery using ArgoCD, serverless container scaling via Azure Container Apps, and automated DevSecOps vulnerability scanning.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <script>
-    // --- 1. DYNAMIC MOVING NETWORK BACKGROUND CANVAS ---
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height, particles;
-
-    function resizeCanvas() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    }
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.6;
-        this.vy = (Math.random() - 0.5) * 0.6;
-        this.radius = Math.random() * 1.8 + 1;
+  `;
+  slidesContainer.appendChild(slide);
+});
+ 
+/* ================= 6. FUTURE ENHANCEMENT CARDS ================= */
+const futureContainer=document.getElementById('future-cards');
+Object.values(projectData).forEach(proj=>{
+  const card=document.createElement('div');
+  card.className='future-card';
+  card.innerHTML=`<h4>${proj.label}</h4><p>${proj.future}</p>`;
+  futureContainer.appendChild(card);
+});
+ 
+/* ================= 7. PIPELINE SIMULATION ================= */
+const activeTimelines={};
+function runSimulation(key){
+  resetSimulation(key);
+  const nodes=projectData[key].nodes;
+  const carrier=document.getElementById(`carrier-${key}`);
+  const carrierImg=carrier.querySelector('img');
+  const tl=gsap.timeline();
+  activeTimelines[key]=tl;
+ 
+  tl.to(`#dev-thought-${key}`,{opacity:1,y:0,duration:0.4});
+  tl.to(`#webhook-dot-${key}`,{opacity:1,duration:0.2});
+  tl.to(`#webhook-dot-${key}`,{x:40,duration:0.6,ease:"power1.inOut"});
+  tl.to(`#webhook-dot-${key}`,{opacity:0,duration:0.2});
+  tl.to(`#progress-bar-${key}`,{width:"100%",duration:nodes.length*1.4,ease:"none"},"<");
+  tl.set(carrier,{left:"0%",opacity:1},"<");
+ 
+  nodes.forEach((node,i)=>{
+    const leftPct=(i/(nodes.length-1))*100;
+    tl.to(`#node-${key}-${i}`,{
+      onStart:()=>{
+        document.getElementById(`node-${key}-${i}`).classList.add('active');
+        carrierImg.src=`${DEVICON_BASE}${node.img}.svg`;
       }
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        if (this.x < 0 || this.x > width) this.vx *= -1;
-        if (this.y < 0 || this.y > height) this.vy *= -1;
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
-        ctx.fill();
-      }
-    }
-
-    function initCanvas() {
-      resizeCanvas();
-      particles = Array.from({ length: 65 }, () => new Particle());
-    }
-
-    function animateCanvas() {
-      ctx.clearRect(0, 0, width, height);
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].update();
-        particles[i].draw();
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(56, 189, 248, ${0.15 - dist / 120 * 0.15})`;
-            ctx.lineWidth = 0.8;
-            ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(animateCanvas);
-    }
-
-    window.addEventListener('resize', resizeCanvas);
-    initCanvas();
-    animateCanvas();
-
-    // --- 2. SWINGING DANGLING CARDS ANIMATION ---
-    gsap.utils.toArray('.dangling-card').forEach((card, i) => {
-      gsap.to(card, {
-        rotation: i % 2 === 0 ? 4 : -4,
-        duration: 2.2 + i * 0.3,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-      });
-    });
-
-    // --- 3. PIPELINE DATA DEFINITIONS ---
-    const projectData = {
-      meddy: [
-        { name: "GitHub", icon: "fa-brands fa-github", ver: "v2.4", action: "PR Merged & Webhook Emitted" },
-        { name: "Jenkins", icon: "fa-brands fa-jenkins", ver: "v2.414", action: "PyTest Suite & Security Linting" },
-        { name: "Docker", icon: "fa-brands fa-docker", ver: "v24.0", action: "Containerizing PyTorch/Flask App" },
-        { name: "ACR", icon: "fa-solid fa-box-archive", ver: "Basic", action: "Tagging & Pushing Image Artifacts" },
-        { name: "Azure App Service", icon: "fa-solid fa-cloud-arrow-up", ver: "Linux B1", action: "Continuous Service Deployment" }
-      ],
-      naukri: [
-        { name: "GitHub", icon: "fa-brands fa-github", ver: "v2.4", action: "Checkout Main Branch Codebase" },
-        { name: "Maven / Node", icon: "fa-solid fa-cube", ver: "Java 17", action: "Packaging Spring Boot & React Engine" },
-        { name: "Docker", icon: "fa-brands fa-docker", ver: "v24.0", action: "Containerizing Automation Engine" },
-        { name: "Azure Storage", icon: "fa-solid fa-database", ver: "Hot Tier", action: "Storing Build Binaries & Artifacts" },
-        { name: "Azure App Service", icon: "fa-solid fa-server", ver: "Linux B1", action: "Deploying API Engine & Portal" }
-      ],
-      tumor: [
-        { name: "GitHub", icon: "fa-brands fa-github", ver: "v2.4", action: "Branch Governance Validation" },
-        { name: "Jenkins", icon: "fa-brands fa-jenkins", ver: "v2.414", action: "Evaluating CNN Model Metrics" },
-        { name: "Docker", icon: "fa-brands fa-docker", ver: "v24.0", action: "Building Image Classifier Image" },
-        { name: "Terraform", icon: "fa-solid fa-layer-group", ver: "v1.5", action: "Provisioning Azure B2 Infra" },
-        { name: "Azure Monitor", icon: "fa-solid fa-chart-line", ver: "Log Analytics", action: "Realtime Inference Telemetry" }
-      ],
-      snowman: [
-        { name: "GitHub", icon: "fa-brands fa-github", ver: "v2.4", action: "Commit Trigger Captured" },
-        { name: "Maven", icon: "fa-solid fa-gears", ver: "v3.9", action: "Compiling Monolith JAR Package" },
-        { name: "Docker", icon: "fa-brands fa-docker", ver: "v24.0", action: "Packaging Legacy Monolith Container" },
-        { name: "Ansible", icon: "fa-solid fa-terminal", ver: "v2.15", action: "Executing VM Playbook Configurations" },
-        { name: "Azure VM", icon: "fa-solid fa-desktop", ver: "Std B2s", action: "Host Deployment Execution" }
-      ],
-      chunkhound: [
-        { name: "GitHub", icon: "fa-brands fa-github", ver: "v2.4", action: "Syncing Repository Indexing Engine" },
-        { name: "Cargo / Rust", icon: "fa-solid fa-bolt", ver: "v1.70+", action: "Compiling High-Speed Semantic Search" },
-        { name: "Docker", icon: "fa-brands fa-docker", ver: "v24.0", action: "Creating Microservice Container Image" },
-        { name: "ACR", icon: "fa-solid fa-boxes-stacked", ver: "Shared Tier", action: "Registry Image Release" },
-        { name: "Azure VM", icon: "fa-solid fa-network-wired", ver: "Std B2s", action: "Deploying Code Search Daemon" }
-      ]
-    };
-
-    let currentProject = 'meddy';
-    let mainTimeline = null;
-
-    function renderPipelineNodes(projKey) {
-      const container = document.getElementById('pipeline-nodes');
-      container.innerHTML = '';
-      const nodes = projectData[projKey];
-
-      nodes.forEach((node, index) => {
-        const nodeEl = document.createElement('div');
-        nodeEl.className = 'node';
-        nodeEl.id = `node-${index}`;
-        nodeEl.innerHTML = `
-          <div class="node-popup">
-            <h5>${node.name}</h5>
-            <p>${node.action}</p>
-          </div>
-          <div class="node-icon-wrap">
-            <div class="node-icon"><i class="${node.icon}"></i></div>
-            <span class="version-badge">${node.ver}</span>
-          </div>
-          <div class="node-label">${node.name}</div>
-        `;
-        container.appendChild(nodeEl);
-      });
-    }
-
-    function switchProject(projKey) {
-      currentProject = projKey;
-      document.querySelectorAll('.proj-btn').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.getElementById(`btn-${projKey}`);
-      if(activeBtn) activeBtn.classList.add('active');
-      resetSimulation();
-      renderPipelineNodes(projKey);
-    }
-
-    function runSimulation() {
-      resetSimulation();
-      const nodes = projectData[currentProject];
-      mainTimeline = gsap.timeline();
-
-      // Step 1: Developer Thinking Bubble Appearance
-      mainTimeline.to("#dev-thought", { opacity: 1, y: 0, duration: 0.4 });
-      
-      // Step 2: Webhook Signal Animation
-      mainTimeline.to("#webhook-dot", { opacity: 1, duration: 0.2 });
-      mainTimeline.to("#webhook-dot", { x: 40, duration: 0.6, ease: "power1.inOut" });
-      mainTimeline.to("#webhook-dot", { opacity: 0, duration: 0.2 });
-
-      // Step 3: Progress Bar Movement & Node Activation
-      mainTimeline.to("#progress-bar", {
-        width: "100%",
-        duration: nodes.length * 1.4,
-        ease: "none"
-      });
-
-      nodes.forEach((_, index) => {
-        mainTimeline.to(`#node-${index}`, {
-          onStart: () => {
-            document.getElementById(`node-${index}`).classList.add('active');
-          }
-        }, 1.2 + (index * 1.4));
-      });
-    }
-
-    function resetSimulation() {
-      if (mainTimeline) mainTimeline.kill();
-      gsap.set("#dev-thought", { opacity: 0, y: 5 });
-      gsap.set("#webhook-dot", { opacity: 0, x: 0 });
-      gsap.set("#progress-bar", { width: "0%" });
-      document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
-    }
-
-    // INITIALIZATION
-    renderPipelineNodes('meddy');
-  </script>
+    },1.2+(i*1.4));
+    tl.to(carrier,{left:`${leftPct}%`,duration:1.1,ease:"power1.inOut"},1.2+(i*1.4)-0.9);
+  });
+ 
+  /* carrier keeps travelling past the last node, toward the next section */
+  tl.to(carrier,{left:"118%",opacity:0,duration:1,ease:"power1.in"},"+=0.3");
+}
+function resetSimulation(key){
+  if(activeTimelines[key])activeTimelines[key].kill();
+  gsap.set(`#dev-thought-${key}`,{opacity:0,y:5});
+  gsap.set(`#webhook-dot-${key}`,{opacity:0,x:0});
+  gsap.set(`#progress-bar-${key}`,{width:"0%"});
+  const carrier=document.getElementById(`carrier-${key}`);
+  if(carrier)gsap.set(carrier,{left:"0%",opacity:0});
+  document.querySelectorAll(`#slide-${key} .node`).forEach(n=>n.classList.remove('active'));
+}
+ 
+/* ================= 8. SCROLL-TRIGGERED SLIDE ENTRANCE + AUTO-RUN ================= */
+Object.keys(projectData).forEach(key=>{
+  const slide=document.getElementById(`slide-${key}`);
+  gsap.fromTo(slide,{opacity:0,y:70},{
+    opacity:1,y:0,duration:0.9,ease:"power2.out",
+    scrollTrigger:{trigger:slide,start:"top 75%",toggleActions:"play none none reverse"}
+  });
+});
+ 
+/* ================= 9. SUBNAV: SCROLL-SPY + CLICK-TO-JUMP ================= */
+document.querySelectorAll('#project-subnav .proj-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.getElementById(btn.dataset.target).scrollIntoView({behavior:"smooth",block:"start"});
+  });
+});
+Object.keys(projectData).forEach(key=>{
+  ScrollTrigger.create({
+    trigger:`#slide-${key}`,start:"top 50%",end:"bottom 50%",
+    onEnter:()=>setActiveSubnav(key),onEnterBack:()=>setActiveSubnav(key)
+  });
+});
+function setActiveSubnav(key){
+  document.querySelectorAll('#project-subnav .proj-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.querySelector(`#project-subnav .proj-btn[data-target="slide-${key}"]`);
+  if(btn)btn.classList.add('active');
+}
+</script>
 </body>
 </html>
