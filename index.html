@@ -66,15 +66,15 @@
   .dropdown-menu li a:hover{background:rgba(14,165,165,0.08);color:var(--accent-teal);}
  
   /* ===================== SECTIONS ===================== */
-  section{min-height:100vh;padding:8.5rem 4rem 4rem 4rem;position:relative;}
-  .section-title{font-size:2.6rem;margin-bottom:0.5rem;text-align:center;font-weight:800;color:var(--text-main);}
+  section{min-height:100vh;padding:clamp(6rem,10vw,8.5rem) clamp(1.6rem,4.5vw,4rem) clamp(3rem,5vw,4rem);position:relative;}
+  .section-title{font-size:clamp(2rem,1.4vw + 1.9rem,2.9rem);margin-bottom:0.5rem;text-align:center;font-weight:800;color:var(--text-main);}
   .section-subtitle{text-align:center;color:var(--text-muted);margin-bottom:3.5rem;font-size:1rem;}
  
   /* ===================== HOME ===================== */
-  #home{display:flex;align-items:center;justify-content:center;gap:3rem;padding-top:7rem;max-width:1400px;margin:0 auto;}
-  .home-left{flex:1.1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;max-width:480px;}
-  .hero-title{font-size:2.6rem;font-weight:800;margin-bottom:0.6rem;line-height:1.15;text-align:left;}
-  .hero-sub{color:var(--text-muted);font-size:1rem;margin-bottom:2.5rem;text-align:left;}
+  #home{display:flex;align-items:center;justify-content:center;gap:clamp(2rem,4vw,5rem);padding-top:7rem;max-width:1680px;width:100%;margin:0 auto;}
+  .home-left{flex:1.1;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;max-width:540px;}
+  .hero-title{font-size:clamp(2.4rem,1.6vw + 2.1rem,3.4rem);font-weight:800;margin-bottom:0.6rem;line-height:1.15;text-align:left;}
+  .hero-sub{color:var(--text-muted);font-size:clamp(1rem,0.4vw + 0.9rem,1.15rem);margin-bottom:2.5rem;text-align:left;}
  
   .dangling-container{display:flex;flex-direction:column;gap:1.1rem;}
   .dangling-card{
@@ -105,7 +105,7 @@
   }
  
   /* ===================== ABOUT ===================== */
-  .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2rem;max-width:1200px;margin:0 auto;width:100%;perspective:1200px;}
+  .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2rem;max-width:1440px;margin:0 auto;width:100%;perspective:1200px;}
   .about-card{
     background:var(--card-bg);border:1px solid var(--border-color);backdrop-filter:blur(10px);
     border-radius:16px;padding:2rem;box-shadow:var(--shadow-soft);cursor:pointer;
@@ -136,7 +136,8 @@
   .project-slide{
     min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;
     border-radius:22px;border:1px solid var(--border-color);background:var(--bg-panel);
-    max-width:1300px;margin:0 auto 3rem auto;padding:3.5rem 3rem;overflow:hidden;box-shadow:var(--shadow-soft);
+    max-width:1600px;width:94%;margin:0 auto 3rem auto;padding:clamp(2.2rem,3vw,3.5rem) clamp(1.6rem,3.5vw,3.5rem);
+    overflow:hidden;box-shadow:var(--shadow-soft);
   }
   .project-watermark-icon{
     position:absolute;right:-40px;bottom:-60px;font-size:22rem;color:var(--text-main);opacity:0.05;z-index:0;pointer-events:none;
@@ -202,26 +203,46 @@
   /* ===================== LIVE DIAGRAM (image + animated flow overlay) ===================== */
   .diagram-panel{
     position:relative;z-index:2;background:#0b0b0c;border:1px solid var(--border-color);border-radius:16px;
-    padding:1.1rem;box-shadow:var(--shadow-soft);
+    padding:1.4rem;box-shadow:var(--shadow-soft);
   }
-  .diagram-wrap{position:relative;width:100%;line-height:0;border-radius:10px;overflow:hidden;background:#000;}
-  .diagram-img{width:100%;display:block;user-select:none;-webkit-user-drag:none;}
+  /* Fixed aspect-ratio + min-height so this box holds its size even if the diagram
+     image hasn't been added yet at assets/*.jpeg — it no longer collapses to the
+     size of a broken-image icon and crushes the markers together. */
+  .diagram-wrap{
+    position:relative;width:100%;border-radius:10px;overflow:hidden;
+    background:radial-gradient(circle at 30% 20%,#17181a 0%,#0a0a0b 70%);
+    aspect-ratio:16/8;min-height:480px;
+  }
+  .diagram-img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    display:block;user-select:none;-webkit-user-drag:none;
+  }
+  /* Hidden by default; JS adds .img-missing to diagram-wrap on image load error
+     so we show a clean placeholder instead of the browser's broken-image glyph. */
+  .diagram-wrap.img-missing .diagram-img{display:none;}
+  .diagram-missing-note{
+    display:none;position:absolute;inset:0;align-items:center;justify-content:center;
+    flex-direction:column;gap:0.6rem;color:rgba(255,255,255,0.35);text-align:center;padding:2rem;
+  }
+  .diagram-wrap.img-missing .diagram-missing-note{display:flex;}
+  .diagram-missing-note i{font-size:2.2rem;}
+  .diagram-missing-note span{font-size:0.78rem;font-style:italic;max-width:360px;}
   .diagram-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
   .flow-line{fill:none;stroke:var(--diagram-accent,#4F7965);stroke-width:0.35;stroke-linecap:round;stroke-linejoin:round;
     stroke-dasharray:1.6 1.6;opacity:0.85;filter:drop-shadow(0 0 2px var(--diagram-accent,#4F7965));
     animation:dashFlow 1.4s linear infinite;}
   @keyframes dashFlow{to{stroke-dashoffset:-6.4;}}
   .flow-marker{
-    position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;
-    background:rgba(255,255,255,0.92);border:2px solid var(--diagram-accent,#4F7965);
-    display:flex;align-items:center;justify-content:center;font-size:0.62rem;color:var(--diagram-accent,#4F7965);
+    position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;
+    background:rgba(255,255,255,0.94);border:2px solid var(--diagram-accent,#4F7965);
+    display:flex;align-items:center;justify-content:center;font-size:0.92rem;color:var(--diagram-accent,#4F7965);
     box-shadow:0 0 0 0 rgba(79,121,101,0.5);transition:transform 0.3s,box-shadow 0.3s,background 0.3s,color 0.3s;
     z-index:3;cursor:default;
   }
   .flow-marker .fm-tip{
-    position:absolute;bottom:130%;left:50%;transform:translateX(-50%);white-space:nowrap;
-    background:rgba(10,10,10,0.92);color:#fff;font-size:0.62rem;font-weight:600;padding:3px 8px;border-radius:6px;
-    opacity:0;pointer-events:none;transition:opacity 0.25s;
+    position:absolute;bottom:135%;left:50%;transform:translateX(-50%);white-space:nowrap;
+    background:rgba(10,10,10,0.92);color:#fff;font-size:0.68rem;font-weight:600;padding:4px 9px;border-radius:6px;
+    opacity:0;pointer-events:none;transition:opacity 0.25s;z-index:6;
   }
   .flow-marker:hover .fm-tip{opacity:1;}
   .flow-marker.active{
@@ -231,9 +252,9 @@
   }
   @keyframes markerPulse{0%{box-shadow:0 0 0 0 rgba(79,121,101,0.55);}100%{box-shadow:0 0 0 14px rgba(79,121,101,0);}}
   .flow-traveler{
-    position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;
-    background:var(--diagram-accent,#4F7965);border:2px solid #fff;display:flex;align-items:center;justify-content:center;
-    color:#fff;font-size:0.85rem;box-shadow:0 4px 14px rgba(0,0,0,0.45),0 0 0 4px rgba(255,255,255,0.15);
+    position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;
+    background:var(--diagram-accent,#4F7965);border:3px solid #fff;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:1.15rem;box-shadow:0 4px 18px rgba(0,0,0,0.5),0 0 0 5px rgba(255,255,255,0.15);
     z-index:5;opacity:0;left:0;top:0;
   }
   .diagram-controls{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:0.9rem;flex-wrap:wrap;}
@@ -241,7 +262,7 @@
   .diagram-btns{display:flex;gap:0.7rem;}
  
   /* ===================== VISION / FUTURE ===================== */
-  .vision-cards,.future-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;max-width:1200px;margin:0 auto;width:100%;}
+  .vision-cards,.future-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;max-width:1440px;margin:0 auto;width:100%;}
   .future-cards{margin-top:1rem;margin-bottom:4rem;}
   .vision-card,.future-card{background:var(--card-bg);border:1px solid var(--border-color);padding:2.3rem 1.8rem;border-radius:14px;position:relative;overflow:hidden;box-shadow:var(--shadow-soft);}
   .vision-card::before,.future-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;}
@@ -254,7 +275,7 @@
  
   /* ===================== CONTACT ===================== */
   #contact{display:flex;flex-direction:column;align-items:center;}
-  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.6rem;max-width:900px;width:100%;}
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.6rem;max-width:1000px;width:100%;}
   .contact-card{
     background:var(--card-bg);border:1px solid var(--border-color);border-radius:16px;padding:2rem;
     text-align:center;box-shadow:var(--shadow-soft);
@@ -715,7 +736,12 @@ Object.entries(projectData).forEach(([key,proj])=>{
     <div class="devops-workflow-heading">DevOps Workflow</div>
     <div class="diagram-panel" style="--diagram-accent:${proj.accentColor};">
       <div class="diagram-wrap" id="diagram-wrap-${key}">
-        <img class="diagram-img" src="${proj.diagramImg}" alt="${proj.label} architecture diagram" draggable="false">
+        <img class="diagram-img" src="${proj.diagramImg}" alt="${proj.label} architecture diagram" draggable="false"
+             onerror="this.closest('.diagram-wrap').classList.add('img-missing')" onload="this.closest('.diagram-wrap').classList.remove('img-missing')">
+        <div class="diagram-missing-note">
+          <i class="fa-solid fa-image"></i>
+          <span>Diagram image not found at ${proj.diagramImg} — add the file to see it here. The flow still runs on the layout below.</span>
+        </div>
         <svg class="diagram-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
           <polyline class="flow-line" points="${buildFlowPoints(proj.flowPath)}"></polyline>
         </svg>
